@@ -39,14 +39,24 @@ function Rating({ value }: { value: number }) {
 }
 
 function TimeAgo({ date }: { date: string }) {
-  const [timeAgo, setTimeAgo] = React.useState<string>('\u00A0'); // non-breaking space
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
-    // This will only run on the client, after initial hydration
-    setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
-  }, [date]);
+    setMounted(true);
+  }, []);
 
-  // We give it a fixed width to prevent layout shift when the time loads
+  if (!mounted) {
+    // On server and initial client render, render a placeholder to prevent hydration mismatch
+    // and layout shift.
+    return (
+      <p className="text-xs text-muted-foreground w-24 text-right">
+        {'\u00A0'}
+      </p>
+    );
+  }
+
+  // After mount on client, calculate and render the actual time ago.
+  const timeAgo = formatDistanceToNow(new Date(date), { addSuffix: true });
   return (
     <p className="text-xs text-muted-foreground w-24 text-right">
       {timeAgo}
