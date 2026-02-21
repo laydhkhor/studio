@@ -68,7 +68,7 @@ export default function BlogPage() {
 
   return (
     <div className="py-20 md:py-28">
-      <div className="container px-4 md:px-6">
+      <div className="container">
         <header className="text-center mb-12">
           <h1 className="font-headline text-4xl md:text-5xl font-bold">
             Health & Wellness Blog

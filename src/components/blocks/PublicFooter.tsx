@@ -13,7 +13,7 @@ export default function PublicFooter() {
 
   return (
     <footer className="bg-card font-ui text-card-foreground border-t">
-      <div className="container px-4 py-12 md:px-6">
+      <div className="container py-12">
         <div className="grid gap-8 md:grid-cols-12">
           <div className="md:col-span-4">
             <Link href="/" className="flex items-center gap-2 mb-4">

@@ -30,7 +30,7 @@ export default function StatsSection() {
 
   return (
     <section className="bg-card py-20 md:py-28">
-      <div className="container px-4 md:px-6">
+      <div className="container">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-y-10 text-center sm:grid-cols-2 sm:gap-x-6 md:gap-x-8 lg:grid-cols-4">
           {stats.map((stat, index) => {
             const numericValue = parseInt(stat.value, 10);

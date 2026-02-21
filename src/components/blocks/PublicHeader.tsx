@@ -34,7 +34,7 @@ export default function PublicHeader() {
         isScrolled && 'shadow-lg'
       )}
     >
-      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Logo className="h-6 w-6 text-primary" />
           <span className="font-headline text-xl font-bold text-primary">
@@ -56,7 +56,7 @@ export default function PublicHeader() {
               className="w-full max-w-sm flex flex-col p-0"
             >
               <SheetHeader className="p-6 pb-4 border-b">
-                <SheetTitle>
+                <SheetTitle asChild>
                   <Link
                     href="/"
                     className="flex items-center gap-2"

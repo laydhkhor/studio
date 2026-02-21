@@ -14,7 +14,7 @@ export default function AboutPage() {
 
   return (
     <div className="py-20 md:py-28">
-      <div className="container px-4 md:px-6">
+      <div className="container">
         <header className="text-center mb-12">
           <h1 className="font-headline text-4xl md:text-5xl font-bold">About Dr. Pritam Pattyanayek</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">

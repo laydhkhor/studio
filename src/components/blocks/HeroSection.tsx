@@ -13,7 +13,7 @@ export default function HeroSection() {
 
   return (
     <section className="relative bg-background overflow-hidden py-20 md:py-28">
-      <div className="container px-4 md:px-6 z-10 relative">
+      <div className="container z-10 relative">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Column - Text Content */}
           <div className="text-center md:text-left">

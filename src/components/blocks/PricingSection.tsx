@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 export default function PricingSection() {
   return (
     <section className="py-20 md:py-28">
-      <div className="container px-4 md:px-6">
+      <div className="container">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-headline text-3xl md:text-4xl font-bold">
             Flexible Consultation Options

@@ -60,7 +60,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="container px-4 md:px-6 max-w-4xl mx-auto">
+      <div className="container max-w-4xl mx-auto">
         <div className="mb-8">
             <Button variant="ghost" asChild className="font-ui">
                 <Link href="/blog">
