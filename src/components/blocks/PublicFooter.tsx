@@ -84,7 +84,7 @@ export default function PublicFooter() {
           </div>
         </div>
         <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} DocAssist. All rights reserved.</p>
+          <p suppressHydrationWarning>&copy; {new Date().getFullYear()} DocAssist. All rights reserved.</p>
         </div>
       </div>
     </footer>
