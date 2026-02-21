@@ -15,6 +15,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { testimonials } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 function Rating({ value }: { value: number }) {
   return (
@@ -33,20 +40,42 @@ function Rating({ value }: { value: number }) {
 
 export default function TestimonialsSection() {
   const [locationFilter, setLocationFilter] = React.useState('All');
-  const [ratingFilter, setRatingFilter] = React.useState<number>(0); // 0 for all ratings
+  const [ratingFilter, setRatingFilter] = React.useState<number>(0);
+  const [sortBy, setSortBy] = React.useState('newest');
 
   const locations = ['All', ...Array.from(new Set(testimonials.map((t) => t.location)))];
   const ratings = [0, 5, 4, 3, 2, 1]; // 0 for All
 
   const filteredTestimonials = React.useMemo(() => {
-    return testimonials
-      .filter((t) => {
-        const locationMatch = locationFilter === 'All' || t.location === locationFilter;
-        const ratingMatch = ratingFilter === 0 || t.rating === ratingFilter;
-        return locationMatch && ratingMatch;
-      })
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [locationFilter, ratingFilter]);
+    let items = [...testimonials];
+
+    // Filter by location
+    if (locationFilter !== 'All') {
+      items = items.filter((t) => t.location === locationFilter);
+    }
+
+    // Filter by rating
+    if (ratingFilter !== 0) {
+      items = items.filter((t) => t.rating === ratingFilter);
+    }
+
+    // Filter by time (for 'lastMonth')
+    if (sortBy === 'lastMonth') {
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      items = items.filter((t) => new Date(t.date) >= oneMonthAgo);
+    }
+
+    // Sort
+    if (sortBy === 'oldest') {
+      items.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    } else {
+      // 'newest' and 'lastMonth' are sorted with newest first
+      items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+    
+    return items;
+  }, [locationFilter, ratingFilter, sortBy]);
 
   return (
     <section className="bg-secondary py-16 md:py-24">
@@ -60,32 +89,41 @@ export default function TestimonialsSection() {
           </p>
         </div>
 
-        <div className="mt-8 flex justify-center gap-2 flex-wrap items-center">
-          <p className="font-ui font-semibold self-center mr-2">Filter by Location:</p>
-          {locations.map((location) => (
-            <Button
-              key={location}
-              variant={locationFilter === location ? 'default' : 'outline'}
-              onClick={() => setLocationFilter(location)}
-              className="font-ui"
-            >
-              {location}
-            </Button>
-          ))}
-        </div>
-        
-        <div className="mt-4 flex justify-center gap-2 flex-wrap items-center">
-           <p className="font-ui font-semibold self-center mr-2">Filter by Rating:</p>
-          {ratings.map((rating) => (
-            <Button
-              key={rating}
-              variant={ratingFilter === rating ? 'default' : 'outline'}
-              onClick={() => setRatingFilter(rating)}
-              className="font-ui flex items-center gap-1"
-            >
-              {rating === 0 ? 'All' : <>{rating} <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" /></>}
-            </Button>
-          ))}
+        <div className="mt-8 flex flex-col items-center justify-center gap-2 md:flex-row md:gap-4">
+            <Select value={locationFilter} onValueChange={setLocationFilter}>
+              <SelectTrigger className="w-full max-w-xs md:w-[200px]">
+                <SelectValue placeholder="Filter by Location" />
+              </SelectTrigger>
+              <SelectContent>
+                {locations.map((location) => (
+                  <SelectItem key={location} value={location}>{location}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={String(ratingFilter)} onValueChange={(v) => setRatingFilter(Number(v))}>
+              <SelectTrigger className="w-full max-w-xs md:w-[200px]">
+                <SelectValue placeholder="Filter by Rating" />
+              </SelectTrigger>
+              <SelectContent>
+                {ratings.map((rating) => (
+                  <SelectItem key={rating} value={String(rating)}>
+                    {rating === 0 ? 'All Ratings' : `${rating} Star${rating > 1 ? 's' : ''}`}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full max-w-xs md:w-[200px]">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest First</SelectItem>
+                <SelectItem value="oldest">Oldest First</SelectItem>
+                <SelectItem value="lastMonth">From Last Month</SelectItem>
+              </SelectContent>
+            </Select>
         </div>
 
         <Carousel
@@ -94,7 +132,7 @@ export default function TestimonialsSection() {
             loop: filteredTestimonials.length > 2,
           }}
           className="w-full max-w-5xl mx-auto mt-12"
-          key={`${locationFilter}-${ratingFilter}`}
+          key={`${locationFilter}-${ratingFilter}-${sortBy}`}
         >
           <CarouselContent>
             {filteredTestimonials.length > 0 ? (
