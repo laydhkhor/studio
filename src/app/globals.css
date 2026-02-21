@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: 'Open Sans', sans-serif;
-}
-
 @layer base {
   :root {
     --background: 205 88% 95%;
@@ -53,5 +49,7 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Open Sans', sans-serif;
+    overscroll-behavior-y: none;
   }
 }
