@@ -23,7 +23,6 @@ export default function HeroSection() {
         />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
-      <div className="absolute inset-0 bg-primary/20"></div>
       
       <div className="relative z-10 container text-center px-4 md:px-6">
         <h2 className="text-lg md:text-xl font-ui font-medium tracking-widest uppercase text-white/90">
