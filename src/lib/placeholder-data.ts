@@ -46,6 +46,28 @@ export const clinicInfo = {
   timings: 'Mon - Sat: 9:00 AM - 8:00 PM',
 };
 
+export const clinicLocations = [
+  {
+    id: 1,
+    name: 'Mahishadal Clinic',
+    address: 'Basulia, Mahishadal, Purba Medinipur, West Bengal',
+    pinCode: '721628',
+    phone: '+91 12345 67890',
+    email: 'contact@docassist.com',
+    timings: 'Mon - Sat: 9:00 AM - 8:00 PM',
+  },
+  {
+    id: 2,
+    name: 'Nandakumar Clinic',
+    address: 'Nandakumar, Purba Medinipur, West Bengal',
+    pinCode: '721632',
+    phone: '+91 98765 43210',
+    email: 'contact.nk@docassist.com',
+    timings: 'Mon, Wed, Fri: 10:00 AM - 6:00 PM',
+  },
+];
+
+
 export const featuredBlogs = [
   {
     id: 1,
