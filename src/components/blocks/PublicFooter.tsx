@@ -1,10 +1,18 @@
+'use client';
+
+import * as React from 'react';
 import Link from 'next/link';
 import { Logo } from '@/components/icons';
 import { navLinks, clinicInfo } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Star } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function PublicFooter() {
+  const [rating, setRating] = React.useState(0);
+  const [hover, setHover] = React.useState(0);
+
   return (
     <footer className="bg-card font-ui text-card-foreground border-t">
       <div className="container py-12">
@@ -43,6 +51,31 @@ export default function PublicFooter() {
           <div className="md:col-span-3">
              <h3 className="font-semibold tracking-wider text-sm uppercase">Write a Review</h3>
              <form className="mt-4 space-y-2">
+              <div className="flex justify-center md:justify-start space-x-1 mb-2">
+                {[...Array(5)].map((_, index) => {
+                  const starValue = index + 1;
+                  return (
+                    <button
+                      type="button"
+                      key={starValue}
+                      onClick={() => setRating(starValue)}
+                      onMouseEnter={() => setHover(starValue)}
+                      onMouseLeave={() => setHover(0)}
+                      className="focus:outline-none"
+                      aria-label={`Rate ${starValue} star${starValue > 1 ? 's' : ''}`}
+                    >
+                      <Star
+                        className={cn(
+                          "h-6 w-6 cursor-pointer transition-colors",
+                          starValue <= (hover || rating)
+                            ? "text-yellow-400 fill-yellow-400"
+                            : "text-gray-300"
+                        )}
+                      />
+                    </button>
+                  );
+                })}
+              </div>
               <Textarea placeholder="Share your experience..." />
               <Button type="submit" className="w-full font-ui">Submit Review</Button>
             </form>
