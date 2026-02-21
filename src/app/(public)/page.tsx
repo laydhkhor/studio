@@ -72,24 +72,24 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection 
-        kicker={home.heroKicker}
-        heading={home.heroHeading}
-        subheading={home.heroSubheading}
-        image={home.heroImage}
-        imageHint={home.heroImageHint}
-        patientsServed={about.patientsServed}
+        kicker={home?.heroKicker}
+        heading={home?.heroHeading}
+        subheading={home?.heroSubheading}
+        image={home?.heroImage}
+        imageHint={home?.heroImageHint}
+        patientsServed={about?.patientsServed}
       />
       <StatsSection 
-        experience={about.experience}
-        patientsServed={about.patientsServed}
-        positiveReviews={about.positiveReviews}
-        consultationsDone={about.consultationsDone}
+        experience={about?.experience}
+        patientsServed={about?.patientsServed}
+        positiveReviews={about?.positiveReviews}
+        consultationsDone={about?.consultationsDone}
       />
-      <PricingSection pricingOptions={pricing.pricingOptions} />
+      <PricingSection pricingOptions={pricing?.pricingOptions} />
       <TestimonialsSection testimonials={testimonials} />
-      <FeaturedBlogsSection featuredBlogs={home.featuredBlogsData} />
-      <ClinicDetailsSection clinicLocations={clinic.clinicLocations} />
-      <FaqSection faqs={faq.faqs} />
+      <FeaturedBlogsSection featuredBlogs={home?.featuredBlogsData} />
+      <ClinicDetailsSection clinicLocations={clinic?.clinicLocations} />
+      <FaqSection faqs={faq?.faqs} />
     </>
   );
 }
