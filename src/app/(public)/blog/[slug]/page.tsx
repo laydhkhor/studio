@@ -33,8 +33,33 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     notFound();
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt,
+    image: post.imageUrl,
+    datePublished: post.date,
+    author: {
+      '@type': 'Person',
+      name: doctorDetails.name,
+    },
+     publisher: {
+      '@type': 'Organization',
+      name: 'DocAssist',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://placehold.co/600x60/EEE/31343C/png?text=DocAssist',
+      },
+    },
+  };
+
   return (
     <article className="py-20 md:py-28">
+       <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="container px-4 md:px-6 max-w-4xl mx-auto">
         <div className="mb-8">
             <Button variant="ghost" asChild className="font-ui">

@@ -10,15 +10,13 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose
 } from '@/components/ui/sheet';
 import { Logo } from '@/components/icons';
 import { navLinks } from '@/lib/placeholder-data';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function PublicHeader() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const isMobile = useIsMobile();
   const [isScrolled, setIsScrolled] = React.useState(false);
 
   React.useEffect(() => {
@@ -43,8 +41,10 @@ export default function PublicHeader() {
             DocAssist
           </span>
         </Link>
-        {isMobile ? (
-          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+
+        {/* Mobile Menu */}
+        <div className="md:hidden">
+          <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Menu />
@@ -55,12 +55,11 @@ export default function PublicHeader() {
               side="right"
               className="w-full max-w-sm flex flex-col p-0"
             >
-              <SheetHeader className="p-6 pb-4 border-b text-left">
+              <SheetHeader className="p-6 pb-4 border-b">
                 <SheetTitle>
                   <Link
                     href="/"
                     className="flex items-center gap-2"
-                    onClick={() => setIsMenuOpen(false)}
                   >
                     <Logo className="h-6 w-6 text-primary" />
                     <span className="font-headline text-xl font-bold text-primary">
@@ -72,62 +71,62 @@ export default function PublicHeader() {
               <div className="flex flex-1 flex-col justify-between">
                 <nav className="mt-8 flex flex-col gap-4 px-6">
                   {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="text-lg font-medium text-foreground hover:text-primary"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {link.label}
-                    </Link>
+                    <SheetClose asChild key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-lg font-medium text-foreground hover:text-primary"
+                      >
+                        {link.label}
+                      </Link>
+                    </SheetClose>
                   ))}
                 </nav>
                 <div className="space-y-2 border-t p-6">
-                  <Button asChild className="w-full" size="lg">
-                    <Link href="/login" onClick={() => setIsMenuOpen(false)}>
-                      Login
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    className="w-full"
-                    size="lg"
-                    variant="default"
-                  >
-                    <Link
-                      href="/login?redirect=/booking"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Book Now
-                    </Link>
-                  </Button>
+                   <SheetClose asChild>
+                      <Button asChild className="w-full" size="lg">
+                        <Link href="/login">Login</Link>
+                      </Button>
+                   </SheetClose>
+                   <SheetClose asChild>
+                      <Button
+                        asChild
+                        className="w-full"
+                        size="lg"
+                        variant="default"
+                      >
+                        <Link href="/login?redirect=/booking">
+                          Book Now
+                        </Link>
+                      </Button>
+                   </SheetClose>
                 </div>
               </div>
             </SheetContent>
           </Sheet>
-        ) : (
-          <div className="flex items-center gap-8">
-            <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-foreground/80 transition-colors hover:text-primary"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-            <div className="flex items-center gap-2">
-              <Button asChild variant="ghost">
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/login?redirect=/booking">Book Now</Link>
-              </Button>
-            </div>
+        </div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-8">
+          <nav className="flex items-center gap-6 text-sm font-medium">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-foreground/80 transition-colors hover:text-primary"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="flex items-center gap-2">
+            <Button asChild variant="ghost">
+              <Link href="/login">Login</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/login?redirect=/booking">Book Now</Link>
+            </Button>
           </div>
-        )}
+        </div>
       </div>
     </header>
   );

@@ -2,6 +2,12 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Contact Dr. Pritam Pattyanayek | DocAssist',
+  description: "Reach out to us to schedule an appointment, ask a question, or find our clinic. We're here to help with your healthcare needs.",
+};
 
 export default function ContactPage() {
   return (

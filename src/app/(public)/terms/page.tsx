@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Terms & Conditions | DocAssist',
+    description: "Read the terms and conditions for using the DocAssist website and services provided by Dr. Pritam Pattyanayek.",
+};
+
 export default function TermsPage() {
     const lastUpdated = "July 26, 2024";
   return (

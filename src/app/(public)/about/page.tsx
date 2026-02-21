@@ -2,6 +2,12 @@ import Image from 'next/image';
 import { doctorDetails } from '@/lib/placeholder-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Award, GraduationCap, Users } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: `About ${doctorDetails.name} | DocAssist`,
+  description: `Learn more about ${doctorDetails.name}, his mission, education, and experience in providing quality healthcare in ${doctorDetails.targetSeoLocations}.`,
+};
 
 export default function AboutPage() {
   const doctorImage = PlaceHolderImages.find(img => img.id === 'doctor-pritam');
