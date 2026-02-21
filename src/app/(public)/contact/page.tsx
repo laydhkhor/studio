@@ -1,10 +1,7 @@
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { clinicInfo } from '@/lib/placeholder-data';
 
 export default function ContactPage() {
   return (
@@ -17,9 +14,8 @@ export default function ContactPage() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div>
-            <h2 className="font-headline text-3xl font-semibold mb-6">Send a Message</h2>
+        <div className="max-w-2xl mx-auto">
+            <h2 className="font-headline text-3xl font-semibold mb-6 text-center">Send a Message</h2>
             <form className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -41,46 +37,6 @@ export default function ContactPage() {
               </div>
               <Button type="submit" className="w-full sm:w-auto font-ui">Send Message</Button>
             </form>
-          </div>
-          
-          <div>
-            <h2 className="font-headline text-3xl font-semibold mb-6">Our Information</h2>
-            <Card className="shadow-lg">
-                <CardHeader>
-                    <CardTitle className="font-headline">Mahishadal Clinic</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <MapPin className="h-5 w-5 text-primary mt-1 shrink-0" />
-                    <div>
-                      <p className="font-ui font-semibold">Address</p>
-                      <p className="text-muted-foreground">{clinicInfo.address}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <Phone className="h-5 w-5 text-primary mt-1 shrink-0" />
-                    <div>
-                      <p className="font-ui font-semibold">Phone</p>
-                      <p className="text-muted-foreground">{clinicInfo.phone}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <Mail className="h-5 w-5 text-primary mt-1 shrink-0" />
-                    <div>
-                      <p className="font-ui font-semibold">Email</p>
-                      <p className="text-muted-foreground">{clinicInfo.email}</p>
-                    </div>
-                  </div>
-                   <div className="flex items-start gap-4">
-                    <Clock className="h-5 w-5 text-primary mt-1 shrink-0" />
-                    <div>
-                      <p className="font-ui font-semibold">Timings</p>
-                      <p className="text-muted-foreground">{clinicInfo.timings}</p>
-                    </div>
-                  </div>
-                </CardContent>
-            </Card>
-          </div>
         </div>
       </div>
     </div>
