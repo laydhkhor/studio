@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { clinicLocations } from '@/lib/placeholder-data';
@@ -49,17 +49,20 @@ export default function ClinicDetailsSection() {
           </div>
           <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
             {filteredClinics.length > 0 ? (
-              filteredClinics.map((clinic) => (
-                <Card key={clinic.id} className="shadow-lg">
+              filteredClinics.map((clinic) => {
+                const fullAddress = `${clinic.address}, ${clinic.pinCode}`;
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
+                return (
+                <Card key={clinic.id} className="shadow-lg flex flex-col">
                   <CardHeader>
                     <CardTitle className="font-headline">{clinic.name}</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 flex-grow">
                     <div className="flex items-start gap-4">
                       <MapPin className="h-5 w-5 text-primary mt-1 shrink-0" />
                       <div>
                         <p className="font-ui font-semibold">Address</p>
-                        <p className="text-muted-foreground">{`${clinic.address}, ${clinic.pinCode}`}</p>
+                        <p className="text-muted-foreground">{fullAddress}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
@@ -84,8 +87,15 @@ export default function ClinicDetailsSection() {
                       </div>
                     </div>
                   </CardContent>
+                  <CardFooter>
+                    <Button asChild className="w-full font-ui">
+                      <a href={mapsUrl} target="_blank" rel="noopener noreferrer">
+                        Get Directions <ExternalLink className="ml-2" />
+                      </a>
+                    </Button>
+                  </CardFooter>
                 </Card>
-              ))
+              )})
             ) : (
               <div className="md:col-span-2 flex items-center justify-center bg-muted/50 rounded-lg p-8">
                 <p className="text-muted-foreground text-center">No clinics found for the specified PIN code. Try another one or view all clinics.</p>
