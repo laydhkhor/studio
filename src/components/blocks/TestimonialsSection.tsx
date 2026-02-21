@@ -11,7 +11,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { testimonials } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
@@ -42,6 +42,7 @@ export default function TestimonialsSection() {
   const [locationFilter, setLocationFilter] = React.useState('All');
   const [ratingFilter, setRatingFilter] = React.useState<number>(0);
   const [sortBy, setSortBy] = React.useState('newest');
+  const [imgErrors, setImgErrors] = React.useState<Record<number, boolean>>({});
 
   const locations = ['All', ...Array.from(new Set(testimonials.map((t) => t.location)))];
   const ratings = [0, 5, 4, 3, 2, 1]; // 0 for All
@@ -152,14 +153,23 @@ export default function TestimonialsSection() {
                         </p>
                         <div className="flex items-center gap-4 pt-4 border-t w-full">
                           <Avatar>
-                            <AvatarImage
-                              src={testimonial.avatarUrl}
-                              alt={testimonial.name}
-                              data-ai-hint={testimonial.avatarHint}
-                            />
-                            <AvatarFallback>
-                              {testimonial.name.charAt(0)}
-                            </AvatarFallback>
+                            {!imgErrors[testimonial.id] ? (
+                              <Image
+                                src={testimonial.avatarUrl}
+                                alt={testimonial.name}
+                                width={40}
+                                height={40}
+                                className="aspect-square h-full w-full"
+                                data-ai-hint={testimonial.avatarHint}
+                                onError={() => {
+                                  setImgErrors((prev) => ({...prev, [testimonial.id]: true}));
+                                }}
+                              />
+                            ) : (
+                              <AvatarFallback>
+                                {testimonial.name.charAt(0)}
+                              </AvatarFallback>
+                            )}
                           </Avatar>
                           <div>
                             <p className="font-semibold font-ui">{testimonial.name}</p>
