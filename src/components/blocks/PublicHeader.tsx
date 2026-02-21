@@ -34,7 +34,7 @@ export default function PublicHeader() {
         isScrolled && 'shadow-lg'
       )}
     >
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container relative flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Logo className="h-6 w-6 text-primary" />
           <span className="font-headline text-xl font-bold text-primary">
@@ -106,8 +106,7 @@ export default function PublicHeader() {
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          <nav className="flex items-center gap-6 text-sm font-medium">
+        <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6 text-sm font-medium">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -117,15 +116,14 @@ export default function PublicHeader() {
                 {link.label}
               </Link>
             ))}
-          </nav>
-          <div className="flex items-center gap-2">
+        </nav>
+        <div className="hidden md:flex items-center gap-2">
             <Button asChild variant="ghost">
               <Link href="/login">Login</Link>
             </Button>
             <Button asChild>
               <Link href="/login?redirect=/booking">Book Now</Link>
             </Button>
-          </div>
         </div>
       </div>
     </header>
