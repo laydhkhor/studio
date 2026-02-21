@@ -1,16 +1,10 @@
 import Link from 'next/link';
-import { Facebook, Twitter, Linkedin } from 'lucide-react';
 import { Logo } from '@/components/icons';
 import { navLinks, clinicInfo } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function PublicFooter() {
-  const socialLinks = [
-    { name: 'Facebook', icon: Facebook, href: '#' },
-    { name: 'Twitter', icon: Twitter, href: '#' },
-    { name: 'LinkedIn', icon: Linkedin, href: '#' },
-  ];
-
   return (
     <footer className="bg-card font-ui text-card-foreground border-t">
       <div className="container py-12">
@@ -47,16 +41,11 @@ export default function PublicFooter() {
             </div>
           </div>
           <div className="md:col-span-3">
-             <h3 className="font-semibold tracking-wider text-sm uppercase">Follow Us</h3>
-             <div className="mt-4 flex space-x-2">
-              {socialLinks.map((social) => (
-                <Button key={social.name} variant="ghost" size="icon" asChild>
-                  <a href={social.href} aria-label={social.name}>
-                    <social.icon className="h-5 w-5 text-muted-foreground hover:text-primary" />
-                  </a>
-                </Button>
-              ))}
-            </div>
+             <h3 className="font-semibold tracking-wider text-sm uppercase">Write a Review</h3>
+             <form className="mt-4 space-y-2">
+              <Textarea placeholder="Share your experience..." />
+              <Button type="submit" className="w-full font-ui">Submit Review</Button>
+            </form>
           </div>
         </div>
         <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
