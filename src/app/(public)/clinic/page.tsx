@@ -15,6 +15,6 @@ export default async function ClinicPage() {
   const data = await client.fetch(query);
 
   return (
-    <ClinicDetailsSection clinicLocations={data.clinicLocations} />
+    <ClinicDetailsSection clinicLocations={data?.clinicLocations} />
   )
 }

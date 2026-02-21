@@ -30,6 +30,10 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
   const [locationFilter, setLocationFilter] = React.useState('All');
   const [pinSearch, setPinSearch] = React.useState('');
 
+  if (!clinicLocations) {
+    return null;
+  }
+
   const locations = [
     'All',
     ...Array.from(new Set(clinicLocations.map((c: any) => c.name.replace(' Clinic', '')))),
