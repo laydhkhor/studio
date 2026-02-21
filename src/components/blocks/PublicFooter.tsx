@@ -17,7 +17,7 @@ export default function PublicFooter() {
     <footer className="bg-card font-ui text-card-foreground border-t">
       <div className="container py-12">
         <div className="grid gap-8 md:grid-cols-12">
-          <div className="md:col-span-4">
+          <div className="md:col-span-3">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <Logo className="h-8 w-8 text-primary" />
               <span className="font-headline text-2xl font-bold text-primary">
@@ -28,7 +28,7 @@ export default function PublicFooter() {
               Your trusted partner in <span className="text-primary">healthcare</span>. Providing quality consultations with <span className="font-semibold text-primary">Dr. Pritam Pattyanayek</span>.
             </p>
           </div>
-          <div className="md:col-span-2">
+          <div className="md:col-span-3">
             <h3 className="font-semibold tracking-wider text-sm uppercase">Quick Links</h3>
             <ul className="mt-4 space-y-2 columns-2">
               {navLinks.map((link) => (
