@@ -13,6 +13,7 @@ export const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Blog' },
+  { href: '/pricing', label: 'Pricing' },
   { href: '/clinic', label: 'Clinic' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -60,6 +61,44 @@ export const pricingOptions = [
     ]
   },
 ];
+
+export const consultationFeatures = [
+  {
+    category: 'Core Features',
+    items: [
+      { feature: 'Price', chat: '₹200', video: '₹500', clinic: '₹300' },
+      { feature: 'Duration', chat: '10 mins', video: '30 mins', clinic: 'Not time-bound' },
+      { feature: 'Platform', chat: 'WhatsApp', video: 'Google Meet', clinic: 'In-Person' },
+    ],
+  },
+  {
+    category: 'Services',
+    items: [
+      { feature: 'Digital Prescription', chat: true, video: true, clinic: true },
+      {
+        feature: 'Comprehensive Diagnosis',
+        chat: false,
+        video: true,
+        clinic: true,
+      },
+      {
+        feature: 'Physical Examination',
+        chat: false,
+        video: false,
+        clinic: true,
+      },
+      { feature: 'Minor Ailments', chat: true, video: true, clinic: true },
+    ],
+  },
+  {
+    category: 'Support',
+    items: [
+      { feature: 'Follow-up query (24 hours)', chat: true, video: false, clinic: false },
+      { feature: '7-day free follow-up chat', chat: false, video: true, clinic: false },
+    ],
+  },
+];
+
 
 export const clinicInfo = {
   address: 'Basulia, Mahishadal, Purba Medinipur, West Bengal, 721628',
