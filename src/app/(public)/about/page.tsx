@@ -16,9 +16,9 @@ export default function AboutPage() {
     <div className="py-20 md:py-28">
       <div className="container">
         <header className="text-center mb-12">
-          <h1 className="font-headline text-4xl md:text-5xl font-bold">About Dr. Pritam Pattyanayek</h1>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold">About <span className="text-primary">Dr. Pritam Pattyanayek</span></h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-            A dedicated and compassionate healthcare professional committed to your well-being.
+            A dedicated and compassionate <span className="text-primary">healthcare</span> professional committed to your well-being.
           </p>
         </header>
 
@@ -38,7 +38,7 @@ export default function AboutPage() {
           <div className="lg:col-span-2 space-y-6 text-justify">
             <h2 className="font-headline text-3xl font-semibold">Our Mission</h2>
             <p className="text-muted-foreground text-lg">
-              Our mission is to provide accessible, high-quality healthcare to the communities of Mahishadal, Nandakumar, and beyond. We believe in a patient-centric approach, where your health and comfort are our top priorities. Dr. Pattyanayek combines modern medical practices with a personal touch to ensure you receive the best possible care.
+              Our mission is to provide accessible, high-quality <span className="text-primary">healthcare</span> to the communities of Mahishadal, Nandakumar, and beyond. We believe in a patient-centric approach, where your <span className="text-primary">health</span> and comfort are our top <span className="text-primary">priorities</span>. <span className="font-semibold text-primary">Dr. Pattyanayek</span> combines modern medical practices with a personal touch to ensure you receive the best possible care.
             </p>
             <p className="text-muted-foreground text-lg">
               Whether you're seeking a routine check-up, managing a chronic condition, or need expert medical advice, we are here to support you on your journey to better health.

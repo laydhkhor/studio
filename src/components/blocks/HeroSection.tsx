@@ -21,10 +21,10 @@ export default function HeroSection() {
               Expert Medical Care
             </span>
             <h1 className="mt-4 font-headline text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
-              Your Health, <br /> Our Top Priority
+              Your <span className="text-primary">Health</span>, <br /> Our Top <span className="text-primary">Priority</span>
             </h1>
             <p className="mt-6 max-w-xl mx-auto md:mx-0 text-lg text-muted-foreground text-justify">
-              With Dr. Pritam Pattyanayek, receive personalized healthcare
+              With <span className="font-semibold text-primary">Dr. Pritam Pattyanayek</span>, receive personalized healthcare
               solutions. Book your appointment today for compassionate and
               expert medical guidance.
             </p>

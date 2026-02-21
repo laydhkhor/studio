@@ -75,7 +75,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground font-ui">
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                <span>{doctorDetails.name}</span>
+                <span className="font-semibold text-primary">{doctorDetails.name}</span>
               </div>
               <time dateTime={post.date}>{format(new Date(post.date), 'MMMM d, yyyy')}</time>
           </div>

@@ -75,7 +75,7 @@ export default function BlogPage() {
           </h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
             Stay informed with the latest articles, health tips, and advice from
-            our doctor.
+            our <span className="text-primary">doctor</span>.
           </p>
         </header>
 

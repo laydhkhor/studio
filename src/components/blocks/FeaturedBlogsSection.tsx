@@ -12,10 +12,10 @@ export default function FeaturedBlogsSection() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="font-headline text-3xl md:text-4xl font-bold">
-              Health & Wellness Tips
+              <span className="text-primary">Health</span> & Wellness Tips
             </h2>
             <p className="mt-4 max-w-xl text-lg text-muted-foreground">
-              Stay informed with the latest articles and advice from our doctor.
+              Stay informed with the latest articles and advice from our <span className="text-primary">doctor</span>.
             </p>
           </div>
           <Button variant="outline" asChild className="mt-4 md:mt-0 font-ui">

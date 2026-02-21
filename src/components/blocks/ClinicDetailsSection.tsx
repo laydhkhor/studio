@@ -62,10 +62,10 @@ export default function ClinicDetailsSection() {
       <div className="container">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="font-headline text-3xl md:text-4xl font-bold">
-            Visit Our Clinics
+            Visit Our <span className="text-primary">Clinics</span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Find the nearest clinic for your consultation. Use the filters to
+            Find the nearest <span className="text-primary">clinic</span> for your consultation. Use the filters to
             select by location or search by PIN code.
           </p>
         </div>

@@ -25,7 +25,7 @@ export default function PublicFooter() {
               </span>
             </Link>
             <p className="text-muted-foreground text-sm text-justify">
-              Your trusted partner in healthcare. Providing quality consultations with Dr. Pritam Pattyanayek.
+              Your trusted partner in <span className="text-primary">healthcare</span>. Providing quality consultations with <span className="font-semibold text-primary">Dr. Pritam Pattyanayek</span>.
             </p>
           </div>
           <div className="md:col-span-2">
