@@ -7,7 +7,7 @@ import { featuredBlogs } from '@/lib/placeholder-data';
 
 export default function FeaturedBlogsSection() {
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-20 md:py-28">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>

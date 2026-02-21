@@ -78,7 +78,7 @@ export default function TestimonialsSection() {
   }, [locationFilter, ratingFilter, sortBy]);
 
   return (
-    <section className="bg-secondary py-16 md:py-24">
+    <section className="bg-secondary py-20 md:py-28">
       <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-headline text-3xl md:text-4xl font-bold">

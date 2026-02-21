@@ -67,7 +67,7 @@ export default function BlogPage() {
   }, [searchTerm, categoryFilter, sortOrder]);
 
   return (
-    <div className="py-16 md:py-24">
+    <div className="py-20 md:py-28">
       <div className="container px-4 md:px-6">
         <header className="text-center mb-12">
           <h1 className="font-headline text-4xl md:text-5xl font-bold">

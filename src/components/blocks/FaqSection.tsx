@@ -8,7 +8,7 @@ import { faqs } from '@/lib/placeholder-data';
 
 export default function FaqSection() {
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-20 md:py-28">
       <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="font-headline text-3xl md:text-4xl font-bold">

@@ -34,7 +34,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <article className="py-16 md:py-24">
+    <article className="py-20 md:py-28">
       <div className="container px-4 md:px-6 max-w-4xl mx-auto">
         <div className="mb-8">
             <Button variant="ghost" asChild className="font-ui">
