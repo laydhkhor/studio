@@ -16,8 +16,8 @@ export default function StatsSection() {
   ];
 
   return (
-    <section className="bg-card">
-      <div className="container px-4 py-20 md:px-6">
+    <section className="bg-card py-20 md:py-28">
+      <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 md:divide-x divide-border">
           {stats.map((stat, index) => (
             <div key={index} className="flex items-center gap-6 justify-center">
