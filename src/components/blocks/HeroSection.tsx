@@ -22,10 +22,10 @@ export default function HeroSection({ kicker, heading, subheading, image, imageH
               {kicker}
             </span>
             <h1 className="mt-4 font-headline text-4xl md:text-5xl lg:text-6xl font-bold text-foreground"
-              dangerouslySetInnerHTML={{ __html: heading?.replace(/Health/g, '<span class="text-primary">Health</span>').replace(/Priority/g, '<span class="text-primary">Priority</span>').replace(/\n/g, '<br />') }}
+              dangerouslySetInnerHTML={{ __html: heading?.replace(/Health/g, '<span class="text-primary">Health</span>').replace(/Priority/g, '<span class="text-primary">Priority</span>').replace(/\n/g, '<br />') ?? '' }}
             />
             <p className="mt-6 max-w-xl mx-auto md:mx-0 text-lg text-muted-foreground text-justify"
-             dangerouslySetInnerHTML={{ __html: subheading?.replace(/Dr. Pritam Pattyanayek/g, '<span class="font-semibold text-primary">Dr. Pritam Pattyanayek</span>') }}
+             dangerouslySetInnerHTML={{ __html: subheading?.replace(/Dr. Pritam Pattyanayek/g, '<span class="font-semibold text-primary">Dr. Pritam Pattyanayek</span>') ?? '' }}
             />
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 font-ui">
               <Button size="lg" asChild className="w-full sm:w-auto">
