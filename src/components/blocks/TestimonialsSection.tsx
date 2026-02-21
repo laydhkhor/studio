@@ -13,7 +13,6 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { testimonials } from '@/lib/placeholder-data';
-import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import {
   Select,
@@ -22,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function Rating({ value }: { value: number }) {
   return (
@@ -36,6 +36,20 @@ function Rating({ value }: { value: number }) {
       ))}
     </div>
   );
+}
+
+function TimeAgo({ date }: { date: string }) {
+  const [timeAgo, setTimeAgo] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
+  }, [date]);
+
+  if (!timeAgo) {
+    return <Skeleton className="h-4 w-20" />;
+  }
+
+  return <p className="text-xs text-muted-foreground">{timeAgo}</p>;
 }
 
 export default function TestimonialsSection() {
@@ -144,9 +158,7 @@ export default function TestimonialsSection() {
                       <CardContent className="flex flex-col items-start gap-4 p-6 flex-grow">
                         <div className="flex justify-between w-full items-center">
                           <Rating value={testimonial.rating} />
-                          <p className="text-xs text-muted-foreground">
-                            {formatDistanceToNow(new Date(testimonial.date), { addSuffix: true })}
-                          </p>
+                          <TimeAgo date={testimonial.date} />
                         </div>
                         <p className="text-base text-muted-foreground flex-grow text-justify">
                           "{testimonial.comment}"
