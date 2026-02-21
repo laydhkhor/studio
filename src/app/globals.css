@@ -41,15 +41,17 @@
     --sidebar-border: 214.3 31.8% 91.4%;
     --sidebar-ring: 207 68% 53%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+
+  html {
+    overscroll-behavior-y: none;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Open Sans', sans-serif;
-    overscroll-behavior-y: none;
   }
 }
