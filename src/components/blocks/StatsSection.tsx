@@ -31,7 +31,7 @@ export default function StatsSection() {
   return (
     <section className="bg-card py-20 md:py-28">
       <div className="container px-4 md:px-6">
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-y-10 text-center sm:grid-cols-2 sm:gap-x-6 md:gap-x-8 lg:grid-cols-4">
           {stats.map((stat, index) => {
             const numericValue = parseInt(stat.value, 10);
             const suffix = stat.value.replace(String(numericValue), '');
@@ -39,10 +39,10 @@ export default function StatsSection() {
             return (
               <div
                 key={index}
-                className="flex items-center justify-center gap-6"
+                className="flex items-center justify-center gap-4"
               >
                 <stat.icon className="h-12 w-12 text-primary" />
-                <div>
+                <div className="text-left">
                   <p className="font-headline text-4xl font-bold">
                     <AnimatedCounter value={numericValue} />
                     {suffix}
