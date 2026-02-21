@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Logo } from '@/components/icons';
@@ -47,17 +47,13 @@ export default function PublicHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-sm">
               <div className="flex h-full flex-col">
-                <div className="flex items-center justify-between border-b pb-4">
+                <div className="flex items-center border-b pb-4">
                   <Link href="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                     <Logo className="h-6 w-6 text-primary" />
                      <span className="font-headline text-xl font-bold text-primary">
                       DocAssist
                     </span>
                   </Link>
-                  <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(false)}>
-                    <X />
-                    <span className="sr-only">Close menu</span>
-                  </Button>
                 </div>
                 <nav className="mt-8 flex flex-col gap-4">
                   {navLinks.map((link) => (
