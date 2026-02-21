@@ -4,7 +4,13 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Logo } from '@/components/icons';
 import { navLinks } from '@/lib/placeholder-data';
 import { cn } from '@/lib/utils';
@@ -45,17 +51,26 @@ export default function PublicHeader() {
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-full max-w-sm">
-              <div className="flex h-full flex-col">
-                <div className="flex items-center border-b pb-4">
-                  <Link href="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
+            <SheetContent
+              side="right"
+              className="w-full max-w-sm flex flex-col p-0"
+            >
+              <SheetHeader className="p-6 pb-4 border-b text-left">
+                <SheetTitle>
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
                     <Logo className="h-6 w-6 text-primary" />
-                     <span className="font-headline text-xl font-bold text-primary">
+                    <span className="font-headline text-xl font-bold text-primary">
                       DocAssist
                     </span>
                   </Link>
-                </div>
-                <nav className="mt-8 flex flex-col gap-4">
+                </SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-1 flex-col justify-between">
+                <nav className="mt-8 flex flex-col gap-4 px-6">
                   {navLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -67,13 +82,25 @@ export default function PublicHeader() {
                     </Link>
                   ))}
                 </nav>
-                <div className="mt-auto space-y-2 border-t pt-4">
-                    <Button asChild className="w-full" size="lg">
-                        <Link href="/login" onClick={() => setIsMenuOpen(false)}>Login</Link>
-                    </Button>
-                    <Button asChild className="w-full" size="lg" variant="default">
-                        <Link href="/login?redirect=/booking" onClick={() => setIsMenuOpen(false)}>Book Now</Link>
-                    </Button>
+                <div className="space-y-2 border-t p-6">
+                  <Button asChild className="w-full" size="lg">
+                    <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+                      Login
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    className="w-full"
+                    size="lg"
+                    variant="default"
+                  >
+                    <Link
+                      href="/login?redirect=/booking"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Book Now
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </SheetContent>
