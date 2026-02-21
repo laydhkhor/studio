@@ -20,22 +20,42 @@ export const pricingOptions = [
     type: 'Chat',
     platform: 'WhatsApp',
     price: '₹200',
-    description: 'Get your queries resolved over a chat.',
+    description: 'Quickly get your minor health queries resolved over a chat.',
     cta: 'Start Chat',
+    tag: 'Basic',
+    features: [
+        'Text-based consultation',
+        'Digital prescription for minor ailments',
+        'Follow-up query within 24 hours'
+    ]
   },
   {
     type: 'Video',
     platform: 'Google Meet',
     price: '₹500',
-    description: 'A complete consultation via video call.',
+    description: 'A complete and thorough consultation via a secure video call.',
     cta: 'Book Video Call',
+    tag: 'Most Popular',
+    features: [
+        'Face-to-face virtual consultation',
+        'Comprehensive diagnosis',
+        'Digital prescription',
+        '7-day free follow-up chat'
+    ]
   },
   {
     type: 'Clinic Visit',
     platform: 'In-person',
     price: '₹300',
-    description: 'Visit our clinic for a full check-up.',
-    cta: 'Get Number',
+    description: 'A traditional in-person visit for a full check-up and physical examination.',
+    cta: 'Book In-Clinic',
+    tag: 'Premium',
+    features: [
+        'Complete physical examination',
+        'Immediate diagnosis & treatment',
+        'Printed & digital prescription',
+        'Personalized care'
+    ]
   },
 ];
 
