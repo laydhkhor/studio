@@ -22,15 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Metadata } from 'next';
-
-// Although this is a client component, we can export metadata from it.
-// Next.js will statically analyze it.
-export const metadata: Metadata = {
-  title: 'Health & Wellness Blog | DocAssist',
-  description: "Explore articles on health, wellness, and medical advice from Dr. Pritam Pattyanayek. Stay informed on topics like cardiology, nutrition, and lifestyle.",
-};
-
 
 export default function BlogPage() {
   const [searchTerm, setSearchTerm] = React.useState('');
