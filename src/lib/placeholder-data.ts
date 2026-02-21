@@ -79,6 +79,7 @@ export const testimonials = [
     name: 'Anjali Sharma',
     location: 'Mahishadal',
     rating: 5,
+    date: '2024-07-20T10:00:00Z',
     avatarUrl: 'https://picsum.photos/seed/user1/100/100',
     avatarHint: 'person smiling',
     comment:
@@ -89,21 +90,43 @@ export const testimonials = [
     name: 'Rajesh Kumar',
     location: 'Nandakumar',
     rating: 5,
+    date: '2024-07-18T14:30:00Z',
     avatarUrl: 'https://picsum.photos/seed/user2/100/100',
     avatarHint: 'person face',
     comment:
-      "The online video consultation was seamless and very convenient. The doctor was thorough and I received my prescription digitally right away. Excellent service.",
+      'The online video consultation was seamless and very convenient. The doctor was thorough and I received my prescription digitally right away. Excellent service.',
   },
   {
     id: 3,
     name: 'Priya Das',
     location: 'Purba Medinipur',
     rating: 4,
+    date: '2024-06-25T09:00:00Z',
     avatarUrl: 'https://picsum.photos/seed/user3/100/100',
     avatarHint: 'happy person',
     comment:
       'A very professional and knowledgeable doctor. The clinic is clean and modern. My go-to healthcare provider in the region.',
   },
+  {
+    id: 4,
+    name: 'Amit Singh',
+    location: 'Mahishadal',
+    rating: 4,
+    date: '2024-07-21T11:00:00Z',
+    avatarUrl: 'https://picsum.photos/seed/user4/100/100',
+    avatarHint: 'person thinking',
+    comment: 'Good experience overall. The doctor was patient and explained everything clearly. The waiting time was a bit long though.'
+  },
+  {
+    id: 5,
+    name: 'Sunita Devi',
+    location: 'Nandakumar',
+    rating: 3,
+    date: '2024-05-15T16:00:00Z',
+    avatarUrl: 'https://picsum.photos/seed/user5/100/100',
+    avatarHint: 'serious person',
+    comment: 'The consultation was okay, but I felt it was a bit rushed. The prescription helped, but I expected a more detailed discussion.'
+  }
 ];
 
 export const faqs = [

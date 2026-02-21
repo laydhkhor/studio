@@ -14,6 +14,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { testimonials } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
+import { formatDistanceToNow } from 'date-fns';
 
 function Rating({ value }: { value: number }) {
   return (
@@ -31,15 +32,21 @@ function Rating({ value }: { value: number }) {
 }
 
 export default function TestimonialsSection() {
-  const [filter, setFilter] = React.useState('All');
+  const [locationFilter, setLocationFilter] = React.useState('All');
+  const [ratingFilter, setRatingFilter] = React.useState<number>(0); // 0 for all ratings
+
   const locations = ['All', ...Array.from(new Set(testimonials.map((t) => t.location)))];
+  const ratings = [0, 5, 4, 3, 2, 1]; // 0 for All
 
   const filteredTestimonials = React.useMemo(() => {
-    if (filter === 'All') {
-      return testimonials;
-    }
-    return testimonials.filter((t) => t.location === filter);
-  }, [filter]);
+    return testimonials
+      .filter((t) => {
+        const locationMatch = locationFilter === 'All' || t.location === locationFilter;
+        const ratingMatch = ratingFilter === 0 || t.rating === ratingFilter;
+        return locationMatch && ratingMatch;
+      })
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [locationFilter, ratingFilter]);
 
   return (
     <section className="bg-secondary py-16 md:py-24">
@@ -53,15 +60,30 @@ export default function TestimonialsSection() {
           </p>
         </div>
 
-        <div className="mt-8 flex justify-center gap-2 flex-wrap">
+        <div className="mt-8 flex justify-center gap-2 flex-wrap items-center">
+          <p className="font-ui font-semibold self-center mr-2">Filter by Location:</p>
           {locations.map((location) => (
             <Button
               key={location}
-              variant={filter === location ? 'default' : 'outline'}
-              onClick={() => setFilter(location)}
+              variant={locationFilter === location ? 'default' : 'outline'}
+              onClick={() => setLocationFilter(location)}
               className="font-ui"
             >
               {location}
+            </Button>
+          ))}
+        </div>
+        
+        <div className="mt-4 flex justify-center gap-2 flex-wrap items-center">
+           <p className="font-ui font-semibold self-center mr-2">Filter by Rating:</p>
+          {ratings.map((rating) => (
+            <Button
+              key={rating}
+              variant={ratingFilter === rating ? 'default' : 'outline'}
+              onClick={() => setRatingFilter(rating)}
+              className="font-ui flex items-center gap-1"
+            >
+              {rating === 0 ? 'All' : <>{rating} <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" /></>}
             </Button>
           ))}
         </div>
@@ -71,8 +93,8 @@ export default function TestimonialsSection() {
             align: 'start',
             loop: filteredTestimonials.length > 2,
           }}
-          className="w-full max-w-5xl mx-auto mt-8"
-          key={filter}
+          className="w-full max-w-5xl mx-auto mt-12"
+          key={`${locationFilter}-${ratingFilter}`}
         >
           <CarouselContent>
             {filteredTestimonials.length > 0 ? (
@@ -81,7 +103,12 @@ export default function TestimonialsSection() {
                   <div className="p-1 h-full">
                     <Card className="h-full shadow-md flex flex-col">
                       <CardContent className="flex flex-col items-start gap-4 p-6 flex-grow">
-                        <Rating value={testimonial.rating} />
+                        <div className="flex justify-between w-full items-center">
+                          <Rating value={testimonial.rating} />
+                          <p className="text-xs text-muted-foreground">
+                            {formatDistanceToNow(new Date(testimonial.date), { addSuffix: true })}
+                          </p>
+                        </div>
                         <p className="text-base text-muted-foreground flex-grow">
                           "{testimonial.comment}"
                         </p>
@@ -110,7 +137,7 @@ export default function TestimonialsSection() {
               ))
             ) : (
               <div className="w-full text-center text-muted-foreground py-16">
-                  No testimonials found for this location.
+                  No testimonials found for the selected filters.
               </div>
             )}
           </CarouselContent>
