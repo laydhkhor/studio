@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { groq } from 'next-sanity';
 import { urlForImage } from '@/sanity/image';
 import { PortableText } from '@portabletext/react';
-import { useLiveQuery } from 'next-sanity/preview';
+import { useLiveQuery } from 'next-sanity/live';
 import { draftMode } from 'next/headers';
 
 

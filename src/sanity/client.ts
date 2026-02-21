@@ -12,3 +12,11 @@ export const client = createClient({
   apiVersion,
   useCdn: true,
 })
+
+export const previewClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: false,
+  token,
+})

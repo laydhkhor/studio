@@ -1,9 +1,10 @@
 import PublicHeader from '@/components/blocks/PublicHeader';
 import PublicFooter from '@/components/blocks/PublicFooter';
-import { client } from '@/sanity/client';
+import { client, previewClient } from '@/sanity/client';
 import { groq } from 'next-sanity';
 import { draftMode } from 'next/headers';
 import ExitPreviewButton from '@/components/ExitPreviewButton';
+import { LiveQueryProvider } from 'next-sanity/live'
 
 export default async function PublicLayout({
   children,
@@ -14,7 +15,7 @@ export default async function PublicLayout({
 
   const settings = await client.fetch(groq`*[_type == "settings"][0]`);
 
-  return (
+  const layoutContent = (
     <div className="flex min-h-screen flex-col">
        {isEnabled && <ExitPreviewButton />}
       <PublicHeader navLinks={settings?.navLinks} />
@@ -24,4 +25,10 @@ export default async function PublicLayout({
       <PublicFooter navLinks={settings?.navLinks} clinicInfo={settings?.clinicInfo} />
     </div>
   );
+
+  if (isEnabled) {
+    return <LiveQueryProvider client={previewClient}>{layoutContent}</LiveQueryProvider>
+  }
+
+  return layoutContent;
 }

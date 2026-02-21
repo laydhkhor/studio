@@ -2,8 +2,16 @@ import dynamic from 'next/dynamic';
 import HeroSection from '@/components/blocks/HeroSection';
 import { Skeleton } from '@/components/ui/skeleton';
 import { client } from '@/sanity/client';
-import { groq } from 'next-sanity';
 import { draftMode } from 'next/headers';
+import HomePage from './HomePage';
+import {
+  homePageQuery,
+  aboutPageQuery,
+  pricingPageQuery,
+  testimonialsQuery,
+  clinicPageQuery,
+  faqPageQuery,
+} from '@/sanity/queries';
 
 const LoadingSkeleton = () => (
   <div className="w-full py-20 md:py-28">
@@ -37,29 +45,9 @@ const FaqSection = dynamic(() => import('@/components/blocks/FaqSection'), {
   loading: () => <LoadingSkeleton />,
 });
 
-const homePageQuery = groq`*[_type == "home"][0]{
-  ...,
-  "heroImage": hero.image,
-  "heroImageHint": hero.imageHint,
-  "heroHeading": hero.heading,
-  "heroSubheading": hero.subheading,
-  "heroKicker": hero.kicker,
-  "featuredBlogsData": featuredBlogs.blogs[]->{
-    "id": _id,
-    title,
-    "slug": slug.current,
-    mainImage,
-    imageHint,
-    excerpt
-  }
-}`;
-const aboutPageQuery = groq`*[_type == "about"][0]`;
-const pricingPageQuery = groq`*[_type == "pricing"][0]`;
-const testimonialsQuery = groq`*[_type == "testimonial"] | order(date desc)`;
-const clinicPageQuery = groq`*[_type == "clinicPage"][0]`;
-const faqPageQuery = groq`*[_type == "faqPage"][0]`;
+export default async function Page() {
+  const { isEnabled } = draftMode();
 
-export default async function HomePage() {
   const [home, about, pricing, testimonials, clinic, faq] = await Promise.all([
     client.fetch(homePageQuery),
     client.fetch(aboutPageQuery),
@@ -69,9 +57,22 @@ export default async function HomePage() {
     client.fetch(faqPageQuery),
   ]);
 
+  if (isEnabled) {
+    return (
+      <HomePage
+        home={home}
+        about={about}
+        pricing={pricing}
+        testimonials={testimonials}
+        clinic={clinic}
+        faq={faq}
+      />
+    );
+  }
+
   return (
     <>
-      <HeroSection 
+      <HeroSection
         kicker={home?.heroKicker}
         heading={home?.heroHeading}
         subheading={home?.heroSubheading}
@@ -79,7 +80,7 @@ export default async function HomePage() {
         imageHint={home?.heroImageHint}
         patientsServed={about?.patientsServed}
       />
-      <StatsSection 
+      <StatsSection
         experience={about?.experience}
         patientsServed={about?.patientsServed}
         positiveReviews={about?.positiveReviews}
