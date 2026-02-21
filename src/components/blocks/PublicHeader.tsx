@@ -27,7 +27,7 @@ export default function PublicHeader() {
     <header
       className={cn(
         'sticky top-0 z-50 w-full transition-all duration-300 font-ui',
-        isScrolled ? 'bg-card/80 backdrop-blur-sm shadow-md' : 'bg-transparent'
+        isScrolled ? 'bg-card shadow-lg' : 'bg-transparent'
       )}
     >
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
