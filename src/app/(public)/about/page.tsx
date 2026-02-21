@@ -4,12 +4,15 @@ import type { Metadata } from 'next';
 import { client } from '@/sanity/client';
 import { groq } from 'next-sanity';
 import { urlForImage } from '@/sanity/image';
-import { draftMode } from 'next/headers';
 
 const aboutPageQuery = groq`*[_type == "about"][0]`;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch(aboutPageQuery);
+  const data = await client.fetch(aboutPageQuery, {}, {
+    next: {
+      tags: ['about']
+    }
+  });
   return {
     title: `About ${data?.doctorName || 'Us'} | DocAssist`,
     description: `Learn more about ${data?.doctorName || 'our doctor'}, his mission, education, and experience in providing quality healthcare.`,
@@ -17,7 +20,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const data = await client.fetch(aboutPageQuery);
+  const data = await client.fetch(aboutPageQuery, {}, {
+    next: {
+      tags: ['about']
+    }
+  });
 
   return (
     <div className="py-20 md:py-28">

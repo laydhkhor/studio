@@ -22,10 +22,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { urlForImage } from '@/sanity/image';
-import { useLiveQuery } from 'next-sanity';
+import { useLiveQuery, LiveQueryProvider } from 'next-sanity';
+import { previewClient } from '@/sanity/client';
 
-function BlogContent({ data: initialData, query }: { data: any, query: string }) {
-  const [data] = useLiveQuery(initialData, query);
+function BlogPostsContent({ data: initialData, query, isEnabled }: { data: any, query: string, isEnabled: boolean }) {
+  const [data] = useLiveQuery(initialData, query, {}, {
+    enabled: isEnabled,
+  });
   const { posts: allBlogs, categories: categoriesData } = data || { posts: [], categories: [] };
   const [searchTerm, setSearchTerm] = React.useState('');
   const [categoryFilter, setCategoryFilter] = React.useState('All');
@@ -170,8 +173,15 @@ function BlogContent({ data: initialData, query }: { data: any, query: string })
 }
 
 export default function BlogPosts({ initialData, isEnabled, query }: { initialData: any, isEnabled: boolean, query: string }) {
+    const content = <BlogPostsContent data={initialData} query={query} isEnabled={isEnabled} />;
+
     if (isEnabled) {
-        return <BlogContent data={initialData} query={query} />;
+        return (
+            <LiveQueryProvider client={previewClient}>
+                {content}
+            </LiveQueryProvider>
+        );
     }
-  return <BlogContent data={initialData} query={query} />;
+    
+    return content;
 }

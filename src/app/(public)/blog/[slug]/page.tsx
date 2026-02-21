@@ -1,6 +1,6 @@
 'use client'
 
-import { getClient } from '@/sanity/client';
+import { getClient, previewClient } from '@/sanity/client';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { groq } from 'next-sanity';
 import { urlForImage } from '@/sanity/image';
 import { PortableText } from '@portabletext/react';
-import { useLiveQuery } from 'next-sanity';
+import { useLiveQuery, LiveQueryProvider } from 'next-sanity';
 import { draftMode } from 'next/headers';
 
 
@@ -21,8 +21,10 @@ const postQuery = groq`*[_type == "post" && slug.current == $slug][0]{
   "authorName": author->name
 }`;
 
-function PostPageContent({ post: initialPost, params, isPreview }: { post: any, params: { slug: string }, isPreview: boolean }) {
-    const [post] = useLiveQuery(initialPost, postQuery, params);
+function PostPageContent({ post: initialPost, isPreview }: { post: any, isPreview: boolean }) {
+    const [post] = useLiveQuery(initialPost, postQuery, { slug: initialPost?.slug?.current }, {
+      enabled: isPreview,
+    });
 
     if (!post || !post.body) {
         notFound();
@@ -49,60 +51,74 @@ function PostPageContent({ post: initialPost, params, isPreview }: { post: any, 
         },
     };
 
-    return (
-        <article className="py-20 md:py-28">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-            <div className="container max-w-4xl mx-auto">
-                <div className="mb-8">
-                    <Button variant="ghost" asChild className="font-ui">
-                        <Link href="/blog">
-                            <ArrowLeft className="mr-2" />
-                            Back to Blog
-                        </Link>
-                    </Button>
-                </div>
-                <header className="mb-12 text-center">
-                    <Badge variant="outline" className="mb-4">{post.categoryName}</Badge>
-                    <h1 className="font-headline text-4xl md:text-5xl font-bold">{post.title}</h1>
-                    <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground font-ui">
-                        <div className="flex items-center gap-2">
-                            <User className="h-4 w-4" />
-                            <span className="font-semibold text-primary">{post.authorName}</span>
-                        </div>
-                        <time dateTime={post.publishedAt}>{format(new Date(post.publishedAt), 'MMMM d, yyyy')}</time>
-                    </div>
-                </header>
-                
-                {post.mainImage && <div className="relative w-full h-64 md:h-96 mb-12">
-                    <Image
-                        src={urlForImage(post.mainImage).url()}
-                        alt={post.title}
-                        fill
-                        className="object-cover rounded-lg shadow-lg"
-                        data-ai-hint={post.imageHint}
-                        priority
-                    />
-                </div>}
-                
-                <div className="prose lg:prose-xl mx-auto text-justify text-muted-foreground">
-                    <PortableText value={post.body} />
-                </div>
+    const content = (
+      <article className="py-20 md:py-28">
+          <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          <div className="container max-w-4xl mx-auto">
+              <div className="mb-8">
+                  <Button variant="ghost" asChild className="font-ui">
+                      <Link href="/blog">
+                          <ArrowLeft className="mr-2" />
+                          Back to Blog
+                      </Link>
+                  </Button>
+              </div>
+              <header className="mb-12 text-center">
+                  <Badge variant="outline" className="mb-4">{post.categoryName}</Badge>
+                  <h1 className="font-headline text-4xl md:text-5xl font-bold">{post.title}</h1>
+                  <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground font-ui">
+                      <div className="flex items-center gap-2">
+                          <User className="h-4 w-4" />
+                          <span className="font-semibold text-primary">{post.authorName}</span>
+                      </div>
+                      <time dateTime={post.publishedAt}>{format(new Date(post.publishedAt), 'MMMM d, yyyy')}</time>
+                  </div>
+              </header>
+              
+              {post.mainImage && <div className="relative w-full h-64 md:h-96 mb-12">
+                  <Image
+                      src={urlForImage(post.mainImage).url()}
+                      alt={post.title}
+                      fill
+                      className="object-cover rounded-lg shadow-lg"
+                      data-ai-hint={post.imageHint}
+                      priority
+                  />
+              </div>}
+              
+              <div className="prose lg:prose-xl mx-auto text-justify text-muted-foreground">
+                  <PortableText value={post.body} />
+              </div>
 
-            </div>
-        </article>
+          </div>
+      </article>
     )
+
+    if (isPreview) {
+        return (
+            <LiveQueryProvider client={previewClient}>
+                {content}
+            </LiveQueryProvider>
+        )
+    }
+
+    return content;
 }
 
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const { isEnabled } = draftMode();
   const client = getClient(isEnabled);
-  const post = await client.fetch(postQuery, { slug: params.slug });
+  const post = await client.fetch(postQuery, { slug: params.slug }, {
+    next: {
+        tags: [`post:${params.slug}`]
+    }
+  });
 
-  return <PostPageContent post={post} params={params} isPreview={isEnabled} />
+  return <PostPageContent post={post} isPreview={isEnabled} />
 }
 
 export async function generateStaticParams() {

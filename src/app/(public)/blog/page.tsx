@@ -21,7 +21,11 @@ const blogPageQuery = groq`{
 export default async function BlogPage() {
   const { isEnabled } = draftMode();
   const client = getClient(isEnabled);
-  const initialData = await client.fetch(blogPageQuery);
+  const initialData = await client.fetch(blogPageQuery, {}, {
+    next: {
+      tags: ['post', 'category']
+    }
+  });
   
   return <BlogPosts initialData={initialData} isEnabled={isEnabled} query={blogPageQuery} />;
 }

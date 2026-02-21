@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/blocks/HeroSection';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useLiveQuery } from 'next-sanity';
+import { useLiveQuery, LiveQueryProvider } from 'next-sanity';
 import {
     homePageQuery,
     aboutPageQuery,
@@ -12,6 +12,7 @@ import {
     clinicPageQuery,
     faqPageQuery,
   } from '@/sanity/queries';
+import { previewClient } from '@/sanity/client';
 
 const LoadingSkeleton = () => (
   <div className="w-full py-20 md:py-28">
@@ -51,38 +52,57 @@ function HomePageContent({
     pricing: initialPricing,
     testimonials: initialTestimonials,
     clinic: initialClinic,
-    faq: initialFaq
+    faq: initialFaq,
+    isPreview
+}: {
+    home: any,
+    about: any,
+    pricing: any,
+    testimonials: any,
+    clinic: any,
+    faq: any,
+    isPreview: boolean
 }) {
-    const [home] = useLiveQuery(initialHome, homePageQuery);
-    const [about] = useLiveQuery(initialAbout, aboutPageQuery);
-    const [pricing] = useLiveQuery(initialPricing, pricingPageQuery);
-    const [testimonials] = useLiveQuery(initialTestimonials, testimonialsQuery);
-    const [clinic] = useLiveQuery(initialClinic, clinicPageQuery);
-    const [faq] = useLiveQuery(initialFaq, faqPageQuery);
+    const [home] = useLiveQuery(initialHome, homePageQuery, {}, { enabled: isPreview });
+    const [about] = useLiveQuery(initialAbout, aboutPageQuery, {}, { enabled: isPreview });
+    const [pricing] = useLiveQuery(initialPricing, pricingPageQuery, {}, { enabled: isPreview });
+    const [testimonials] = useLiveQuery(initialTestimonials, testimonialsQuery, {}, { enabled: isPreview });
+    const [clinic] = useLiveQuery(initialClinic, clinicPageQuery, {}, { enabled: isPreview });
+    const [faq] = useLiveQuery(initialFaq, faqPageQuery, {}, { enabled: isPreview });
 
-    return (
-        <>
-            <HeroSection 
-                kicker={home?.heroKicker}
-                heading={home?.heroHeading}
-                subheading={home?.heroSubheading}
-                image={home?.heroImage}
-                imageHint={home?.heroImageHint}
-                patientsServed={about?.patientsServed}
-            />
-            <StatsSection 
-                experience={about?.experience}
-                patientsServed={about?.patientsServed}
-                positiveReviews={about?.positiveReviews}
-                consultationsDone={about?.consultationsDone}
-            />
-            <PricingSection pricingOptions={pricing?.pricingOptions} />
-            <TestimonialsSection testimonials={testimonials} />
-            <FeaturedBlogsSection featuredBlogs={home?.featuredBlogsData} />
-            <ClinicDetailsSection clinicLocations={clinic?.clinicLocations} />
-            <FaqSection faqs={faq?.faqs} />
-        </>
-    )
+    const content = (
+      <>
+        <HeroSection 
+            kicker={home?.heroKicker}
+            heading={home?.heroHeading}
+            subheading={home?.heroSubheading}
+            image={home?.heroImage}
+            imageHint={home?.heroImageHint}
+            patientsServed={about?.patientsServed}
+        />
+        <StatsSection 
+            experience={about?.experience}
+            patientsServed={about?.patientsServed}
+            positiveReviews={about?.positiveReviews}
+            consultationsDone={about?.consultationsDone}
+        />
+        <PricingSection pricingOptions={pricing?.pricingOptions} />
+        <TestimonialsSection testimonials={testimonials} />
+        <FeaturedBlogsSection featuredBlogs={home?.featuredBlogsData} />
+        <ClinicDetailsSection clinicLocations={clinic?.clinicLocations} />
+        <FaqSection faqs={faq?.faqs} />
+      </>
+    );
+
+    if (isPreview) {
+        return (
+            <LiveQueryProvider client={previewClient}>
+                {content}
+            </LiveQueryProvider>
+        )
+    }
+
+    return content;
 }
 
 
@@ -104,40 +124,15 @@ export default function HomePage({
     isPreview: boolean
 }) {
 
-    if (isPreview) {
-        return (
-            <HomePageContent
-                home={home}
-                about={about}
-                pricing={pricing}
-                testimonials={testimonials}
-                clinic={clinic}
-                faq={faq}
-            />
-        )
-    }
-
     return (
-        <>
-            <HeroSection 
-                kicker={home?.heroKicker}
-                heading={home?.heroHeading}
-                subheading={home?.heroSubheading}
-                image={home?.heroImage}
-                imageHint={home?.heroImageHint}
-                patientsServed={about?.patientsServed}
-            />
-            <StatsSection 
-                experience={about?.experience}
-                patientsServed={about?.patientsServed}
-                positiveReviews={about?.positiveReviews}
-                consultationsDone={about?.consultationsDone}
-            />
-            <PricingSection pricingOptions={pricing?.pricingOptions} />
-            <TestimonialsSection testimonials={testimonials} />
-            <FeaturedBlogsSection featuredBlogs={home?.featuredBlogsData} />
-            <ClinicDetailsSection clinicLocations={clinic?.clinicLocations} />
-            <FaqSection faqs={faq?.faqs} />
-        </>
+        <HomePageContent
+            home={home}
+            about={about}
+            pricing={pricing}
+            testimonials={testimonials}
+            clinic={clinic}
+            faq={faq}
+            isPreview={isPreview}
+        />
     )
 }

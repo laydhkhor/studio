@@ -25,12 +25,16 @@ export const metadata: Metadata = {
 const query = groq`*[_type == "pricing"][0]`;
 
 export default async function PricingPage() {
-  const data = await client.fetch(query);
-  const { pricingOptions, consultationFeatures } = data;
+  const data = await client.fetch(query, {}, {
+    next: {
+      tags: ['pricing']
+    }
+  });
+  const { pricingOptions, consultationFeatures } = data || {};
 
   const plans = ['chat', 'video', 'clinic'] as const;
 
-  const categoryStartIndices = consultationFeatures.reduce(
+  const categoryStartIndices = consultationFeatures?.reduce(
     (acc: any, category: any, index: number) => {
       if (index === 0) {
         acc.push(0);
@@ -40,12 +44,16 @@ export default async function PricingPage() {
       return acc;
     },
     [] as number[]
-  );
+  ) || [];
 
   const parseValue = (value: string) => {
-    if (value.toLowerCase() === 'true') return true;
-    if (value.toLowerCase() === 'false') return false;
+    if (value && value.toLowerCase() === 'true') return true;
+    if (value && value.toLowerCase() === 'false') return false;
     return value;
+  }
+
+  if (!data) {
+    return null; // or a loading/error state
   }
 
   return (
@@ -66,7 +74,7 @@ export default async function PricingPage() {
             <div className="bg-card p-6 flex items-center">
               <h2 className="font-headline text-xl font-semibold">Features</h2>
             </div>
-            {pricingOptions.map((plan: any) => (
+            {pricingOptions?.map((plan: any) => (
               <div
                 key={plan.type}
                 className="bg-card p-6 text-center flex flex-col justify-center items-center"
@@ -87,7 +95,7 @@ export default async function PricingPage() {
             ))}
 
             {/* Feature Rows */}
-            {consultationFeatures.map((category: any, categoryIndex: number) => (
+            {consultationFeatures?.map((category: any, categoryIndex: number) => (
               <React.Fragment key={category.category}>
                 {/* Category Header */}
                 <div className="col-span-4 bg-muted px-6 py-3">
@@ -137,7 +145,7 @@ export default async function PricingPage() {
 
             {/* Footer/CTA Row */}
             <div className="bg-card p-6"></div>
-            {pricingOptions.map((plan: any) => (
+            {pricingOptions?.map((plan: any) => (
               <div
                 key={plan.type}
                 className="bg-card p-6 text-center flex items-center justify-center"
@@ -151,7 +159,7 @@ export default async function PricingPage() {
 
           {/* Mobile View */}
           <div className="lg:hidden grid grid-cols-1 gap-8">
-            {pricingOptions.map((plan: any) => {
+            {pricingOptions?.map((plan: any) => {
               const planKey = plan.type
                 .toLowerCase()
                 .split(' ')[0] as 'chat' | 'video' | 'clinic';
@@ -185,7 +193,7 @@ export default async function PricingPage() {
                     </div>
                     <ul className="space-y-3">
                       {consultationFeatures
-                        .flatMap((cat: any) => cat.items)
+                        ?.flatMap((cat: any) => cat.items)
                         .map((item: any) => {
                           const value = parseValue(item[planKey as keyof typeof item]);
                           return (

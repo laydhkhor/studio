@@ -15,12 +15,12 @@ export default async function Page() {
   const client = getClient(isEnabled);
 
   const [home, about, pricing, testimonials, clinic, faq] = await Promise.all([
-    client.fetch(homePageQuery),
-    client.fetch(aboutPageQuery),
-    client.fetch(pricingPageQuery),
-    client.fetch(testimonialsQuery),
-    client.fetch(clinicPageQuery),
-    client.fetch(faqPageQuery),
+    client.fetch(homePageQuery, {}, { next: { tags: ['home'] } }),
+    client.fetch(aboutPageQuery, {}, { next: { tags: ['about'] } }),
+    client.fetch(pricingPageQuery, {}, { next: { tags: ['pricing'] } }),
+    client.fetch(testimonialsQuery, {}, { next: { tags: ['testimonial'] } }),
+    client.fetch(clinicPageQuery, {}, { next: { tags: ['clinicPage'] } }),
+    client.fetch(faqPageQuery, {}, { next: { tags: ['faqPage'] } }),
   ]);
 
   return (

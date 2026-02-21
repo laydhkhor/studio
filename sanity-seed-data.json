@@ -1,0 +1,89 @@
+
+{
+    "mutations": [
+        {
+            "createOrReplace": {
+                "_id": "siteSettings",
+                "_type": "settings",
+                "navLinks": [
+                    {"_key": "home", "href": "/", "label": "Home"},
+                    {"_key": "about", "href": "/about", "label": "About"},
+                    {"_key": "blog", "href": "/blog", "label": "Blog"},
+                    {"_key": "pricing", "href": "/pricing", "label": "Pricing"},
+                    {"_key": "clinic", "href": "/clinic", "label": "Clinic"},
+                    {"_key": "contact", "href": "/contact", "label": "Contact"}
+                ],
+                "clinicInfo": {
+                    "address": "Mahishadal, Purba Medinipur, West Bengal, 721628",
+                    "phone": "+91 12345 67890",
+                    "email": "contact@docassist.com"
+                }
+            }
+        },
+        {
+            "createOrReplace": {
+                "_id": "aboutPage",
+                "_type": "about",
+                "title": "About Page",
+                "doctorName": "Dr. Pritam Pattyanayek",
+                "missionStatement": "Our mission is to provide accessible, high-quality healthcare to our community. We believe in a patient-first approach, where your health and well-being are our top priorities. Dr. Pattyanayek is dedicated to building lasting relationships with patients, offering personalized care and guidance.",
+                "bio": "With over a decade of experience in internal medicine, Dr. Pattyanayek is a respected physician known for his compassionate care and clinical expertise. He is committed to staying up-to-date with the latest medical advancements to ensure his patients receive the best possible treatment.",
+                "education": "MBBS from R.G. Kar Medical College, Kolkata",
+                "experience": "15+ Years",
+                "patientsServed": "2500+",
+                "positiveReviews": "98%",
+                "consultationsDone": "5000+"
+            }
+        },
+        {
+            "createOrReplace": {
+                "_id": "homePage",
+                "_type": "home",
+                "title": "Home Page",
+                "hero": {
+                    "kicker": "Your Health, Our Priority",
+                    "heading": "Expert Healthcare You Can Trust",
+                    "subheading": "Experience compassionate and comprehensive medical care with Dr. Pritam Pattyanayek. We are dedicated to providing personalized consultations to help you achieve your best health."
+                }
+            }
+        },
+        {
+            "createOrReplace": {
+                "_id": "author_pritam",
+                "_type": "author",
+                "name": "Dr. Pritam Pattyanayek"
+            }
+        },
+        {
+            "createOrReplace": {
+                "_id": "cat_health_tips",
+                "_type": "category",
+                "title": "Health Tips"
+            }
+        },
+        {
+            "createOrReplace": {
+                "_id": "post_1",
+                "_type": "post",
+                "title": "5 Tips for a Healthy Heart",
+                "slug": { "current": "5-tips-for-a-healthy-heart" },
+                "author": { "_type": "reference", "_ref": "author_pritam" },
+                "category": { "_type": "reference", "_ref": "cat_health_tips" },
+                "publishedAt": "2024-07-20T10:00:00Z",
+                "excerpt": "Maintaining a healthy heart is crucial for overall well-being. Discover five practical tips you can incorporate into your daily routine to improve your cardiovascular health.",
+                "body": [
+                    {
+                        "_type": "block",
+                        "style": "normal",
+                        "children": [
+                            {
+                                "_type": "span",
+                                "text": "A healthy heart is the cornerstone of a healthy life. Here are five essential tips to keep your heart in top shape."
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
