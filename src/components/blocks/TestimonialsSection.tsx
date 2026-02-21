@@ -39,17 +39,19 @@ function Rating({ value }: { value: number }) {
 }
 
 function TimeAgo({ date }: { date: string }) {
-  const [timeAgo, setTimeAgo] = React.useState<string | null>(null);
+  const [timeAgo, setTimeAgo] = React.useState<string>('\u00A0'); // non-breaking space
 
   React.useEffect(() => {
+    // This will only run on the client, after initial hydration
     setTimeAgo(formatDistanceToNow(new Date(date), { addSuffix: true }));
   }, [date]);
 
-  if (!timeAgo) {
-    return <Skeleton className="h-4 w-20" />;
-  }
-
-  return <p className="text-xs text-muted-foreground">{timeAgo}</p>;
+  // We give it a fixed width to prevent layout shift when the time loads
+  return (
+    <p className="text-xs text-muted-foreground w-24 text-right">
+      {timeAgo}
+    </p>
+  );
 }
 
 export default function TestimonialsSection() {
