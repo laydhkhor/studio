@@ -40,7 +40,7 @@ export default function HeroSection() {
                 asChild
                 className="w-full sm:w-auto"
               >
-                <Link href="/about">Learn More</Link>
+                <Link href="/clinic">View Clinics</Link>
               </Button>
             </div>
           </div>
