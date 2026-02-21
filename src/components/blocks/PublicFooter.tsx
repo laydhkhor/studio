@@ -12,6 +12,12 @@ import { cn } from '@/lib/utils';
 export default function PublicFooter() {
   const [rating, setRating] = React.useState(0);
   const [hover, setHover] = React.useState(0);
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
 
   return (
     <footer className="bg-card font-ui text-card-foreground border-t">
@@ -51,8 +57,8 @@ export default function PublicFooter() {
           <div className="md:col-span-3">
              <h3 className="font-semibold tracking-wider text-sm uppercase">Write a Review</h3>
              <form className="mt-4 space-y-2">
-              <div className="flex justify-center md:justify-start space-x-1 mb-2">
-                {[...Array(5)].map((_, index) => {
+              <div className="flex justify-center md:justify-start space-x-1 mb-2 h-9">
+                {isClient && [...Array(5)].map((_, index) => {
                   const starValue = index + 1;
                   return (
                     <Button
