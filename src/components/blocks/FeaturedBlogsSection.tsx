@@ -39,7 +39,7 @@ export default function FeaturedBlogsSection() {
                 <CardTitle className="font-headline h-14">{post.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground h-16">{post.excerpt}</p>
+                <p className="text-muted-foreground h-16 text-justify">{post.excerpt}</p>
               </CardContent>
               <CardFooter>
                  <Button variant="link" asChild className="p-0 font-ui">

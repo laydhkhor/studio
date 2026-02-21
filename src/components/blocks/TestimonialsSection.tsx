@@ -147,7 +147,7 @@ export default function TestimonialsSection() {
                             {formatDistanceToNow(new Date(testimonial.date), { addSuffix: true })}
                           </p>
                         </div>
-                        <p className="text-base text-muted-foreground flex-grow">
+                        <p className="text-base text-muted-foreground flex-grow text-justify">
                           "{testimonial.comment}"
                         </p>
                         <div className="flex items-center gap-4 pt-4 border-t w-full">
