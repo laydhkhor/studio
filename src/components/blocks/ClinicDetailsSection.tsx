@@ -3,25 +3,40 @@
 import * as React from 'react';
 import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { clinicLocations } from '@/lib/placeholder-data';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export default function ClinicDetailsSection() {
-  const [pinFilter, setPinFilter] = React.useState('');
-  const [filteredClinics, setFilteredClinics] = React.useState(clinicLocations);
+  const [locationFilter, setLocationFilter] = React.useState('All');
+  const [pinFilter, setPinFilter] = React.useState('All');
 
-  const handleFilter = () => {
-    if (pinFilter.trim() === '') {
-      setFilteredClinics(clinicLocations);
-    } else {
-      setFilteredClinics(clinicLocations.filter(c => c.pinCode.includes(pinFilter.trim())));
+  const locations = ['All', ...Array.from(new Set(clinicLocations.map((c) => c.name.replace(' Clinic', ''))))];
+  const pinCodes = ['All', ...Array.from(new Set(clinicLocations.map((c) => c.pinCode)))];
+
+  const filteredClinics = React.useMemo(() => {
+    let items = [...clinicLocations];
+
+    if (locationFilter !== 'All') {
+      items = items.filter((clinic) => clinic.name.includes(locationFilter));
     }
-  };
 
-  const clearFilter = () => {
-    setPinFilter('');
-    setFilteredClinics(clinicLocations);
+    if (pinFilter !== 'All') {
+      items = items.filter((clinic) => clinic.pinCode === pinFilter);
+    }
+    
+    return items;
+  }, [locationFilter, pinFilter]);
+
+  const clearFilters = () => {
+    setLocationFilter('All');
+    setPinFilter('All');
   };
 
   return (
@@ -33,18 +48,30 @@ export default function ClinicDetailsSection() {
               Visit Our Clinics
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Find the nearest clinic for your consultation. Enter your PIN code to find the closest location.
+              Find the nearest clinic for your consultation. Use the filters to select by location or PIN code.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-2">
-              <Input
-                type="text"
-                placeholder="Enter PIN Code (e.g., 721628)"
-                value={pinFilter}
-                onChange={(e) => setPinFilter(e.target.value)}
-                className="max-w-xs"
-              />
-              <Button onClick={handleFilter}>Search</Button>
-              <Button variant="outline" onClick={clearFilter}>View All</Button>
+              <Select value={locationFilter} onValueChange={setLocationFilter}>
+                <SelectTrigger className="w-full sm:w-auto">
+                  <SelectValue placeholder="Filter by Location" />
+                </SelectTrigger>
+                <SelectContent>
+                  {locations.map((location) => (
+                    <SelectItem key={location} value={location}>{location}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+               <Select value={pinFilter} onValueChange={setPinFilter}>
+                <SelectTrigger className="w-full sm:w-auto">
+                  <SelectValue placeholder="Filter by PIN" />
+                </SelectTrigger>
+                <SelectContent>
+                  {pinCodes.map((pin) => (
+                    <SelectItem key={pin} value={pin}>{pin}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button variant="outline" onClick={clearFilters}>View All</Button>
             </div>
           </div>
           <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -98,7 +125,7 @@ export default function ClinicDetailsSection() {
               )})
             ) : (
               <div className="md:col-span-2 flex items-center justify-center bg-muted/50 rounded-lg p-8">
-                <p className="text-muted-foreground text-center">No clinics found for the specified PIN code. Try another one or view all clinics.</p>
+                <p className="text-muted-foreground text-center">No clinics found for the selected filters.</p>
               </div>
             )}
           </div>
