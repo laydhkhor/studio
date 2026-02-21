@@ -17,11 +17,11 @@ export default async function PublicLayout({
   return (
     <div className="flex min-h-screen flex-col">
        {isEnabled && <ExitPreviewButton />}
-      <PublicHeader navLinks={settings.navLinks} />
+      <PublicHeader navLinks={settings?.navLinks} />
       <main className="flex-1">
         {children}
       </main>
-      <PublicFooter navLinks={settings.navLinks} clinicInfo={settings.clinicInfo} />
+      <PublicFooter navLinks={settings?.navLinks} clinicInfo={settings?.clinicInfo} />
     </div>
   );
 }
