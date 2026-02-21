@@ -63,8 +63,13 @@ export default function PricingPage() {
                 key={plan.type}
                 className="bg-card p-6 text-center flex flex-col justify-end"
               >
-                {plan.tag === 'Most Popular' && (
-                  <Badge className="mb-2 w-fit mx-auto">{plan.tag}</Badge>
+                {plan.tag && (
+                  <Badge className={cn(
+                    "mb-2 w-fit mx-auto font-ui",
+                    plan.tag === 'Most Popular' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                  )}>
+                    {plan.tag}
+                  </Badge>
                 )}
                 <h3 className="font-headline text-xl font-semibold">
                   {plan.type}
@@ -151,6 +156,14 @@ export default function PricingPage() {
                   )}
                 >
                   <CardHeader className="text-center">
+                    {plan.tag && (
+                      <Badge className={cn(
+                        "w-fit mx-auto mb-2 font-ui",
+                        plan.tag === 'Most Popular' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                      )}>
+                        {plan.tag}
+                      </Badge>
+                    )}
                     <CardTitle className="font-headline text-2xl">
                       {plan.type}
                     </CardTitle>
