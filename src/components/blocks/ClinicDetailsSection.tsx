@@ -87,7 +87,7 @@ export default function ClinicDetailsSection() {
                   <Input
                     type="search"
                     placeholder="Search by PIN..."
-                    className="w-full sm:w-[150px] rounded-lg bg-background pl-8"
+                    className="w-full sm:w-[200px] rounded-lg bg-background pl-8"
                     value={pinSearch}
                     onChange={(e) => setPinSearch(e.target.value)}
                   />
