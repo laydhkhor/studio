@@ -10,6 +10,8 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { GoogleIcon } from '@/components/icons';
+import { Facebook } from 'lucide-react';
 
 export default function LoginPage() {
   return (
@@ -23,9 +25,11 @@ export default function LoginPage() {
       <CardContent className="grid gap-4">
         <div className="grid grid-cols-2 gap-6">
           <Button variant="outline">
+            <GoogleIcon className="mr-2 h-4 w-4" />
             Google
           </Button>
           <Button variant="outline">
+            <Facebook className="mr-2 h-4 w-4 fill-current" />
             Facebook
           </Button>
         </div>

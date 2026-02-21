@@ -76,6 +76,8 @@ export const featuredBlogs = [
     imageUrl: 'https://picsum.photos/seed/blog1/600/400',
     imageHint: 'healthy food',
     slug: '/blog/healthy-heart-tips',
+    category: 'Cardiology',
+    date: '2024-07-22T09:00:00Z',
   },
   {
     id: 2,
@@ -84,6 +86,8 @@ export const featuredBlogs = [
     imageUrl: 'https://picsum.photos/seed/blog2/600/400',
     imageHint: 'person jogging',
     slug: '/blog/importance-of-exercise',
+    category: 'Lifestyle',
+    date: '2024-07-20T09:00:00Z',
   },
   {
     id: 3,
@@ -92,8 +96,55 @@ export const featuredBlogs = [
     imageUrl: 'https://picsum.photos/seed/blog3/600/400',
     imageHint: 'person meditating',
     slug: '/blog/managing-stress',
+    category: 'Mental Health',
+    date: '2024-07-18T09:00:00Z',
   },
 ];
+
+export const allBlogs = [
+  ...featuredBlogs,
+  {
+    id: 4,
+    title: 'Understanding Diabetes: Causes and Prevention',
+    excerpt: 'A comprehensive guide to understanding diabetes, its common causes, and lifestyle changes you can make to prevent it.',
+    imageUrl: 'https://picsum.photos/seed/blog4/600/400',
+    imageHint: 'medical chart',
+    slug: '/blog/understanding-diabetes',
+    category: 'Health Education',
+    date: '2024-07-15T09:00:00Z',
+  },
+  {
+    id: 5,
+    title: 'Seasonal Allergies: How to Find Relief',
+    excerpt: 'Don\'t let seasonal allergies ruin your day. Learn about common triggers and effective strategies to manage your symptoms.',
+    imageUrl: 'https://picsum.photos/seed/blog5/600/400',
+    imageHint: 'flowers field',
+    slug: '/blog/seasonal-allergies',
+    category: 'Wellness',
+    date: '2024-07-10T09:00:00Z',
+  },
+    {
+    id: 6,
+    title: 'The Benefits of a Good Night\'s Sleep',
+    excerpt: 'Quality sleep is crucial for your physical and mental health. Explore the science of sleep and get tips for a more restful night.',
+    imageUrl: 'https://picsum.photos/seed/blog6/600/400',
+    imageHint: 'person sleeping',
+    slug: '/blog/benefits-of-sleep',
+    category: 'Lifestyle',
+    date: '2024-07-05T09:00:00Z',
+  },
+    {
+    id: 7,
+    title: 'Your Guide to a Balanced Diet',
+    excerpt: 'Eating a balanced diet is fundamental to good health. This guide breaks down the essentials of nutrition to help you make healthier choices.',
+    imageUrl: 'https://picsum.photos/seed/blog7/600/400',
+    imageHint: 'healthy vegetables',
+    slug: '/blog/balanced-diet-guide',
+    category: 'Nutrition',
+    date: '2024-06-28T09:00:00Z',
+  }
+].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
 
 export const testimonials = [
   {
