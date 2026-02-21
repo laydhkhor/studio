@@ -3,16 +3,14 @@
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/blocks/HeroSection';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useLiveQuery, LiveQueryProvider } from 'next-sanity/live';
 import {
-    homePageQuery,
     aboutPageQuery,
-    pricingPageQuery,
-    testimonialsQuery,
     clinicPageQuery,
     faqPageQuery,
-  } from '@/sanity/queries';
-import { previewClient } from '@/sanity/client';
+    homePageQuery,
+    pricingPageQuery,
+    testimonialsQuery,
+} from '@/sanity/queries';
 
 const LoadingSkeleton = () => (
   <div className="w-full py-20 md:py-28">
@@ -46,13 +44,14 @@ const FaqSection = dynamic(() => import('@/components/blocks/FaqSection'), {
   loading: () => <LoadingSkeleton />,
 });
 
-function HomePageContent({
-    home: initialHome,
-    about: initialAbout,
-    pricing: initialPricing,
-    testimonials: initialTestimonials,
-    clinic: initialClinic,
-    faq: initialFaq,
+
+export default function HomePage({
+    home,
+    about,
+    pricing,
+    testimonials,
+    clinic,
+    faq,
     isPreview
 }: {
     home: any,
@@ -63,14 +62,8 @@ function HomePageContent({
     faq: any,
     isPreview: boolean
 }) {
-    const [home] = useLiveQuery(initialHome, homePageQuery, {}, { enabled: isPreview });
-    const [about] = useLiveQuery(initialAbout, aboutPageQuery, {}, { enabled: isPreview });
-    const [pricing] = useLiveQuery(initialPricing, pricingPageQuery, {}, { enabled: isPreview });
-    const [testimonials] = useLiveQuery(initialTestimonials, testimonialsQuery, {}, { enabled: isPreview });
-    const [clinic] = useLiveQuery(initialClinic, clinicPageQuery, {}, { enabled: isPreview });
-    const [faq] = useLiveQuery(initialFaq, faqPageQuery, {}, { enabled: isPreview });
 
-    const content = (
+    return (
       <>
         <HeroSection 
             kicker={home?.heroKicker}
@@ -93,46 +86,4 @@ function HomePageContent({
         <FaqSection faqs={faq?.faqs} />
       </>
     );
-
-    if (isPreview) {
-        return (
-            <LiveQueryProvider client={previewClient}>
-                {content}
-            </LiveQueryProvider>
-        )
-    }
-
-    return content;
-}
-
-
-export default function HomePage({
-    home,
-    about,
-    pricing,
-    testimonials,
-    clinic,
-    faq,
-    isPreview
-}: {
-    home: any,
-    about: any,
-    pricing: any,
-    testimonials: any,
-    clinic: any,
-    faq: any,
-    isPreview: boolean
-}) {
-
-    return (
-        <HomePageContent
-            home={home}
-            about={about}
-            pricing={pricing}
-            testimonials={testimonials}
-            clinic={clinic}
-            faq={faq}
-            isPreview={isPreview}
-        />
-    )
 }
