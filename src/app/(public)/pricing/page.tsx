@@ -55,13 +55,13 @@ export default function PricingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="hidden lg:grid grid-cols-4 gap-px bg-border rounded-lg overflow-hidden">
             {/* Header Row */}
-            <div className="bg-card p-6">
+            <div className="bg-card p-6 flex items-center">
               <h2 className="font-headline text-xl font-semibold">Features</h2>
             </div>
             {pricingOptions.map((plan) => (
               <div
                 key={plan.type}
-                className="bg-card p-6 text-center flex flex-col justify-end"
+                className="bg-card p-6 text-center flex flex-col justify-center"
               >
                 {plan.tag && (
                   <Badge className={cn(
