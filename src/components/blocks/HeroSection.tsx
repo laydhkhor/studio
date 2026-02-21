@@ -46,7 +46,7 @@ export default function HeroSection() {
           </div>
 
           {/* Right Column - Image and Floating Elements */}
-          <div className="relative hidden md:flex justify-center items-center h-[500px]">
+          <div className="relative mt-12 flex justify-center items-center h-[500px] md:mt-0">
             {/* Background Blobs */}
             <div className="absolute top-0 -left-4 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
             <div className="absolute top-0 -right-4 w-72 h-72 bg-accent/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob [animation-delay:2s]"></div>
@@ -78,7 +78,7 @@ export default function HeroSection() {
                 </div>
             </Card>
             
-             <Card className="absolute z-20 top-1/3 -right-8 p-3 flex items-center gap-3 shadow-lg animate-float [animation-delay:1s]">
+             <Card className="absolute z-20 top-1/3 right-0 p-3 flex items-center gap-3 shadow-lg animate-float [animation-delay:1s]">
                 <div className="p-2 bg-green-100 rounded-full">
                     <Video className="text-accent" />
                 </div>
