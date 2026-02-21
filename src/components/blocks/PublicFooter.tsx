@@ -24,7 +24,7 @@ export default function PublicFooter() {
                 DocAssist
               </span>
             </Link>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm text-justify">
               Your trusted partner in healthcare. Providing quality consultations with Dr. Pritam Pattyanayek.
             </p>
           </div>
