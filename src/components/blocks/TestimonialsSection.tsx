@@ -1,3 +1,6 @@
+'use client';
+
+import * as React from 'react';
 import Image from 'next/image';
 import { Star } from 'lucide-react';
 import {
@@ -10,6 +13,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { testimonials } from '@/lib/placeholder-data';
+import { Button } from '@/components/ui/button';
 
 function Rating({ value }: { value: number }) {
   return (
@@ -27,6 +31,16 @@ function Rating({ value }: { value: number }) {
 }
 
 export default function TestimonialsSection() {
+  const [filter, setFilter] = React.useState('All');
+  const locations = ['All', ...Array.from(new Set(testimonials.map((t) => t.location)))];
+
+  const filteredTestimonials = React.useMemo(() => {
+    if (filter === 'All') {
+      return testimonials;
+    }
+    return testimonials.filter((t) => t.location === filter);
+  }, [filter]);
+
   return (
     <section className="bg-secondary py-16 md:py-24">
       <div className="container px-4 md:px-6">
@@ -38,46 +52,67 @@ export default function TestimonialsSection() {
             See what people are saying about their experience with DocAssist.
           </p>
         </div>
+
+        <div className="mt-8 flex justify-center gap-2 flex-wrap">
+          {locations.map((location) => (
+            <Button
+              key={location}
+              variant={filter === location ? 'default' : 'outline'}
+              onClick={() => setFilter(location)}
+              className="font-ui"
+            >
+              {location}
+            </Button>
+          ))}
+        </div>
+
         <Carousel
           opts={{
             align: 'start',
-            loop: true,
+            loop: filteredTestimonials.length > 2,
           }}
-          className="w-full max-w-5xl mx-auto mt-12"
+          className="w-full max-w-5xl mx-auto mt-8"
+          key={filter}
         >
           <CarouselContent>
-            {testimonials.map((testimonial) => (
-              <CarouselItem key={testimonial.id} className="md:basis-1/2 lg:basis-1/3">
-                <div className="p-1">
-                  <Card className="h-full shadow-md">
-                    <CardContent className="flex flex-col items-start gap-4 p-6">
-                       <Rating value={testimonial.rating} />
-                      <p className="text-base text-muted-foreground flex-grow">
-                        "{testimonial.comment}"
-                      </p>
-                      <div className="flex items-center gap-4 pt-4 border-t w-full">
-                        <Avatar>
-                          <AvatarImage
-                            src={testimonial.avatarUrl}
-                            alt={testimonial.name}
-                            data-ai-hint={testimonial.avatarHint}
-                          />
-                          <AvatarFallback>
-                            {testimonial.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-semibold font-ui">{testimonial.name}</p>
-                          <p className="text-sm text-muted-foreground font-ui">
-                            {testimonial.location}
-                          </p>
+            {filteredTestimonials.length > 0 ? (
+              filteredTestimonials.map((testimonial) => (
+                <CarouselItem key={testimonial.id} className="md:basis-1/2 lg:basis-1/3">
+                  <div className="p-1 h-full">
+                    <Card className="h-full shadow-md flex flex-col">
+                      <CardContent className="flex flex-col items-start gap-4 p-6 flex-grow">
+                        <Rating value={testimonial.rating} />
+                        <p className="text-base text-muted-foreground flex-grow">
+                          "{testimonial.comment}"
+                        </p>
+                        <div className="flex items-center gap-4 pt-4 border-t w-full">
+                          <Avatar>
+                            <AvatarImage
+                              src={testimonial.avatarUrl}
+                              alt={testimonial.name}
+                              data-ai-hint={testimonial.avatarHint}
+                            />
+                            <AvatarFallback>
+                              {testimonial.name.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-semibold font-ui">{testimonial.name}</p>
+                            <p className="text-sm text-muted-foreground font-ui">
+                              {testimonial.location}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CarouselItem>
-            ))}
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))
+            ) : (
+              <div className="w-full text-center text-muted-foreground py-16">
+                  No testimonials found for this location.
+              </div>
+            )}
           </CarouselContent>
           <CarouselPrevious className="hidden md:flex"/>
           <CarouselNext className="hidden md:flex"/>
