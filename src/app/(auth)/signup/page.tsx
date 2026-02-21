@@ -18,14 +18,10 @@ export default function SignupPage() {
       <CardHeader className="text-center">
         <CardTitle className="font-headline text-2xl">Create an Account</CardTitle>
         <CardDescription className="font-ui">
-          Start your journey to better health today.
+          Enter your email and password to get started.
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
-        <div className="grid gap-2">
-          <Label htmlFor="full-name">Full Name</Label>
-          <Input id="full-name" placeholder="Pritam Pattyanayek" required />
-        </div>
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" placeholder="m@example.com" required />
