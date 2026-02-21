@@ -3,7 +3,6 @@ import HeroSection from '@/components/blocks/HeroSection';
 import { Skeleton } from '@/components/ui/skeleton';
 import { client } from '@/sanity/client';
 import { groq } from 'next-sanity';
-import { LiveQuery } from 'next-sanity/preview/live-query';
 import { draftMode } from 'next/headers';
 
 const LoadingSkeleton = () => (
@@ -60,48 +59,37 @@ const testimonialsQuery = groq`*[_type == "testimonial"] | order(date desc)`;
 const clinicPageQuery = groq`*[_type == "clinicPage"][0]`;
 const faqPageQuery = groq`*[_type == "faqPage"][0]`;
 
-export default function HomePage() {
-  const { isEnabled } = draftMode();
+export default async function HomePage() {
+  const [home, about, pricing, testimonials, clinic, faq] = await Promise.all([
+    client.fetch(homePageQuery),
+    client.fetch(aboutPageQuery),
+    client.fetch(pricingPageQuery),
+    client.fetch(testimonialsQuery),
+    client.fetch(clinicPageQuery),
+    client.fetch(faqPageQuery),
+  ]);
 
   return (
-    <LiveQuery
-      enabled={isEnabled}
-      query={[homePageQuery, aboutPageQuery, pricingPageQuery, testimonialsQuery, clinicPageQuery, faqPageQuery]}
-      initialData={
-        await Promise.all([
-          client.fetch(homePageQuery),
-          client.fetch(aboutPageQuery),
-          client.fetch(pricingPageQuery),
-          client.fetch(testimonialsQuery),
-          client.fetch(clinicPageQuery),
-          client.fetch(faqPageQuery),
-        ]).then(([home, about, pricing, testimonials, clinic, faq]) => ({ home, about, pricing, testimonials, clinic, faq }))
-      }
-      as="div"
-    >
-      {({ data }) => (
-        <>
-          <HeroSection 
-            kicker={data.home.heroKicker}
-            heading={data.home.heroHeading}
-            subheading={data.home.heroSubheading}
-            image={data.home.heroImage}
-            imageHint={data.home.heroImageHint}
-            patientsServed={data.about.patientsServed}
-          />
-          <StatsSection 
-            experience={data.about.experience}
-            patientsServed={data.about.patientsServed}
-            positiveReviews={data.about.positiveReviews}
-            consultationsDone={data.about.consultationsDone}
-          />
-          <PricingSection pricingOptions={data.pricing.pricingOptions} />
-          <TestimonialsSection testimonials={data.testimonials} />
-          <FeaturedBlogsSection featuredBlogs={data.home.featuredBlogsData} />
-          <ClinicDetailsSection clinicLocations={data.clinic.clinicLocations} />
-          <FaqSection faqs={data.faq.faqs} />
-        </>
-      )}
-    </LiveQuery>
+    <>
+      <HeroSection 
+        kicker={home.heroKicker}
+        heading={home.heroHeading}
+        subheading={home.heroSubheading}
+        image={home.heroImage}
+        imageHint={home.heroImageHint}
+        patientsServed={about.patientsServed}
+      />
+      <StatsSection 
+        experience={about.experience}
+        patientsServed={about.patientsServed}
+        positiveReviews={about.positiveReviews}
+        consultationsDone={about.consultationsDone}
+      />
+      <PricingSection pricingOptions={pricing.pricingOptions} />
+      <TestimonialsSection testimonials={testimonials} />
+      <FeaturedBlogsSection featuredBlogs={home.featuredBlogsData} />
+      <ClinicDetailsSection clinicLocations={clinic.clinicLocations} />
+      <FaqSection faqs={faq.faqs} />
+    </>
   );
 }

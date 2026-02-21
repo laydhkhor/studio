@@ -3,7 +3,6 @@ import { client } from '@/sanity/client';
 import { groq } from 'next-sanity';
 import type { Metadata } from 'next';
 import { draftMode } from 'next/headers';
-import { LiveQuery } from 'next-sanity/preview/live-query';
 
 export const metadata: Metadata = {
   title: 'Our Clinics in Mahishadal & Nandakumar | DocAssist',
@@ -13,12 +12,9 @@ export const metadata: Metadata = {
 const query = groq`*[_type == "clinicPage"][0]`;
 
 export default async function ClinicPage() {
-  const { isEnabled } = draftMode();
   const data = await client.fetch(query);
 
   return (
-    <LiveQuery enabled={isEnabled} query={query} initialData={data} as="div">
-      {({ data: liveData }) => <ClinicDetailsSection clinicLocations={liveData.clinicLocations} />}
-    </LiveQuery>
+    <ClinicDetailsSection clinicLocations={data.clinicLocations} />
   )
 }

@@ -3,7 +3,6 @@ import PublicFooter from '@/components/blocks/PublicFooter';
 import { client } from '@/sanity/client';
 import { groq } from 'next-sanity';
 import { draftMode } from 'next/headers';
-import PreviewProvider from '@/components/PreviewProvider';
 import ExitPreviewButton from '@/components/ExitPreviewButton';
 
 export default async function PublicLayout({
@@ -20,13 +19,7 @@ export default async function PublicLayout({
        {isEnabled && <ExitPreviewButton />}
       <PublicHeader navLinks={settings.navLinks} />
       <main className="flex-1">
-         {isEnabled ? (
-          <PreviewProvider token={client.token!}>
-            {children}
-          </PreviewProvider>
-        ) : (
-          children
-        )}
+        {children}
       </main>
       <PublicFooter navLinks={settings.navLinks} clinicInfo={settings.clinicInfo} />
     </div>
