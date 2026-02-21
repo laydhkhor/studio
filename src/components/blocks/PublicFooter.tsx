@@ -3,13 +3,12 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Logo } from '@/components/icons';
-import { navLinks, clinicInfo } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export default function PublicFooter() {
+export default function PublicFooter({ navLinks, clinicInfo }: any) {
   const [rating, setRating] = React.useState(0);
   const [hover, setHover] = React.useState(0);
   const [isClient, setIsClient] = React.useState(false);
@@ -18,6 +17,9 @@ export default function PublicFooter() {
     setIsClient(true);
   }, []);
 
+  if (!navLinks || !clinicInfo) {
+    return null;
+  }
 
   return (
     <footer className="bg-card font-ui text-card-foreground border-t">
@@ -37,7 +39,7 @@ export default function PublicFooter() {
           <div className="md:col-span-3">
             <h3 className="font-semibold tracking-wider text-sm uppercase">Quick Links</h3>
             <ul className="mt-4 space-y-2 columns-2">
-              {navLinks.map((link) => (
+              {navLinks.map((link: any) => (
                 <li key={link.href} className="break-inside-avoid">
                   <Link href={link.href} className="text-muted-foreground hover:text-primary text-sm">
                     {link.label}

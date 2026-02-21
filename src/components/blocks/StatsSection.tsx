@@ -1,29 +1,28 @@
 'use client';
 
-import { doctorDetails } from '@/lib/placeholder-data';
 import { Award, Users, Star, Stethoscope } from 'lucide-react';
 import AnimatedCounter from '@/components/ui/animated-counter';
 
-export default function StatsSection() {
+export default function StatsSection({ experience, patientsServed, positiveReviews, consultationsDone}: any) {
   const stats = [
     {
       icon: Award,
-      value: doctorDetails.experience,
+      value: experience,
       label: 'Years Experience',
     },
     {
       icon: Users,
-      value: doctorDetails.patientsServed,
+      value: patientsServed,
       label: 'Happy Patients',
     },
     {
       icon: Star,
-      value: doctorDetails.positiveReviews,
+      value: positiveReviews,
       label: 'Positive Reviews',
     },
     {
       icon: Stethoscope,
-      value: doctorDetails.consultationsDone,
+      value: consultationsDone,
       label: 'Consultations',
     },
   ];
@@ -33,6 +32,7 @@ export default function StatsSection() {
       <div className="container">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-y-10 text-center sm:grid-cols-2 sm:gap-x-6 md:gap-x-8 lg:grid-cols-4">
           {stats.map((stat, index) => {
+            if (!stat.value) return null;
             const numericValue = parseInt(stat.value, 10);
             const suffix = stat.value.replace(String(numericValue), '');
 

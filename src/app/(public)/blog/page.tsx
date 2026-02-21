@@ -11,7 +11,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { allBlogs } from '@/lib/placeholder-data';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
@@ -22,19 +21,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useLiveQuery } from 'next-sanity/preview';
+import { client } from '@/sanity/client';
+import { groq } from 'next-sanity';
+import { urlForImage } from '@/sanity/image';
+
+const postsQuery = groq`*[_type == "post"]{
+  _id,
+  title,
+  "slug": slug.current,
+  mainImage,
+  imageHint,
+  excerpt,
+  "category": category->title,
+  "date": publishedAt
+} | order(date desc)`;
+const categoriesQuery = groq`*[_type == "category"].title`;
 
 export default function BlogPage() {
+  const [initialPosts, initialCategories] = React.use(Promise.all([
+    client.fetch(postsQuery),
+    client.fetch(categoriesQuery)
+  ]));
+
+  const [allBlogs] = useLiveQuery(initialPosts, postsQuery);
+  const [categoriesData] = useLiveQuery(initialCategories, categoriesQuery);
+  
   const [searchTerm, setSearchTerm] = React.useState('');
   const [categoryFilter, setCategoryFilter] = React.useState('All');
   const [sortOrder, setSortOrder] = React.useState('newest');
 
-  const categories = [
-    'All',
-    ...Array.from(new Set(allBlogs.map((post) => post.category))),
-  ];
+  const categories = ['All', ...categoriesData];
 
   const filteredAndSortedBlogs = React.useMemo(() => {
-    let blogs = allBlogs.filter((post) => {
+    let blogs = allBlogs.filter((post: any) => {
       const searchTermMatch =
         searchTerm === '' ||
         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -46,25 +66,25 @@ export default function BlogPage() {
 
     if (sortOrder === 'oldest') {
       blogs.sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()
       );
     } else if (sortOrder === 'lastMonth') {
       const oneMonthAgo = new Date();
       oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
       blogs = blogs
-        .filter((post) => new Date(post.date) >= oneMonthAgo)
+        .filter((post: any) => new Date(post.date) >= oneMonthAgo)
         .sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
     } else {
       // 'newest' is the default
       blogs.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
     }
 
     return blogs;
-  }, [searchTerm, categoryFilter, sortOrder]);
+  }, [allBlogs, searchTerm, categoryFilter, sortOrder]);
 
   return (
     <div className="py-20 md:py-28">
@@ -95,7 +115,7 @@ export default function BlogPage() {
               <SelectValue placeholder="Filter by Category" />
             </SelectTrigger>
             <SelectContent>
-              {categories.map((category) => (
+              {categories.map((category: any) => (
                 <SelectItem key={category} value={category}>
                   {category}
                 </SelectItem>
@@ -116,14 +136,14 @@ export default function BlogPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredAndSortedBlogs.length > 0 ? (
-            filteredAndSortedBlogs.map((post) => (
+            filteredAndSortedBlogs.map((post: any) => (
               <Card
-                key={post.id}
+                key={post._id}
                 className="overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col"
               >
                 <Link href={`/blog/${post.slug}`} className="block">
                   <Image
-                    src={post.imageUrl}
+                    src={urlForImage(post.mainImage).width(600).height(400).url()}
                     alt={post.title}
                     width={600}
                     height={400}

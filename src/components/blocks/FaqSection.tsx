@@ -4,9 +4,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { faqs } from '@/lib/placeholder-data';
 
-export default function FaqSection() {
+export default function FaqSection({ faqs }: any) {
+  if (!faqs) {
+    return null;
+  }
   return (
     <section className="py-20 md:py-28">
       <div className="container">
@@ -20,7 +22,7 @@ export default function FaqSection() {
         </div>
         <div className="mt-12 max-w-3xl mx-auto">
           <Accordion type="single" collapsible className="w-full">
-            {faqs.map((faq, index) => (
+            {faqs.map((faq: any, index: number) => (
               <AccordionItem key={index} value={`item-${index}`}>
                 <AccordionTrigger className="font-ui font-semibold text-lg text-left hover:no-underline">
                   {faq.question}

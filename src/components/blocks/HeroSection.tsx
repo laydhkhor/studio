@@ -1,15 +1,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { doctorDetails } from '@/lib/placeholder-data';
-import { ArrowRight, Heart, Mail, Phone, Star, Video } from 'lucide-react';
+import { ArrowRight, Heart, Phone, Star, Video } from 'lucide-react';
 import { Card } from '../ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { urlForImage } from '@/sanity/image';
 
-export default function HeroSection() {
-  const doctorImage = PlaceHolderImages.find((img) => img.id === 'doctor-pritam');
-  const patientAvatar = PlaceHolderImages.find((img) => img.id === 'testimonial-1');
+export default function HeroSection({ kicker, heading, subheading, image, imageHint, patientsServed }: any) {
+  const patientAvatar = {
+    imageUrl: 'https://picsum.photos/seed/user1/100/100',
+    imageHint: 'person smiling'
+  };
 
   return (
     <section className="relative bg-background overflow-hidden py-20 md:py-28">
@@ -18,16 +19,14 @@ export default function HeroSection() {
           {/* Left Column - Text Content */}
           <div className="text-center md:text-left">
             <span className="font-ui font-semibold text-primary tracking-widest uppercase">
-              Expert Medical Care
+              {kicker}
             </span>
-            <h1 className="mt-4 font-headline text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
-              Your <span className="text-primary">Health</span>, <br /> Our Top <span className="text-primary">Priority</span>
-            </h1>
-            <p className="mt-6 max-w-xl mx-auto md:mx-0 text-lg text-muted-foreground text-justify">
-              With <span className="font-semibold text-primary">Dr. Pritam Pattyanayek</span>, receive personalized healthcare
-              solutions. Book your appointment today for compassionate and
-              expert medical guidance.
-            </p>
+            <h1 className="mt-4 font-headline text-4xl md:text-5xl lg:text-6xl font-bold text-foreground"
+              dangerouslySetInnerHTML={{ __html: heading?.replace(/Health/g, '<span class="text-primary">Health</span>').replace(/Priority/g, '<span class="text-primary">Priority</span>').replace(/\n/g, '<br />') }}
+            />
+            <p className="mt-6 max-w-xl mx-auto md:mx-0 text-lg text-muted-foreground text-justify"
+             dangerouslySetInnerHTML={{ __html: subheading?.replace(/Dr. Pritam Pattyanayek/g, '<span class="font-semibold text-primary">Dr. Pritam Pattyanayek</span>') }}
+            />
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 font-ui">
               <Button size="lg" asChild className="w-full sm:w-auto">
                 <Link href="/login?redirect=/booking">
@@ -55,14 +54,14 @@ export default function HeroSection() {
 
                 {/* Doctor Image */}
                 <div className="relative z-10">
-                  {doctorImage && (
+                  {image && (
                     <Image
-                      src={doctorImage.imageUrl}
-                      alt={doctorImage.description}
+                      src={urlForImage(image).width(400).height(400).url()}
+                      alt="Dr. Pritam Pattyanayek"
                       width={400}
                       height={400}
                       className="rounded-full object-cover aspect-square shadow-2xl"
-                      data-ai-hint={doctorImage.imageHint}
+                      data-ai-hint={imageHint}
                       priority
                     />
                   )}
@@ -131,7 +130,7 @@ export default function HeroSection() {
              <Card className="absolute z-20 bottom-4 right-0 p-3 hidden md:flex items-center gap-2 shadow-lg animate-float [animation-delay:3s]">
                 <Heart className="h-6 w-6 text-red-500 fill-red-500"/>
                 <div>
-                    <p className="font-bold text-lg font-headline">{doctorDetails.patientsServed}</p>
+                    <p className="font-bold text-lg font-headline">{patientsServed}</p>
                     <p className="text-xs text-muted-foreground">Happy Patients</p>
                 </div>
              </Card>

@@ -3,9 +3,12 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { featuredBlogs } from '@/lib/placeholder-data';
+import { urlForImage } from '@/sanity/image';
 
-export default function FeaturedBlogsSection() {
+export default function FeaturedBlogsSection({ featuredBlogs }: any) {
+  if (!featuredBlogs) {
+    return null;
+  }
   return (
     <section className="py-20 md:py-28">
       <div className="container">
@@ -23,11 +26,11 @@ export default function FeaturedBlogsSection() {
           </Button>
         </div>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredBlogs.map((post) => (
+          {featuredBlogs.map((post: any) => (
             <Card key={post.id} className="overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
               <Link href={`/blog/${post.slug}`} className="block">
                 <Image
-                  src={post.imageUrl}
+                  src={urlForImage(post.mainImage).width(600).height(400).url()}
                   alt={post.title}
                   width={600}
                   height={400}

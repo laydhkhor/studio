@@ -13,10 +13,9 @@ import {
   SheetClose
 } from '@/components/ui/sheet';
 import { Logo } from '@/components/icons';
-import { navLinks } from '@/lib/placeholder-data';
 import { cn } from '@/lib/utils';
 
-export default function PublicHeader() {
+export default function PublicHeader({ navLinks }: any) {
   const [isScrolled, setIsScrolled] = React.useState(false);
 
   React.useEffect(() => {
@@ -26,6 +25,10 @@ export default function PublicHeader() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  if (!navLinks) {
+    return null;
+  }
 
   return (
     <header
@@ -70,7 +73,7 @@ export default function PublicHeader() {
               </SheetHeader>
               <div className="flex flex-1 flex-col justify-between">
                 <nav className="mt-8 flex flex-col gap-4 px-6">
-                  {navLinks.map((link) => (
+                  {navLinks.map((link: any) => (
                     <SheetClose asChild key={link.href}>
                       <Link
                         href={link.href}
@@ -107,7 +110,7 @@ export default function PublicHeader() {
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6 text-sm font-medium">
-            {navLinks.map((link) => (
+            {navLinks.map((link: any) => (
               <Link
                 key={link.href}
                 href={link.href}

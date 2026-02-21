@@ -17,7 +17,6 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { clinicLocations } from '@/lib/placeholder-data';
 import {
   Select,
   SelectContent,
@@ -27,13 +26,13 @@ import {
 } from '@/components/ui/select';
 import { Input } from '../ui/input';
 
-export default function ClinicDetailsSection() {
+export default function ClinicDetailsSection({ clinicLocations }: any) {
   const [locationFilter, setLocationFilter] = React.useState('All');
   const [pinSearch, setPinSearch] = React.useState('');
 
   const locations = [
     'All',
-    ...Array.from(new Set(clinicLocations.map((c) => c.name.replace(' Clinic', '')))),
+    ...Array.from(new Set(clinicLocations.map((c: any) => c.name.replace(' Clinic', '')))),
   ];
 
   const filteredClinics = React.useMemo(() => {
@@ -50,7 +49,7 @@ export default function ClinicDetailsSection() {
     }
 
     return items;
-  }, [locationFilter, pinSearch]);
+  }, [locationFilter, pinSearch, clinicLocations]);
 
   const clearFilters = () => {
     setLocationFilter('All');

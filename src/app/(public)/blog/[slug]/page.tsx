@@ -1,4 +1,4 @@
-import { allBlogs, doctorDetails } from '@/lib/placeholder-data';
+import { client } from '@/sanity/client';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
@@ -6,30 +6,43 @@ import { format } from 'date-fns';
 import { ArrowLeft, User } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { groq } from 'next-sanity';
+import { urlForImage } from '@/sanity/image';
+import { PortableText } from '@portabletext/react';
+import { draftMode } from 'next/headers';
+import { LiveQuery } from 'next-sanity/preview/live-query';
+
+const postQuery = groq`*[_type == "post" && slug.current == $slug][0]{
+  ...,
+  "categoryName": category->title,
+  "authorName": author->name
+}`;
 
 export async function generateStaticParams() {
-  return allBlogs.map((post) => ({
+  const posts = await client.fetch(groq`*[_type == "post"]{"slug": slug.current}`);
+  return posts.map((post: any) => ({
     slug: post.slug,
   }));
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-    const post = allBlogs.find((p) => p.slug === params.slug);
+    const post = await client.fetch(postQuery, { slug: params.slug });
     if (!post) {
         return {
             title: 'Post Not Found',
         }
     }
     return {
-        title: `${post.title} | Dr. Pritam Pattyanayek's Blog`,
+        title: `${post.title} | Blog`,
         description: post.excerpt,
     }
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = allBlogs.find((p) => p.slug === params.slug);
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  const { isEnabled } = draftMode();
+  const post = await client.fetch(postQuery, { slug: params.slug });
 
-  if (!post || !post.content) {
+  if (!post || !post.body) {
     notFound();
   }
 
@@ -38,11 +51,11 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     '@type': 'Article',
     headline: post.title,
     description: post.excerpt,
-    image: post.imageUrl,
-    datePublished: post.date,
+    image: urlForImage(post.mainImage).url(),
+    datePublished: post.publishedAt,
     author: {
       '@type': 'Person',
-      name: doctorDetails.name,
+      name: post.authorName,
     },
      publisher: {
       '@type': 'Organization',
@@ -55,7 +68,8 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   };
 
   return (
-    <article className="py-20 md:py-28">
+    <LiveQuery enabled={isEnabled} query={postQuery} params={{slug: params.slug}} initialData={post} as="article" className="py-20 md:py-28">
+       {({data: livePost}) => (<>
        <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -70,35 +84,35 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             </Button>
         </div>
         <header className="mb-12 text-center">
-          <Badge variant="outline" className="mb-4">{post.category}</Badge>
-          <h1 className="font-headline text-4xl md:text-5xl font-bold">{post.title}</h1>
+          <Badge variant="outline" className="mb-4">{livePost.categoryName}</Badge>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold">{livePost.title}</h1>
           <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground font-ui">
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                <span className="font-semibold text-primary">{doctorDetails.name}</span>
+                <span className="font-semibold text-primary">{livePost.authorName}</span>
               </div>
-              <time dateTime={post.date}>{format(new Date(post.date), 'MMMM d, yyyy')}</time>
+              <time dateTime={livePost.publishedAt}>{format(new Date(livePost.publishedAt), 'MMMM d, yyyy')}</time>
           </div>
         </header>
         
         <div className="relative w-full h-64 md:h-96 mb-12">
             <Image
-                src={post.imageUrl}
-                alt={post.title}
+                src={urlForImage(livePost.mainImage).url()}
+                alt={livePost.title}
                 fill
                 className="object-cover rounded-lg shadow-lg"
-                data-ai-hint={post.imageHint}
+                data-ai-hint={livePost.imageHint}
                 priority
             />
         </div>
         
-        <div className="space-y-6 text-lg text-muted-foreground text-justify">
-          {post.content.split('\n').map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-          ))}
+        <div className="prose lg:prose-xl mx-auto text-justify text-muted-foreground">
+          <PortableText value={livePost.body} />
         </div>
 
       </div>
-    </article>
+      </>
+       )}
+    </LiveQuery>
   );
 }

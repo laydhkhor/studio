@@ -1,12 +1,14 @@
 import Link from 'next/link';
-import { pricingOptions } from '@/lib/placeholder-data';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-export default function PricingSection() {
+export default function PricingSection({ pricingOptions }: any) {
+  if (!pricingOptions) {
+    return null;
+  }
   return (
     <section className="py-20 md:py-28">
       <div className="container">
@@ -26,7 +28,7 @@ export default function PricingSection() {
           </div>
         </div>
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
-          {pricingOptions.map((option, index) => (
+          {pricingOptions.map((option: any, index: number) => (
             <Card
               key={index}
               className={cn(
@@ -54,7 +56,7 @@ export default function PricingSection() {
                   <p className="text-muted-foreground text-sm min-h-[40px] text-justify">{option.description}</p>
                 
                   <ul className="space-y-3 text-sm text-muted-foreground pt-6 mt-6 border-t">
-                    {option.features.map((feature, i) => (
+                    {option.features.map((feature: string, i: number) => (
                       <li key={i} className="flex items-start gap-3">
                         <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
                         <span>{feature}</span>

@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/carousel';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { testimonials } from '@/lib/placeholder-data';
 import { formatDistanceToNow } from 'date-fns';
 import {
   Select,
@@ -21,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
+import { urlForImage } from '@/sanity/image';
 
 function Rating({ value }: { value: number }) {
   return (
@@ -46,8 +45,6 @@ function TimeAgo({ date }: { date: string }) {
   }, []);
 
   if (!mounted) {
-    // On server and initial client render, render a placeholder to prevent hydration mismatch
-    // and layout shift.
     return (
       <p className="text-xs text-muted-foreground w-24 text-right">
         {'\u00A0'}
@@ -55,7 +52,6 @@ function TimeAgo({ date }: { date: string }) {
     );
   }
 
-  // After mount on client, calculate and render the actual time ago.
   const timeAgo = formatDistanceToNow(new Date(date), { addSuffix: true });
   return (
     <p className="text-xs text-muted-foreground w-24 text-right">
@@ -64,13 +60,13 @@ function TimeAgo({ date }: { date: string }) {
   );
 }
 
-export default function TestimonialsSection() {
+export default function TestimonialsSection({ testimonials }: any) {
   const [locationFilter, setLocationFilter] = React.useState('All');
   const [ratingFilter, setRatingFilter] = React.useState<number>(0);
   const [sortBy, setSortBy] = React.useState('newest');
-  const [imgErrors, setImgErrors] = React.useState<Record<number, boolean>>({});
+  const [imgErrors, setImgErrors] = React.useState<Record<string, boolean>>({});
 
-  const locations = ['All', ...Array.from(new Set(testimonials.map((t) => t.location)))];
+  const locations = ['All', ...Array.from(new Set(testimonials.map((t: any) => t.location)))];
   const ratings = [0, 5, 4, 3, 2, 1]; // 0 for All
 
   const filteredTestimonials = React.useMemo(() => {
@@ -102,7 +98,7 @@ export default function TestimonialsSection() {
     }
     
     return items;
-  }, [locationFilter, ratingFilter, sortBy]);
+  }, [locationFilter, ratingFilter, sortBy, testimonials]);
 
   return (
     <section className="bg-secondary py-20 md:py-28">
@@ -164,7 +160,7 @@ export default function TestimonialsSection() {
           <CarouselContent>
             {filteredTestimonials.length > 0 ? (
               filteredTestimonials.map((testimonial) => (
-                <CarouselItem key={testimonial.id} className="md:basis-1/2 lg:basis-1/3">
+                <CarouselItem key={testimonial._id} className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-1 h-full">
                     <Card className="h-full shadow-md flex flex-col">
                       <CardContent className="flex flex-col items-start gap-4 p-6 flex-grow">
@@ -176,17 +172,17 @@ export default function TestimonialsSection() {
                           "{testimonial.comment}"
                         </p>
                         <div className="flex items-center gap-4 pt-4 border-t w-full">
-                          <Avatar>
-                            {!imgErrors[testimonial.id] ? (
+                           <Avatar>
+                            {!imgErrors[testimonial._id] && testimonial.avatar ? (
                               <Image
-                                src={testimonial.avatarUrl}
+                                src={urlForImage(testimonial.avatar).width(40).height(40).url()}
                                 alt={testimonial.name}
                                 width={40}
                                 height={40}
                                 className="aspect-square h-full w-full"
                                 data-ai-hint={testimonial.avatarHint}
                                 onError={() => {
-                                  setImgErrors((prev) => ({...prev, [testimonial.id]: true}));
+                                  setImgErrors((prev) => ({...prev, [testimonial._id]: true}));
                                 }}
                               />
                             ) : (
