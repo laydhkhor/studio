@@ -43,7 +43,7 @@ export default function StatsSection() {
               >
                 <stat.icon className="h-12 w-12 text-primary" />
                 <div className="text-left">
-                  <p className="font-headline text-4xl font-bold">
+                  <p className="font-headline text-4xl font-bold whitespace-nowrap">
                     <AnimatedCounter value={numericValue} />
                     {suffix}
                   </p>
