@@ -69,10 +69,9 @@ export default function ClinicDetailsSection() {
               Find the nearest clinic for your consultation. Use the filters to
               select by location or search by PIN code.
             </p>
-            <div className="mt-6 space-y-4">
-              <div className="flex flex-col sm:flex-row gap-2">
+            <div className="mt-6 flex flex-col sm:flex-row gap-2">
                 <Select value={locationFilter} onValueChange={setLocationFilter}>
-                  <SelectTrigger className="w-full sm:w-auto">
+                  <SelectTrigger className="w-full sm:w-[200px]">
                     <SelectValue placeholder="Filter by Location" />
                   </SelectTrigger>
                   <SelectContent>
@@ -83,17 +82,16 @@ export default function ClinicDetailsSection() {
                     ))}
                   </SelectContent>
                 </Select>
-                <div className="relative flex-1">
+                <div className="relative w-full sm:w-auto">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="search"
                     placeholder="Search by PIN..."
-                    className="w-full rounded-lg bg-background pl-8"
+                    className="w-full sm:w-[150px] rounded-lg bg-background pl-8"
                     value={pinSearch}
                     onChange={(e) => setPinSearch(e.target.value)}
                   />
                 </div>
-              </div>
               <Button
                 variant="outline"
                 onClick={clearFilters}
