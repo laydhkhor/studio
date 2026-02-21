@@ -16,6 +16,7 @@ import { Check, X } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 export const metadata: Metadata = {
   title: 'Pricing & Plans | DocAssist',
@@ -25,6 +26,18 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   const plans = ['chat', 'video', 'clinic'] as const;
+
+  const categoryStartIndices = consultationFeatures.reduce(
+    (acc, category, index) => {
+      if (index === 0) {
+        acc.push(0);
+      } else {
+        acc.push(acc[index - 1] + consultationFeatures[index - 1].items.length);
+      }
+      return acc;
+    },
+    [] as number[]
+  );
 
   return (
     <div className="py-20 md:py-28">
@@ -48,11 +61,11 @@ export default function PricingPage() {
             {pricingOptions.map((plan) => (
               <div
                 key={plan.type}
-                className={cn(
-                  'bg-card p-6 text-center',
-                  plan.tag === 'Most Popular' && 'bg-secondary'
-                )}
+                className="bg-card p-6 text-center flex flex-col justify-end"
               >
+                {plan.tag === 'Most Popular' && (
+                  <Badge className="mb-2 w-fit mx-auto">{plan.tag}</Badge>
+                )}
                 <h3 className="font-headline text-xl font-semibold">
                   {plan.type}
                 </h3>
@@ -61,7 +74,7 @@ export default function PricingPage() {
             ))}
 
             {/* Feature Rows */}
-            {consultationFeatures.map((category) => (
+            {consultationFeatures.map((category, categoryIndex) => (
               <React.Fragment key={category.category}>
                 {/* Category Header */}
                 <div className="col-span-4 bg-muted px-6 py-3">
@@ -70,37 +83,42 @@ export default function PricingPage() {
                   </h4>
                 </div>
                 {/* Items */}
-                {category.items.map((item) => (
-                  <React.Fragment key={item.feature}>
-                    <div className="bg-card p-6 flex items-center">
-                      <p className="font-ui text-sm">{item.feature}</p>
-                    </div>
-                    {plans.map((plan) => {
-                      const value = item[plan as keyof typeof item];
-                      return (
-                        <div
-                          key={plan}
-                          className={cn(
-                            'bg-card p-6 text-center flex justify-center items-center',
-                            pricingOptions.find(
-                              (p) => p.type.toLowerCase() === plan
-                            )?.tag === 'Most Popular' && 'bg-secondary'
-                          )}
-                        >
-                          {typeof value === 'boolean' ? (
-                            value ? (
-                              <Check className="h-6 w-6 text-green-500" />
+                {category.items.map((item, itemIndex) => {
+                  const globalIndex =
+                    categoryStartIndices[categoryIndex] + itemIndex;
+                  const rowBgClass =
+                    globalIndex % 2 === 0 ? 'bg-card' : 'bg-muted/50';
+
+                  return (
+                    <React.Fragment key={item.feature}>
+                      <div className={cn('p-6 flex items-center', rowBgClass)}>
+                        <p className="font-ui text-sm">{item.feature}</p>
+                      </div>
+                      {plans.map((plan) => {
+                        const value = item[plan as keyof typeof item];
+                        return (
+                          <div
+                            key={plan}
+                            className={cn(
+                              'p-6 text-center flex justify-center items-center',
+                              rowBgClass
+                            )}
+                          >
+                            {typeof value === 'boolean' ? (
+                              value ? (
+                                <Check className="h-6 w-6 text-green-500" />
+                              ) : (
+                                <X className="h-6 w-6 text-destructive" />
+                              )
                             ) : (
-                              <X className="h-6 w-6 text-destructive" />
-                            )
-                          ) : (
-                            <p className="text-sm text-foreground">{value}</p>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </React.Fragment>
-                ))}
+                              <p className="text-sm text-foreground">{value}</p>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </React.Fragment>
+                  );
+                })}
               </React.Fragment>
             ))}
 
@@ -109,10 +127,7 @@ export default function PricingPage() {
             {pricingOptions.map((plan) => (
               <div
                 key={plan.type}
-                className={cn(
-                  'bg-card p-6 text-center flex items-center justify-center',
-                  plan.tag === 'Most Popular' && 'bg-secondary'
-                )}
+                className="bg-card p-6 text-center flex items-center justify-center"
               >
                 <Button asChild className="w-full font-ui">
                   <Link href="/login?redirect=/booking">{plan.cta}</Link>
@@ -124,7 +139,9 @@ export default function PricingPage() {
           {/* Mobile View */}
           <div className="lg:hidden grid grid-cols-1 gap-8">
             {pricingOptions.map((plan) => {
-              const planKey = plan.type.toLowerCase().split(' ')[0] as 'chat' | 'video' | 'clinic';
+              const planKey = plan.type
+                .toLowerCase()
+                .split(' ')[0] as 'chat' | 'video' | 'clinic';
               return (
                 <Card
                   key={plan.type}
@@ -187,7 +204,7 @@ export default function PricingPage() {
                     </Button>
                   </CardFooter>
                 </Card>
-              )
+              );
             })}
           </div>
         </div>

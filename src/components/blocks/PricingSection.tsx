@@ -10,13 +10,20 @@ export default function PricingSection() {
   return (
     <section className="py-20 md:py-28">
       <div className="container">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto max-w-3xl text-center">
           <h2 className="font-headline text-3xl md:text-4xl font-bold">
             Flexible Consultation Options
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Choose the most convenient way to connect with the doctor. Each option is tailored to provide you with the best care possible.
           </p>
+           <div className="mt-6">
+            <Button asChild variant="outline" className="font-ui">
+              <Link href="/pricing">
+                View Detailed Comparison <ArrowRight className="ml-2" />
+              </Link>
+            </Button>
+          </div>
         </div>
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
           {pricingOptions.map((option, index) => (
