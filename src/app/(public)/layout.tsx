@@ -4,7 +4,7 @@ import { client, previewClient } from '@/sanity/client';
 import { groq } from 'next-sanity';
 import { draftMode } from 'next/headers';
 import ExitPreviewButton from '@/components/ExitPreviewButton';
-import { LiveQueryProvider } from 'next-sanity/live'
+import { LiveQueryProvider } from 'next-sanity'
 
 export default async function PublicLayout({
   children,
@@ -26,9 +26,9 @@ export default async function PublicLayout({
     </div>
   );
 
-  if (isEnabled) {
-    return <LiveQueryProvider client={previewClient}>{layoutContent}</LiveQueryProvider>
-  }
-
-  return layoutContent;
+  return (
+    <LiveQueryProvider client={previewClient} logger={console}>
+      {layoutContent}
+    </LiveQueryProvider>
+  )
 }

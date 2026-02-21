@@ -20,3 +20,7 @@ export const previewClient = createClient({
   useCdn: false,
   token,
 })
+
+export function getClient(preview: boolean = false) {
+  return preview ? previewClient : client
+}

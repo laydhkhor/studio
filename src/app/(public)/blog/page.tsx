@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { client } from '@/sanity/client';
+import { getClient } from '@/sanity/client';
 import { groq } from 'next-sanity';
 import { draftMode } from 'next/headers';
 import BlogPosts from './BlogPosts';
@@ -20,6 +20,7 @@ const blogPageQuery = groq`{
 
 export default async function BlogPage() {
   const { isEnabled } = draftMode();
+  const client = getClient(isEnabled);
   const initialData = await client.fetch(blogPageQuery);
   
   return <BlogPosts initialData={initialData} isEnabled={isEnabled} query={blogPageQuery} />;

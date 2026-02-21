@@ -66,11 +66,15 @@ export default function TestimonialsSection({ testimonials }: any) {
   const [sortBy, setSortBy] = React.useState('newest');
   const [imgErrors, setImgErrors] = React.useState<Record<string, boolean>>({});
 
+  if (!testimonials) {
+    return null;
+  }
+
   const locations = ['All', ...Array.from(new Set(testimonials.map((t: any) => t.location)))];
   const ratings = [0, 5, 4, 3, 2, 1]; // 0 for All
 
   const filteredTestimonials = React.useMemo(() => {
-    let items = [...testimonials];
+    let items = [...(testimonials || [])];
 
     // Filter by location
     if (locationFilter !== 'All') {

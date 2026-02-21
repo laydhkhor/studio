@@ -22,11 +22,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { urlForImage } from '@/sanity/image';
-import { useLiveQuery } from 'next-sanity/live';
+import { useLiveQuery } from 'next-sanity';
 
 function BlogContent({ data: initialData, query }: { data: any, query: string }) {
   const [data] = useLiveQuery(initialData, query);
-  const { posts: allBlogs, categories: categoriesData } = data;
+  const { posts: allBlogs, categories: categoriesData } = data || { posts: [], categories: [] };
   const [searchTerm, setSearchTerm] = React.useState('');
   const [categoryFilter, setCategoryFilter] = React.useState('All');
   const [sortOrder, setSortOrder] = React.useState('newest');
@@ -39,8 +39,8 @@ function BlogContent({ data: initialData, query }: { data: any, query: string })
     blogs = blogs.filter((post: any) => {
       const searchTermMatch =
         searchTerm === '' ||
-        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
+        (post.title && post.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (post.excerpt && post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()));
       const categoryMatch =
         categoryFilter === 'All' || post.category === categoryFilter;
       return searchTermMatch && categoryMatch;
@@ -124,14 +124,14 @@ function BlogContent({ data: initialData, query }: { data: any, query: string })
                 className="overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col"
               >
                 <Link href={`/blog/${post.slug}`} className="block">
-                  <Image
+                  {post.mainImage && <Image
                     src={urlForImage(post.mainImage).width(600).height(400).url()}
                     alt={post.title}
                     width={600}
                     height={400}
                     className="w-full h-48 object-cover"
                     data-ai-hint={post.imageHint}
-                  />
+                  />}
                 </Link>
                 <CardHeader>
                   <div className="flex justify-between items-center text-xs text-muted-foreground mb-2">
