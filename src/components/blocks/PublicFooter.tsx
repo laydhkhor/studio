@@ -30,9 +30,9 @@ export default function PublicFooter() {
           </div>
           <div className="md:col-span-2">
             <h3 className="font-semibold tracking-wider text-sm uppercase">Quick Links</h3>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 space-y-2 columns-2">
               {navLinks.map((link) => (
-                <li key={link.href}>
+                <li key={link.href} className="break-inside-avoid">
                   <Link href={link.href} className="text-muted-foreground hover:text-primary text-sm">
                     {link.label}
                   </Link>
