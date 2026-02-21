@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/blocks/HeroSection';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useLiveQuery, LiveQueryProvider } from 'next-sanity';
+import { useLiveQuery, LiveQueryProvider } from 'next-sanity/live';
 import {
     homePageQuery,
     aboutPageQuery,

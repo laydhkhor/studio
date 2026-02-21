@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { urlForImage } from '@/sanity/image';
-import { useLiveQuery, LiveQueryProvider } from 'next-sanity';
+import { useLiveQuery, LiveQueryProvider } from 'next-sanity/live';
 import { previewClient } from '@/sanity/client';
 
 function BlogPostsContent({ data: initialData, query, isEnabled }: { data: any, query: string, isEnabled: boolean }) {
