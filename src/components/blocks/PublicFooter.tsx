@@ -55,13 +55,15 @@ export default function PublicFooter() {
                 {[...Array(5)].map((_, index) => {
                   const starValue = index + 1;
                   return (
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="size-auto p-0 hover:bg-transparent"
                       key={starValue}
                       onClick={() => setRating(starValue)}
                       onMouseEnter={() => setHover(starValue)}
                       onMouseLeave={() => setHover(0)}
-                      className="focus:outline-none"
                       aria-label={`Rate ${starValue} star${starValue > 1 ? 's' : ''}`}
                     >
                       <Star
@@ -72,7 +74,7 @@ export default function PublicFooter() {
                             : "text-gray-300"
                         )}
                       />
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
