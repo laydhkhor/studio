@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/blocks/HeroSection';
-import StatsSection from '@/components/blocks/StatsSection';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const LoadingSkeleton = () => (
@@ -11,6 +10,10 @@ const LoadingSkeleton = () => (
   </div>
 );
 
+const StatsSection = dynamic(
+  () => import('@/components/blocks/StatsSection'),
+  { loading: () => <LoadingSkeleton /> }
+);
 const PricingSection = dynamic(
   () => import('@/components/blocks/PricingSection'),
   { loading: () => <LoadingSkeleton /> }
