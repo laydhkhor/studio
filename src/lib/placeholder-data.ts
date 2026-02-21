@@ -5,6 +5,8 @@ export const doctorDetails = {
   patientsServed: '2500+',
   practiceLocation: 'West Bengal, India',
   targetSeoLocations: 'Mahishadal, Nandakumar, Purba Medinipur',
+  positiveReviews: '98%',
+  consultationsDone: '5000+',
 };
 
 export const navLinks = [

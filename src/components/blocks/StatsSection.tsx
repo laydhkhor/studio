@@ -1,5 +1,8 @@
+'use client';
+
 import { doctorDetails } from '@/lib/placeholder-data';
-import { Award, Users } from 'lucide-react';
+import { Award, Users, Star, Stethoscope } from 'lucide-react';
+import AnimatedCounter from '@/components/ui/animated-counter';
 
 export default function StatsSection() {
   const stats = [
@@ -13,21 +16,42 @@ export default function StatsSection() {
       value: doctorDetails.patientsServed,
       label: 'Happy Patients',
     },
+    {
+      icon: Star,
+      value: doctorDetails.positiveReviews,
+      label: 'Positive Reviews',
+    },
+    {
+      icon: Stethoscope,
+      value: doctorDetails.consultationsDone,
+      label: 'Consultations',
+    },
   ];
 
   return (
     <section className="bg-card py-20 md:py-28">
       <div className="container px-4 md:px-6">
-        <div className="mx-auto max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 md:divide-x divide-border">
-          {stats.map((stat, index) => (
-            <div key={index} className="flex items-center gap-6 justify-center">
-              <stat.icon className="h-12 w-12 text-primary" />
-              <div>
-                <p className="font-headline text-4xl font-bold">{stat.value}</p>
-                <p className="text-muted-foreground font-ui">{stat.label}</p>
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat, index) => {
+            const numericValue = parseInt(stat.value, 10);
+            const suffix = stat.value.replace(String(numericValue), '');
+
+            return (
+              <div
+                key={index}
+                className="flex items-center justify-center gap-6"
+              >
+                <stat.icon className="h-12 w-12 text-primary" />
+                <div>
+                  <p className="font-headline text-4xl font-bold">
+                    <AnimatedCounter value={numericValue} />
+                    {suffix}
+                  </p>
+                  <p className="text-muted-foreground font-ui">{stat.label}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
