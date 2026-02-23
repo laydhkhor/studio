@@ -2,9 +2,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Award, Users, Stethoscope, Star } from 'lucide-react';
+import { ArrowRight, Award, Users, Stethoscope } from 'lucide-react';
 import { Card } from '../ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 export default function HeroSection({ home, about }: { home: any, about: any }) {
 
@@ -76,23 +75,6 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
                             <span>{about?.consultationsDone} Consultations</span>
                         </div>
                     </div>
-                </Card>
-
-                {/* Review Card */}
-                <Card className="absolute -top-10 -right-12 z-20 p-4 shadow-lg bg-card/80 backdrop-blur-md max-w-[250px] hidden md:block">
-                    <div className="flex items-center gap-3">
-                        <Avatar>
-                            <AvatarImage src="https://picsum.photos/seed/user1/40/40" alt="Patient Anjali S." data-ai-hint="person smiling" />
-                            <AvatarFallback>AS</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <p className="font-semibold font-ui text-sm">Anjali S.</p>
-                            <div className="flex items-center gap-0.5">
-                                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-                            </div>
-                        </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2 italic">"Incredibly patient and thorough. The best doctor in Mahishadal!"</p>
                 </Card>
             </div>
           </div>
