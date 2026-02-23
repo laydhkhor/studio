@@ -72,22 +72,22 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                         <p className="mt-4 text-lg text-muted-foreground">
                            {bookingData.subtitle}
                         </p>
-                         <ul className="mt-8 space-y-4 text-left text-muted-foreground">
-                            <li className="flex items-start gap-3">
+                        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                            <div className="flex items-start gap-3">
                                 <CalendarIcon className="h-6 w-6 shrink-0 mt-1 text-primary" />
                                 <div>
                                     <h3 className="font-semibold text-foreground">Flexible Scheduling</h3>
-                                    <p>Pick a date and time that works best for you from the available slots.</p>
+                                    <p className="text-muted-foreground">Pick a date and time that works best for you from the available slots.</p>
                                 </div>
-                            </li>
-                             <li className="flex items-start gap-3">
+                            </div>
+                             <div className="flex items-start gap-3">
                                 <Clock className="h-6 w-6 shrink-0 mt-1 text-primary" />
                                 <div>
                                     <h3 className="font-semibold text-foreground">Confirmation Reminder</h3>
-                                    <p>You'll receive an instant confirmation and a reminder before your session.</p>
+                                    <p className="text-muted-foreground">You'll receive an instant confirmation and a reminder before your session.</p>
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </div>
                     <Card className="w-full max-w-3xl shadow-xl">
                         <CardHeader>
