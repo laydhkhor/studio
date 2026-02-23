@@ -11,8 +11,8 @@ const LoadingSkeleton = () => (
   </div>
 );
 
-const StatsSection = dynamic(
-  () => import('@/components/blocks/StatsSection'),
+const BookingSection = dynamic(
+  () => import('@/components/blocks/BookingSection'),
   { loading: () => <LoadingSkeleton /> }
 );
 const PricingSection = dynamic(
@@ -38,6 +38,7 @@ const FaqSection = dynamic(() => import('@/components/blocks/FaqSection'), {
 export default function HomePage({
     home,
     about,
+    booking,
     pricing,
     testimonials,
     clinic,
@@ -45,6 +46,7 @@ export default function HomePage({
 }: {
     home: any,
     about: any,
+    booking: any,
     pricing: any,
     testimonials: any,
     clinic: any,
@@ -56,12 +58,7 @@ export default function HomePage({
             home={home}
             about={about}
         />
-        <StatsSection 
-            experience={about?.experience}
-            patientsServed={about?.patientsServed}
-            positiveReviews={about?.positiveReviews}
-            consultationsDone={about?.consultationsDone}
-        />
+        <BookingSection bookingData={booking} />
         <PricingSection pricingOptions={pricing?.pricingOptions} />
         <TestimonialsSection testimonials={testimonials} />
         <FeaturedBlogsSection featuredBlogs={home?.featuredBlogs} />

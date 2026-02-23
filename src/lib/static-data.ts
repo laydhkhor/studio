@@ -125,6 +125,26 @@ export const faqData = {
     ]
 };
 
+export const bookingData = {
+    title: 'Book a Video Consultation',
+    subtitle: 'Choose a convenient time slot for your online appointment. All sessions are conducted via secure video call.',
+    availableDates: [
+        'August 1, 2024',
+        'August 2, 2024',
+        'August 5, 2024',
+        'August 6, 2024',
+        'August 7, 2024',
+    ],
+    timeSlots: [
+        '10:00 AM - 10:30 AM',
+        '10:30 AM - 11:00 AM',
+        '11:00 AM - 11:30 AM',
+        '02:00 PM - 02:30 PM',
+        '02:30 PM - 03:00 PM',
+        '03:00 PM - 03:30 PM',
+    ]
+};
+
 
 export const postsData = [
     {
