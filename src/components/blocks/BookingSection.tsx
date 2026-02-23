@@ -104,72 +104,76 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                     <Label htmlFor="phone">Phone Number</Label>
                                     <Input id="phone" type="tel" placeholder="+91 12345 67890" value={phone} onChange={(e) => setPhone(e.target.value)} required/>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="dob">Date of Birth</Label>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                        <Button
-                                            variant={'outline'}
-                                            className={cn(
-                                            'w-full justify-start text-left font-normal',
-                                            !dob && 'text-muted-foreground'
-                                            )}
-                                        >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {dob ? format(dob, 'PPP') : <span>Pick a date</span>}
-                                        </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0">
-                                        <Calendar
-                                            mode="single"
-                                            selected={dob}
-                                            onSelect={setDob}
-                                            initialFocus
-                                            captionLayout="dropdown-buttons"
-                                            fromYear={1920}
-                                            toYear={new Date().getFullYear()}
-                                        />
-                                        </PopoverContent>
-                                    </Popover>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="dob">Date of Birth</Label>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                'w-full justify-start text-left font-normal',
+                                                !dob && 'text-muted-foreground'
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {dob ? format(dob, 'PPP') : <span>Pick a date</span>}
+                                            </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={dob}
+                                                onSelect={setDob}
+                                                initialFocus
+                                                captionLayout="dropdown-buttons"
+                                                fromYear={1920}
+                                                toYear={new Date().getFullYear()}
+                                            />
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="reason">Reason for Booking</Label>
+                                        <Select value={selectedReason} onValueChange={setSelectedReason} required>
+                                            <SelectTrigger id="reason">
+                                                <SelectValue placeholder="Select a reason" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {bookingData.reasons.map((reason: string) => (
+                                                    <SelectItem key={reason} value={reason}>{reason}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="reason">Reason for Booking</Label>
-                                    <Select value={selectedReason} onValueChange={setSelectedReason} required>
-                                        <SelectTrigger id="reason">
-                                            <SelectValue placeholder="Select a reason" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {bookingData.reasons.map((reason: string) => (
-                                                <SelectItem key={reason} value={reason}>{reason}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="date">Appointment Date</Label>
-                                    <Select value={selectedDate} onValueChange={setSelectedDate} required>
-                                        <SelectTrigger id="date">
-                                            <SelectValue placeholder="Select a date" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {bookingData.availableDates.map((date: string) => (
-                                                <SelectItem key={date} value={date}>{date}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="time">Time Slot</Label>
-                                    <Select value={selectedTime} onValueChange={setSelectedTime} required>
-                                        <SelectTrigger id="time">
-                                            <SelectValue placeholder="Select a time" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {bookingData.timeSlots.map((time: string) => (
-                                                <SelectItem key={time} value={time}>{time}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="date">Appointment Date</Label>
+                                        <Select value={selectedDate} onValueChange={setSelectedDate} required>
+                                            <SelectTrigger id="date">
+                                                <SelectValue placeholder="Select a date" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {bookingData.availableDates.map((date: string) => (
+                                                    <SelectItem key={date} value={date}>{date}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="time">Time Slot</Label>
+                                        <Select value={selectedTime} onValueChange={setSelectedTime} required>
+                                            <SelectTrigger id="time">
+                                                <SelectValue placeholder="Select a time" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {bookingData.timeSlots.map((time: string) => (
+                                                    <SelectItem key={time} value={time}>{time}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="details">Additional Details (Optional)</Label>
