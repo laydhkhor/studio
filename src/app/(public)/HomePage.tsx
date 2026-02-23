@@ -53,12 +53,8 @@ export default function HomePage({
     return (
       <>
         <HeroSection 
-            kicker={home?.heroKicker}
-            heading={home?.heroHeading}
-            subheading={home?.heroSubheading}
-            image={home?.heroImage}
-            imageHint={home?.heroImageHint}
-            patientsServed={about?.patientsServed}
+            home={home}
+            about={about}
         />
         <StatsSection 
             experience={about?.experience}
