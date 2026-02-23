@@ -1,16 +1,19 @@
-'use client'
 
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/blocks/HeroSection';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-    aboutPageQuery,
-    clinicPageQuery,
-    faqPageQuery,
-    homePageQuery,
-    pricingPageQuery,
-    testimonialsQuery,
-} from '@/sanity/queries';
+
+// Note: This component is simplified to render static data.
+// The original implementation with useLiveQuery for Sanity previews is commented out below.
+// import { useLiveQuery } from 'next-sanity/live';
+// import {
+//     homePageQuery,
+//     aboutPageQuery,
+//     pricingPageQuery,
+//     testimonialsQuery,
+//     clinicPageQuery,
+//     faqPageQuery,
+// } from '@/sanity/queries';
 
 const LoadingSkeleton = () => (
   <div className="w-full py-20 md:py-28">
@@ -44,24 +47,28 @@ const FaqSection = dynamic(() => import('@/components/blocks/FaqSection'), {
   loading: () => <LoadingSkeleton />,
 });
 
-
 export default function HomePage({
     home,
     about,
     pricing,
     testimonials,
     clinic,
-    faq,
-    isPreview
+    faq
 }: {
     home: any,
     about: any,
     pricing: any,
     testimonials: any,
     clinic: any,
-    faq: any,
-    isPreview: boolean
+    faq: any
 }) {
+
+    // const [home] = useLiveQuery(initialHome, homePageQuery, {}, { enabled: isPreview });
+    // const [about] = useLiveQuery(initialAbout, aboutPageQuery, {}, { enabled: isPreview });
+    // const [pricing] = useLiveQuery(initialPricing, pricingPageQuery, {}, { enabled: isPreview });
+    // const [testimonials] = useLiveQuery(initialTestimonials, testimonialsQuery, {}, { enabled: isPreview });
+    // const [clinic] = useLiveQuery(initialClinic, clinicPageQuery, {}, { enabled: isPreview });
+    // const [faq] = useLiveQuery(initialFaq, faqPageQuery, {}, { enabled: isPreview });
 
     return (
       <>
@@ -81,7 +88,7 @@ export default function HomePage({
         />
         <PricingSection pricingOptions={pricing?.pricingOptions} />
         <TestimonialsSection testimonials={testimonials} />
-        <FeaturedBlogsSection featuredBlogs={home?.featuredBlogsData} />
+        <FeaturedBlogsSection featuredBlogs={home?.featuredBlogs} />
         <ClinicDetailsSection clinicLocations={clinic?.clinicLocations} />
         <FaqSection faqs={faq?.faqs} />
       </>

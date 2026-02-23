@@ -1,10 +1,10 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Heart, Phone, Star, Video } from 'lucide-react';
 import { Card } from '../ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { urlForImage } from '@/sanity/image';
 
 export default function HeroSection({ kicker, heading, subheading, image, imageHint, patientsServed }: any) {
   const patientAvatar = {
@@ -56,7 +56,7 @@ export default function HeroSection({ kicker, heading, subheading, image, imageH
                 <div className="relative z-10">
                   {image && (
                     <Image
-                      src={urlForImage(image).width(400).height(400).url()}
+                      src={image}
                       alt="Dr. Pritam Pattyanayek"
                       width={400}
                       height={400}

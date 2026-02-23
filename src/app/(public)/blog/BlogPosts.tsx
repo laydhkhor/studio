@@ -1,3 +1,4 @@
+
 'use client';
 import * as React from 'react';
 import Image from 'next/image';
@@ -21,15 +22,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { urlForImage } from '@/sanity/image';
 
-export default function BlogPosts({ initialData }: { initialData: any, isEnabled: boolean, query: string }) {
+export default function BlogPosts({ initialData }: { initialData: any }) {
   const { posts: allBlogs, categories: categoriesData } = initialData || { posts: [], categories: [] };
   const [searchTerm, setSearchTerm] = React.useState('');
   const [categoryFilter, setCategoryFilter] = React.useState('All');
   const [sortOrder, setSortOrder] = React.useState('newest');
 
-  const categories = ['All', ...(categoriesData || [])];
+  const categories = ['All', ...(categoriesData || [])].filter((c, i, a) => a.indexOf(c) === i);
 
   const filteredAndSortedBlogs = React.useMemo(() => {
     let blogs = [...(allBlogs || [])];
@@ -123,7 +123,7 @@ export default function BlogPosts({ initialData }: { initialData: any, isEnabled
               >
                 <Link href={`/blog/${post.slug}`} className="block">
                   {post.mainImage && <Image
-                    src={urlForImage(post.mainImage).width(600).height(400).url()}
+                    src={post.mainImage}
                     alt={post.title}
                     width={600}
                     height={400}

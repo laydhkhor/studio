@@ -1,3 +1,4 @@
+
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
@@ -16,7 +17,7 @@ export default defineConfig({
     structureTool(),
     presentationTool({
       previewUrl: {
-        origin: typeof location === 'undefined' ? 'http://localhost:9002' : location.origin,
+        origin: 'http://localhost:9002',
         preview: '/api/draft',
       },
     }),

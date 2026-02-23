@@ -1,18 +1,17 @@
+
 import Image from 'next/image';
 import { Award, GraduationCap, Users } from 'lucide-react';
 import type { Metadata } from 'next';
-import { client } from '@/sanity/client';
-import { groq } from 'next-sanity';
-import { urlForImage } from '@/sanity/image';
+import { aboutData } from '@/lib/static-data';
 
-const aboutPageQuery = groq`*[_type == "about"][0]`;
+// Note: Sanity fetching is commented out to use static data.
+// import { client } from '@/sanity/client';
+// import { groq } from 'next-sanity';
+
+// const aboutPageQuery = groq`*[_type == "about"][0]`;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch(aboutPageQuery, {}, {
-    next: {
-      tags: ['about']
-    }
-  });
+  const data = aboutData;
   return {
     title: `About ${data?.doctorName || 'Us'} | DocAssist`,
     description: `Learn more about ${data?.doctorName || 'our doctor'}, his mission, education, and experience in providing quality healthcare.`,
@@ -20,11 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const data = await client.fetch(aboutPageQuery, {}, {
-    next: {
-      tags: ['about']
-    }
-  });
+  const data = aboutData;
 
   return (
     <div className="py-20 md:py-28">
@@ -40,7 +35,7 @@ export default async function AboutPage() {
           <div className="lg:col-span-1 flex justify-center">
             {data?.image && (
               <Image
-                src={urlForImage(data.image).width(350).height(350).url()}
+                src={data.image}
                 alt={data.doctorName || 'Doctor'}
                 width={350}
                 height={350}

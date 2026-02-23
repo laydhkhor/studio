@@ -1,4 +1,4 @@
-import { getClient } from '@/sanity/client';
+
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
@@ -6,26 +6,25 @@ import { format } from 'date-fns';
 import { ArrowLeft, User } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { groq } from 'next-sanity';
-import { urlForImage } from '@/sanity/image';
 import { PortableText } from '@portabletext/react';
-import { draftMode } from 'next/headers';
+import { postsData } from '@/lib/static-data';
 
+// Note: Sanity fetching is commented out to use static data.
+// import { getClient } from '@/sanity/client';
+// import { groq } from 'next-sanity';
+// import { draftMode } from 'next/headers';
+// const postQuery = groq`*[_type == "post" && slug.current == $slug][0]{
+//   ...,
+//   "categoryName": category->title,
+//   "authorName": author->name
+// }`;
 
-const postQuery = groq`*[_type == "post" && slug.current == $slug][0]{
-  ...,
-  "categoryName": category->title,
-  "authorName": author->name
-}`;
+const getPost = (slug: string) => {
+    return postsData.find(p => p.slug === slug);
+}
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const { isEnabled } = draftMode();
-  const client = getClient(isEnabled);
-  const post = await client.fetch(postQuery, { slug: params.slug }, {
-    next: {
-        tags: [`post:${params.slug}`]
-    }
-  });
+  const post = getPost(params.slug);
 
     if (!post || !post.body) {
         notFound();
@@ -36,7 +35,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         '@type': 'Article',
         headline: post.title,
         description: post.excerpt,
-        image: urlForImage(post.mainImage).url(),
+        image: post.mainImage,
         datePublished: post.publishedAt,
         author: {
         '@type': 'Person',
@@ -68,7 +67,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   </Button>
               </div>
               <header className="mb-12 text-center">
-                  <Badge variant="outline" className="mb-4">{post.categoryName}</Badge>
+                  <Badge variant="outline" className="mb-4">{post.category}</Badge>
                   <h1 className="font-headline text-4xl md:text-5xl font-bold">{post.title}</h1>
                   <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground font-ui">
                       <div className="flex items-center gap-2">
@@ -81,7 +80,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               
               {post.mainImage && <div className="relative w-full h-64 md:h-96 mb-12">
                   <Image
-                      src={urlForImage(post.mainImage).url()}
+                      src={post.mainImage}
                       alt={post.title}
                       fill
                       className="object-cover rounded-lg shadow-lg"
@@ -101,14 +100,14 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
 
 export async function generateStaticParams() {
-  const posts = await getClient().fetch(groq`*[_type == "post"]{"slug": slug.current}`);
+  const posts = postsData;
   return posts.map((post: any) => ({
     slug: post.slug,
   }));
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-    const post = await getClient().fetch(postQuery, { slug: params.slug });
+    const post = getPost(params.slug);
     if (!post) {
         return {
             title: 'Post Not Found',

@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -11,7 +12,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import {
   Select,
@@ -20,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { urlForImage } from '@/sanity/image';
 
 function Rating({ value }: { value: number }) {
   return (
@@ -178,12 +178,9 @@ export default function TestimonialsSection({ testimonials }: any) {
                         <div className="flex items-center gap-4 pt-4 border-t w-full">
                            <Avatar>
                             {!imgErrors[testimonial._id] && testimonial.avatar ? (
-                              <Image
-                                src={urlForImage(testimonial.avatar).width(40).height(40).url()}
+                              <AvatarImage
+                                src={testimonial.avatar}
                                 alt={testimonial.name}
-                                width={40}
-                                height={40}
-                                className="aspect-square h-full w-full"
                                 data-ai-hint={testimonial.avatarHint}
                                 onError={() => {
                                   setImgErrors((prev) => ({...prev, [testimonial._id]: true}));

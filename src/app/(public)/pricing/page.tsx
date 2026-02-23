@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,8 +14,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { client } from '@/sanity/client';
-import { groq } from 'next-sanity';
+import { pricingData } from '@/lib/static-data';
+
+// Note: Sanity fetching is commented out to use static data.
+// import { client } from '@/sanity/client';
+// import { groq } from 'next-sanity';
 
 export const metadata: Metadata = {
   title: 'Pricing & Plans | DocAssist',
@@ -22,14 +26,15 @@ export const metadata: Metadata = {
     'Compare our flexible consultation options: Chat, Video, and In-Clinic visits. Choose the plan that best suits your healthcare needs.',
 };
 
-const query = groq`*[_type == "pricing"][0]`;
+// const query = groq`*[_type == "pricing"][0]`;
 
 export default async function PricingPage() {
-  const data = await client.fetch(query, {}, {
-    next: {
-      tags: ['pricing']
-    }
-  });
+  // const data = await client.fetch(query, {}, {
+  //   next: {
+  //     tags: ['pricing']
+  //   }
+  // });
+  const data = pricingData;
   const { pricingOptions, consultationFeatures } = data || {};
 
   const plans = ['chat', 'video', 'clinic'] as const;

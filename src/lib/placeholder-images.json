@@ -1,1 +1,46 @@
-{}
+{
+  "doctor_hero": {
+    "src": "https://picsum.photos/seed/doc-hero/400/400",
+    "hint": "doctor portrait"
+  },
+  "doctor_about": {
+    "src": "https://picsum.photos/seed/doc-about/350/350",
+    "hint": "doctor smiling"
+  },
+  "patient_avatar_1": {
+    "src": "https://picsum.photos/seed/patient1/40/40",
+    "hint": "person smiling"
+  },
+  "patient_avatar_2": {
+    "src": "https://picsum.photos/seed/patient2/40/40",
+    "hint": "person portrait"
+  },
+  "patient_avatar_3": {
+    "src": "https://picsum.photos/seed/patient3/40/40",
+    "hint": "man smiling"
+  },
+  "patient_avatar_4": {
+    "src": "https://picsum.photos/seed/patient4/40/40",
+    "hint": "woman portrait"
+  },
+  "patient_avatar_5": {
+    "src": "https://picsum.photos/seed/patient5/40/40",
+    "hint": "person portrait"
+  },
+  "blog_main_1": {
+    "src": "https://picsum.photos/seed/blog1/600/400",
+    "hint": "heart health"
+  },
+  "blog_main_2": {
+    "src": "https://picsum.photos/seed/blog2/600/400",
+    "hint": "healthy food"
+  },
+  "blog_main_3": {
+    "src": "https://picsum.photos/seed/blog3/600/400",
+    "hint": "person exercising"
+  },
+  "blog_main_4": {
+    "src": "https://picsum.photos/seed/blog4/600/400",
+    "hint": "doctor consultation"
+  }
+}
