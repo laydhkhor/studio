@@ -64,24 +64,24 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
     return (
         <section className="bg-secondary py-20 md:py-28">
             <div className="container">
-                <div className="grid lg:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h2 className="font-headline text-3xl md:text-4xl font-bold">
+                <div className="flex flex-col items-center gap-12">
+                    <div className="max-w-3xl text-center">
+                        <h2 className="font-headline text-3xl font-bold md:text-4xl">
                            {bookingData.title}
                         </h2>
                         <p className="mt-4 text-lg text-muted-foreground">
                            {bookingData.subtitle}
                         </p>
-                         <ul className="mt-8 space-y-4 text-muted-foreground">
+                         <ul className="mt-8 space-y-4 text-left text-muted-foreground">
                             <li className="flex items-start gap-3">
-                                <CalendarIcon className="h-6 w-6 text-primary shrink-0 mt-1" />
+                                <CalendarIcon className="h-6 w-6 shrink-0 mt-1 text-primary" />
                                 <div>
                                     <h3 className="font-semibold text-foreground">Flexible Scheduling</h3>
                                     <p>Pick a date and time that works best for you from the available slots.</p>
                                 </div>
                             </li>
                              <li className="flex items-start gap-3">
-                                <Clock className="h-6 w-6 text-primary shrink-0 mt-1" />
+                                <Clock className="h-6 w-6 shrink-0 mt-1 text-primary" />
                                 <div>
                                     <h3 className="font-semibold text-foreground">Confirmation Reminder</h3>
                                     <p>You'll receive an instant confirmation and a reminder before your session.</p>
@@ -89,7 +89,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                             </li>
                         </ul>
                     </div>
-                    <Card className="shadow-xl">
+                    <Card className="w-full max-w-3xl shadow-xl">
                         <CardHeader>
                             <CardTitle className="font-headline">Book Your Slot</CardTitle>
                              <CardDescription>Fill in your details below.</CardDescription>
@@ -104,7 +104,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                     <Label htmlFor="phone">Phone Number</Label>
                                     <Input id="phone" type="tel" placeholder="+91 12345 67890" value={phone} onChange={(e) => setPhone(e.target.value)} required/>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div className="space-y-2">
                                         <Label htmlFor="dob">Date of Birth</Label>
                                         <Popover>
@@ -147,7 +147,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                         </Select>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div className="space-y-2">
                                         <Label htmlFor="date">Appointment Date</Label>
                                         <Select value={selectedDate} onValueChange={setSelectedDate} required>
