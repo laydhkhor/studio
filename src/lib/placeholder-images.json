@@ -1,10 +1,10 @@
 {
   "doctor_hero": {
-    "src": "https://picsum.photos/seed/doc-hero/400/400",
-    "hint": "doctor portrait"
+    "src": "https://images.unsplash.com/photo-1622253692010-333f2da60710?q=80&w=400&h=400&fit=crop",
+    "hint": "male doctor"
   },
   "doctor_about": {
-    "src": "https://picsum.photos/seed/doc-about/350/350",
+    "src": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16e?q=80&w=350&h=350&fit=crop",
     "hint": "doctor smiling"
   },
   "patient_avatar_1": {
