@@ -23,14 +23,15 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
     const [name, setName] = React.useState('');
     const [phone, setPhone] = React.useState('');
     const [dob, setDob] = React.useState<Date>();
-    const [reason, setReason] = React.useState('');
+    const [selectedReason, setSelectedReason] = React.useState('');
+    const [details, setDetails] = React.useState('');
     const [selectedDate, setSelectedDate] = React.useState('');
     const [selectedTime, setSelectedTime] = React.useState('');
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!name || !phone || !dob || !selectedDate || !selectedTime) {
+        if (!name || !phone || !dob || !selectedReason || !selectedDate || !selectedTime) {
             toast({
                 variant: 'destructive',
                 title: 'Incomplete Form',
@@ -51,7 +52,8 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
             setName('');
             setPhone('');
             setDob(undefined);
-            setReason('');
+            setSelectedReason('');
+            setDetails('');
             setSelectedDate('');
             setSelectedTime('');
         }, 1500);
@@ -131,14 +133,17 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                     </Popover>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="reason">Reason for Booking (Optional)</Label>
-                                    <Textarea
-                                        id="reason"
-                                        placeholder="Briefly describe your health concern..."
-                                        value={reason}
-                                        onChange={(e) => setReason(e.target.value)}
-                                        className="min-h-[100px]"
-                                    />
+                                    <Label htmlFor="reason">Reason for Booking</Label>
+                                    <Select value={selectedReason} onValueChange={setSelectedReason} required>
+                                        <SelectTrigger id="reason">
+                                            <SelectValue placeholder="Select a reason" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {bookingData.reasons.map((reason: string) => (
+                                                <SelectItem key={reason} value={reason}>{reason}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="date">Appointment Date</Label>
@@ -165,6 +170,16 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="details">Additional Details (Optional)</Label>
+                                    <Textarea
+                                        id="details"
+                                        placeholder="Provide any other relevant details..."
+                                        value={details}
+                                        onChange={(e) => setDetails(e.target.value)}
+                                        className="min-h-[100px]"
+                                    />
                                 </div>
                                 <Button type="submit" className="w-full font-ui" disabled={isSubmitting}>
                                     {isSubmitting ? 'Booking...' : 'Book Video Session'}

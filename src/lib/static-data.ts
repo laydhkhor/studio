@@ -142,6 +142,15 @@ export const bookingData = {
         '02:00 PM - 02:30 PM',
         '02:30 PM - 03:00 PM',
         '03:00 PM - 03:30 PM',
+    ],
+    reasons: [
+        'General Check-up',
+        'Fever',
+        'Headache',
+        'Cold & Cough',
+        'Stomach Pain',
+        'Follow-up',
+        'Other',
     ]
 };
 
