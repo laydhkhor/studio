@@ -34,11 +34,6 @@ export const adminNavItems = [
     href: '/admin/seo-tool',
     icon: 'Sparkles',
     label: 'SEO Tool',
-  },
-   {
-    href: '/cms',
-    icon: 'Database',
-    label: 'CMS',
   }
 ];
 

@@ -3,18 +3,6 @@ import dynamic from 'next/dynamic';
 import HeroSection from '@/components/blocks/HeroSection';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// Note: This component is simplified to render static data.
-// The original implementation with useLiveQuery for Sanity previews is commented out below.
-// import { useLiveQuery } from 'next-sanity/live';
-// import {
-//     homePageQuery,
-//     aboutPageQuery,
-//     pricingPageQuery,
-//     testimonialsQuery,
-//     clinicPageQuery,
-//     faqPageQuery,
-// } from '@/sanity/queries';
-
 const LoadingSkeleton = () => (
   <div className="w-full py-20 md:py-28">
     <div className="container">
@@ -62,14 +50,6 @@ export default function HomePage({
     clinic: any,
     faq: any
 }) {
-
-    // const [home] = useLiveQuery(initialHome, homePageQuery, {}, { enabled: isPreview });
-    // const [about] = useLiveQuery(initialAbout, aboutPageQuery, {}, { enabled: isPreview });
-    // const [pricing] = useLiveQuery(initialPricing, pricingPageQuery, {}, { enabled: isPreview });
-    // const [testimonials] = useLiveQuery(initialTestimonials, testimonialsQuery, {}, { enabled: isPreview });
-    // const [clinic] = useLiveQuery(initialClinic, clinicPageQuery, {}, { enabled: isPreview });
-    // const [faq] = useLiveQuery(initialFaq, faqPageQuery, {}, { enabled: isPreview });
-
     return (
       <>
         <HeroSection 

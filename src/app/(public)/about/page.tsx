@@ -4,12 +4,6 @@ import { Award, GraduationCap, Users } from 'lucide-react';
 import type { Metadata } from 'next';
 import { aboutData } from '@/lib/static-data';
 
-// Note: Sanity fetching is commented out to use static data.
-// import { client } from '@/sanity/client';
-// import { groq } from 'next-sanity';
-
-// const aboutPageQuery = groq`*[_type == "about"][0]`;
-
 export async function generateMetadata(): Promise<Metadata> {
   const data = aboutData;
   return {

@@ -1,9 +1,12 @@
-'use client'
-
-import {NextStudio} from 'next-sanity/studio'
-import config from '../../../../../sanity.config'
-
 export default function StudioPage() {
-  //  Supports the same props as `import {Studio} from 'sanity'`, `config` is required
-  return <NextStudio config={config} />
+  return (
+    <div className="flex items-center justify-center h-full p-8 text-center">
+      <div>
+        <h1 className="text-2xl font-bold">Sanity Studio Removed</h1>
+        <p className="text-muted-foreground mt-2">
+          The Sanity CMS integration has been removed from this application.
+        </p>
+      </div>
+    </div>
+  );
 }

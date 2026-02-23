@@ -16,24 +16,13 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { pricingData } from '@/lib/static-data';
 
-// Note: Sanity fetching is commented out to use static data.
-// import { client } from '@/sanity/client';
-// import { groq } from 'next-sanity';
-
 export const metadata: Metadata = {
   title: 'Pricing & Plans | DocAssist',
   description:
     'Compare our flexible consultation options: Chat, Video, and In-Clinic visits. Choose the plan that best suits your healthcare needs.',
 };
 
-// const query = groq`*[_type == "pricing"][0]`;
-
 export default async function PricingPage() {
-  // const data = await client.fetch(query, {}, {
-  //   next: {
-  //     tags: ['pricing']
-  //   }
-  // });
   const data = pricingData;
   const { pricingOptions, consultationFeatures } = data || {};
 

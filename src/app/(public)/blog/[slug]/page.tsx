@@ -6,18 +6,7 @@ import { format } from 'date-fns';
 import { ArrowLeft, User } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { PortableText } from '@portabletext/react';
 import { postsData } from '@/lib/static-data';
-
-// Note: Sanity fetching is commented out to use static data.
-// import { getClient } from '@/sanity/client';
-// import { groq } from 'next-sanity';
-// import { draftMode } from 'next/headers';
-// const postQuery = groq`*[_type == "post" && slug.current == $slug][0]{
-//   ...,
-//   "categoryName": category->title,
-//   "authorName": author->name
-// }`;
 
 const getPost = (slug: string) => {
     return postsData.find(p => p.slug === slug);
@@ -90,7 +79,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               </div>}
               
               <div className="prose lg:prose-xl mx-auto text-justify text-muted-foreground">
-                  <PortableText value={post.body} />
+                  {post.body.map((block: any) => {
+                    const text = block.children.map((span: any) => span.text).join('');
+                    if (block.style === 'h2') {
+                        return <h2 key={block._key}>{text}</h2>;
+                    }
+                    return <p key={block._key}>{text}</p>;
+                  })}
               </div>
 
           </div>
