@@ -140,33 +140,31 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                         className="min-h-[100px]"
                                     />
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="date">Appointment Date</Label>
-                                        <Select value={selectedDate} onValueChange={setSelectedDate} required>
-                                            <SelectTrigger id="date">
-                                                <SelectValue placeholder="Select a date" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {bookingData.availableDates.map((date: string) => (
-                                                    <SelectItem key={date} value={date}>{date}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="time">Time Slot</Label>
-                                        <Select value={selectedTime} onValueChange={setSelectedTime} required>
-                                            <SelectTrigger id="time">
-                                                <SelectValue placeholder="Select a time" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {bookingData.timeSlots.map((time: string) => (
-                                                    <SelectItem key={time} value={time}>{time}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="date">Appointment Date</Label>
+                                    <Select value={selectedDate} onValueChange={setSelectedDate} required>
+                                        <SelectTrigger id="date">
+                                            <SelectValue placeholder="Select a date" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {bookingData.availableDates.map((date: string) => (
+                                                <SelectItem key={date} value={date}>{date}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="time">Time Slot</Label>
+                                    <Select value={selectedTime} onValueChange={setSelectedTime} required>
+                                        <SelectTrigger id="time">
+                                            <SelectValue placeholder="Select a time" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {bookingData.timeSlots.map((time: string) => (
+                                                <SelectItem key={time} value={time}>{time}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <Button type="submit" className="w-full font-ui" disabled={isSubmitting}>
                                     {isSubmitting ? 'Booking...' : 'Book Video Session'}
