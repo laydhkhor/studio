@@ -34,9 +34,9 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
     return null;
   }
 
-  const locations = [
+  const locations: string[] = [
     'All',
-    ...Array.from(new Set(clinicLocations.map((c: any) => c.name.replace(' Clinic', '')))),
+    ...Array.from(new Set(clinicLocations.map((c: any) => c.name.replace(' Clinic', '')))) as string[],
   ];
 
   const filteredClinics = React.useMemo(() => {

@@ -70,7 +70,7 @@ export default function TestimonialsSection({ testimonials }: any) {
     return null;
   }
 
-  const locations = ['All', ...Array.from(new Set(testimonials.map((t: any) => t.location)))];
+  const locations: string[] = ['All', ...Array.from(new Set(testimonials.map((t: any) => t.location))) as string[]];
   const ratings = [0, 5, 4, 3, 2, 1]; // 0 for All
 
   const filteredTestimonials = React.useMemo(() => {

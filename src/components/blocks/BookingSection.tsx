@@ -126,7 +126,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                                 selected={dob}
                                                 onSelect={setDob}
                                                 initialFocus
-                                                captionLayout="dropdown-buttons"
+                                                captionLayout="dropdown"
                                                 fromYear={1920}
                                                 toYear={new Date().getFullYear()}
                                             />
