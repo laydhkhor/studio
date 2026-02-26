@@ -3,7 +3,8 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import { Star } from 'lucide-react';
+import Link from 'next/link';
+import { Star, ArrowRight } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -21,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 
 function Rating({ value }: { value: number }) {
   return (
@@ -213,6 +215,14 @@ export default function TestimonialsSection({ testimonials }: any) {
           <CarouselPrevious className="hidden md:flex"/>
           <CarouselNext className="hidden md:flex"/>
         </Carousel>
+
+        <div className="mt-12 text-center">
+          <Button asChild variant="outline" className="font-ui">
+            <Link href="/review">
+              View All Reviews <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   );

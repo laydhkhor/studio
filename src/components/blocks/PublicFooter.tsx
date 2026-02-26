@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -46,6 +47,11 @@ export default function PublicFooter({ navLinks, clinicInfo }: any) {
                   </Link>
                 </li>
               ))}
+              <li className="break-inside-avoid">
+                <Link href="/review" className="text-muted-foreground hover:text-primary text-sm">
+                  Reviews
+                </Link>
+              </li>
             </ul>
           </div>
           <div className="md:col-span-3">
