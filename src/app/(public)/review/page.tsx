@@ -5,7 +5,7 @@ import * as React from 'react';
 import { testimonialsData } from '@/lib/static-data';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Star, Search, Filter } from 'lucide-react';
+import { Star, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 
 function Rating({ value }: { value: number }) {
   return (
@@ -31,10 +32,13 @@ function Rating({ value }: { value: number }) {
   );
 }
 
+const ITEMS_PER_PAGE = 6;
+
 export default function ReviewPage() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [locationFilter, setLocationFilter] = React.useState('All');
   const [ratingFilter, setRatingFilter] = React.useState('0');
+  const [currentPage, setCurrentPage] = React.useState(1);
   const [isMounted, setIsMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -52,6 +56,20 @@ export default function ReviewPage() {
       return matchesSearch && matchesLocation && matchesRating;
     });
   }, [searchTerm, locationFilter, ratingFilter]);
+
+  // Reset to first page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, locationFilter, ratingFilter]);
+
+  const totalPages = Math.ceil(filteredReviews.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedReviews = filteredReviews.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="py-20 md:py-28 bg-background">
@@ -98,9 +116,9 @@ export default function ReviewPage() {
           </Select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredReviews.length > 0 ? (
-            filteredReviews.map((testimonial) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {paginatedReviews.length > 0 ? (
+            paginatedReviews.map((testimonial) => (
               <Card key={testimonial._id} className="h-full shadow-md flex flex-col hover:shadow-lg transition-shadow">
                 <CardContent className="flex flex-col items-start gap-4 p-6 flex-grow">
                   <div className="flex justify-between w-full items-center">
@@ -135,6 +153,58 @@ export default function ReviewPage() {
             </div>
           )}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }).map((_, i) => {
+                const pageNumber = i + 1;
+                // Basic logic to show limited page numbers if there are too many
+                if (
+                  totalPages > 7 &&
+                  pageNumber !== 1 &&
+                  pageNumber !== totalPages &&
+                  Math.abs(pageNumber - currentPage) > 1
+                ) {
+                  if (pageNumber === 2 || pageNumber === totalPages - 1) {
+                    return <span key={pageNumber} className="px-2">...</span>;
+                  }
+                  return null;
+                }
+                
+                return (
+                  <Button
+                    key={pageNumber}
+                    variant={currentPage === pageNumber ? "default" : "outline"}
+                    className="w-10 h-10"
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </Button>
+                );
+              })}
+            </div>
+
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
