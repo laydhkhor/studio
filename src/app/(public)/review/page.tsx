@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -32,7 +31,7 @@ function Rating({ value }: { value: number }) {
   );
 }
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 3; // Reduced to show pagination with current sample data
 
 export default function ReviewPage() {
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -116,7 +115,7 @@ export default function ReviewPage() {
           </Select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 min-h-[400px]">
           {paginatedReviews.length > 0 ? (
             paginatedReviews.map((testimonial) => (
               <Card key={testimonial._id} className="h-full shadow-md flex flex-col hover:shadow-lg transition-shadow">
@@ -156,14 +155,16 @@ export default function ReviewPage() {
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-2">
+          <div className="flex justify-center items-center gap-2 pt-8">
             <Button
               variant="outline"
               size="icon"
               disabled={currentPage === 1}
               onClick={() => handlePageChange(currentPage - 1)}
+              className="h-10 w-10"
             >
               <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Previous Page</span>
             </Button>
             
             <div className="flex items-center gap-1">
@@ -200,8 +201,10 @@ export default function ReviewPage() {
               size="icon"
               disabled={currentPage === totalPages}
               onClick={() => handlePageChange(currentPage + 1)}
+              className="h-10 w-10"
             >
               <ChevronRight className="h-4 w-4" />
+              <span className="sr-only">Next Page</span>
             </Button>
           </div>
         )}
