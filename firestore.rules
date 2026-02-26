@@ -1,0 +1,161 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * CORE PHILOSOPHY
+     * This ruleset implements a Hybrid Ownership and Role-Based Access Control (RBAC) model. 
+     * It prioritizes "Authorization Independence" by using a dedicated DBAC collection 
+     * (/roles_doctor) to identify administrative users and relying on denormalized 
+     * user IDs within documents to make localized authorization decisions.
+     *
+     * DATA STRUCTURE
+     * - /users/{userId}: Core profile data, owner-managed with doctor oversight.
+     * - /roles_doctor/{userId}: A marker collection; existence of a UID here grants doctor-level permissions.
+     * - /patients/{patientId}/...: User-siloed data for bookings, prescriptions, and schedules.
+     * - /reviews/{reviewId}: Top-level collection for public feedback.
+     *
+     * KEY SECURITY DECISIONS
+     * 1. DBAC (Database Access Control): Instead of complex nested lookups, we use the `isDoctor()` 
+     *    helper which checks for the existence of a document in the `roles_doctor` collection.
+     * 2. Structural Segregation: Patient-specific health data is nested under the patient's UID 
+     *    to simplify list operations and enforce privacy.
+     * 3. Prototyping Flexibility: These rules enforce "who" can access data based on relationship 
+     *    fields (patientId, doctorId) but do not enforce strict data schemas or types.
+     * 4. Relational Integrity: On creation of nested resources, we enforce that the internal 
+     *    'patientId' field matches the URL path to prevent data cross-talk.
+     */
+
+    // --- Global Helper Functions ---
+
+    /** @description Checks if the request is from an authenticated user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** @description Checks if the authenticated user matches the provided ID. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** @description Checks if the authenticated user is registered in the doctor roles collection. */
+    function isDoctor() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_doctor/$(request.auth.uid));
+    }
+
+    /** @description Verifies ownership and document existence for state-changing operations. */
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    /** @description Verifies doctor role and document existence for state-changing operations. */
+    function isExistingDoctor() {
+      return resource != null && isDoctor();
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Rules for the core User profiles.
+     * @path /users/{userId}
+     * @allow (create) if auth.uid == userId. (update) if user is owner or doctor.
+     * @deny (delete) if user is not a doctor.
+     * @principle Ownership for personal data; DBAC for administrative actions.
+     */
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isDoctor();
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) || isExistingDoctor();
+      allow delete: if isExistingDoctor();
+    }
+
+    /**
+     * @description Rules for doctor role markers.
+     * @path /roles_doctor/{doctorId}
+     * @allow (get) if signed in.
+     * @deny (write) for all clients; managed by system/admin.
+     * @principle Database Access Control (DBAC) marker.
+     */
+    match /roles_doctor/{doctorId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if false; 
+    }
+
+    /**
+     * @description Professional profile for the doctor.
+     * @path /doctor_profile/{doctorId}
+     * @allow (read) for all signed-in users. (write) if user is the doctor.
+     * @deny (write) if UID does not match.
+     * @principle Public read profile with owner-only writes.
+     */
+    match /doctor_profile/{doctorId} {
+      allow get, list: if isSignedIn();
+      allow create: if isOwner(doctorId) && request.resource.data.userId == doctorId;
+      allow update, delete: if isExistingOwner(doctorId);
+    }
+
+    /**
+     * @description Global application and clinic configuration.
+     * @path /app_config/{doctorId}
+     * @allow (read) for all signed-in users. (write) if user is the doctor.
+     * @principle Singleton configuration managed by the doctor.
+     */
+    match /app_config/{doctorId} {
+      allow get, list: if isSignedIn();
+      allow create: if isOwner(doctorId) && request.resource.data.doctorId == doctorId;
+      allow update, delete: if isExistingOwner(doctorId);
+    }
+
+    /**
+     * @description Patient appointment bookings.
+     * @path /patients/{patientId}/bookings/{bookingId}
+     * @allow (read/write) if user is the patient or the doctor.
+     * @principle Shared access between patient and doctor using path-based and role-based checks.
+     */
+    match /patients/{patientId}/bookings/{bookingId} {
+      allow get, list: if isOwner(patientId) || isDoctor();
+      allow create: if (isOwner(patientId) || isDoctor()) && request.resource.data.patientId == patientId;
+      allow update, delete: if resource != null && (isOwner(patientId) || isDoctor());
+    }
+
+    /**
+     * @description Medical prescriptions issued to patients.
+     * @path /patients/{patientId}/prescriptions/{prescriptionId}
+     * @allow (read) if patient or doctor. (write) if doctor only.
+     * @principle Restricted write access for clinical documents.
+     */
+    match /patients/{patientId}/prescriptions/{prescriptionId} {
+      allow get, list: if isOwner(patientId) || isDoctor();
+      allow create: if isDoctor() && request.resource.data.patientId == patientId;
+      allow update, delete: if isExistingDoctor();
+    }
+
+    /**
+     * @description Dosage schedules for prescribed medicine.
+     * @path /patients/{patientId}/medicine_schedules/{medicineScheduleId}
+     * @allow (read/write) if patient (for tracking) or doctor (for management).
+     * @principle Shared tracking between patient and provider.
+     */
+    match /patients/{patientId}/medicine_schedules/{medicineScheduleId} {
+      allow get, list: if isOwner(patientId) || isDoctor();
+      allow create: if (isOwner(patientId) || isDoctor()) && request.resource.data.patientId == patientId;
+      allow update, delete: if resource != null && (isOwner(patientId) || isDoctor());
+    }
+
+    /**
+     * @description Public patient reviews and ratings.
+     * @path /reviews/{reviewId}
+     * @allow (read) for all users. (create) if patient sets their UID. (update) if owner.
+     * @deny (update) if trying to change patientId.
+     * @principle Public read with authenticated owner-only writes.
+     */
+    match /reviews/{reviewId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && request.resource.data.patientId == request.auth.uid;
+      allow update: if isExistingOwner(resource.data.patientId) && request.resource.data.patientId == resource.data.patientId;
+      allow delete: if isExistingOwner(resource.data.patientId) || isExistingDoctor();
+    }
+
+  }
+}

@@ -1,0 +1,609 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the application, which can be either a patient or the doctor. This entity stores core profile information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "fullName": {
+          "type": "string",
+          "description": "The full name of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user.",
+          "format": "email"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The phone number of the user."
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "description": "The date of birth of the user.",
+          "format": "date"
+        },
+        "gender": {
+          "type": "string",
+          "description": "The gender of the user (e.g., 'Male', 'Female', 'Other')."
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the user in the application (e.g., 'patient', 'doctor')."
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates if the user account is currently active. Doctor can deactivate/delete users."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The timestamp when the user profile was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "The timestamp when the user profile was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "fullName",
+        "email",
+        "phoneNumber",
+        "dateOfBirth",
+        "gender",
+        "role",
+        "isActive",
+        "createdAt"
+      ]
+    },
+    "DoctorProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DoctorProfile",
+      "type": "object",
+      "description": "Stores specific details and professional information for the single doctor using the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the DoctorProfile entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User entity for the doctor. (Relationship: User 1:1 DoctorProfile)"
+        },
+        "education": {
+          "type": "string",
+          "description": "Details about the doctor's educational background."
+        },
+        "practiceLocation": {
+          "type": "string",
+          "description": "The primary geographical location where the doctor practices."
+        },
+        "yearsOfExperience": {
+          "type": "number",
+          "description": "The total number of years the doctor has been practicing professionally."
+        },
+        "patientsServed": {
+          "type": "number",
+          "description": "The approximate number of patients the doctor has served."
+        },
+        "aboutMeSummary": {
+          "type": "string",
+          "description": "A concise summary or biography of the doctor. Longer content is managed via Sanity CMS."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "education",
+        "practiceLocation",
+        "yearsOfExperience",
+        "patientsServed"
+      ]
+    },
+    "Booking": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Booking",
+      "type": "object",
+      "description": "Manages patient appointment bookings, including type, status, and associated details.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Booking entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the User entity for the patient who made the booking. (Relationship: User 1:N Booking)"
+        },
+        "doctorId": {
+          "type": "string",
+          "description": "Reference to the User entity for the doctor. (Relationship: User 1:N Booking)"
+        },
+        "appointmentDateTime": {
+          "type": "string",
+          "description": "The scheduled date and time for the appointment.",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of consultation requested (e.g., 'Chat', 'Video', 'Clinic Visit')."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the booking (e.g., 'Pending', 'Accepted', 'Declined', 'Rescheduled', 'Completed', 'Cancelled')."
+        },
+        "meetingLink": {
+          "type": "string",
+          "description": "The URL for video conference appointments (e.g., Google Meet link), if applicable.",
+          "format": "uri"
+        },
+        "patientNotes": {
+          "type": "string",
+          "description": "Any specific notes or queries provided by the patient during the booking process."
+        },
+        "doctorNotes": {
+          "type": "string",
+          "description": "Any specific notes added by the doctor regarding the booking."
+        },
+        "rescheduleReason": {
+          "type": "string",
+          "description": "The reason provided if the booking was rescheduled."
+        },
+        "cancellationReason": {
+          "type": "string",
+          "description": "The reason provided if the booking was cancelled."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The timestamp when the booking was initially created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "The timestamp when the booking was last updated or its status changed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "doctorId",
+        "appointmentDateTime",
+        "type",
+        "status",
+        "createdAt"
+      ]
+    },
+    "Prescription": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Prescription",
+      "type": "object",
+      "description": "Stores details of prescriptions issued by the doctor to patients, including medicine items and instructions.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Prescription entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the User entity for the patient receiving the prescription. (Relationship: User 1:N Prescription)"
+        },
+        "doctorId": {
+          "type": "string",
+          "description": "Reference to the User entity for the doctor who issued the prescription. (Relationship: User 1:N Prescription)"
+        },
+        "issuedDate": {
+          "type": "string",
+          "description": "The date when the prescription was issued.",
+          "format": "date"
+        },
+        "generalRemarks": {
+          "type": "string",
+          "description": "Any general remarks or overarching instructions from the doctor for the entire prescription."
+        },
+        "medicineItems": {
+          "type": "array",
+          "description": "An array of objects, where each object represents a single medicine prescribed.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The timestamp when the prescription was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "doctorId",
+        "issuedDate",
+        "medicineItems",
+        "createdAt"
+      ]
+    },
+    "MedicineSchedule": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MedicineSchedule",
+      "type": "object",
+      "description": "Manages individual medicine dosage schedules for patients, used for reminders and tracking adherence.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the MedicineSchedule entity."
+        },
+        "prescriptionId": {
+          "type": "string",
+          "description": "Reference to the Prescription entity this schedule belongs to. (Relationship: Prescription 1:N MedicineSchedule)"
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the User entity for the patient. (Relationship: User 1:N MedicineSchedule)"
+        },
+        "medicineName": {
+          "type": "string",
+          "description": "The name of the medicine for which this schedule entry is created."
+        },
+        "scheduledDateTime": {
+          "type": "string",
+          "description": "The exact date and time a specific dose of medicine is scheduled to be taken.",
+          "format": "date-time"
+        },
+        "dosage": {
+          "type": "string",
+          "description": "The specific dosage amount for this scheduled medicine intake."
+        },
+        "taken": {
+          "type": "boolean",
+          "description": "Indicates whether the patient has marked this specific dose as taken."
+        },
+        "reminderSent": {
+          "type": "boolean",
+          "description": "Indicates whether a notification reminder for this schedule entry has been sent."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The timestamp when this medicine schedule entry was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "The timestamp when this medicine schedule entry was last updated (e.g., marked as taken).",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "prescriptionId",
+        "patientId",
+        "medicineName",
+        "scheduledDateTime",
+        "dosage",
+        "taken",
+        "reminderSent",
+        "createdAt"
+      ]
+    },
+    "AppConfig": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AppConfig",
+      "type": "object",
+      "description": "Stores global application settings and doctor-specific configurations, such as pricing and clinic details.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AppConfig entity (e.g., a fixed ID like 'global-config')."
+        },
+        "doctorId": {
+          "type": "string",
+          "description": "Reference to the User entity for the doctor who owns these configurations. (Relationship: User 1:1 AppConfig)"
+        },
+        "chatPricing": {
+          "type": "number",
+          "description": "The price for a chat consultation."
+        },
+        "videoPricing": {
+          "type": "number",
+          "description": "The price for a video consultation."
+        },
+        "clinicVisitPricing": {
+          "type": "number",
+          "description": "The price for a direct clinic visit."
+        },
+        "clinicAddress": {
+          "type": "string",
+          "description": "The physical address of the doctor's clinic."
+        },
+        "clinicMapLink": {
+          "type": "string",
+          "description": "A URL linking to the clinic's location on a map service (e.g., Google Maps).",
+          "format": "uri"
+        },
+        "contactEmail": {
+          "type": "string",
+          "description": "The general contact email address for the clinic or doctor.",
+          "format": "email"
+        },
+        "contactPhoneNumber": {
+          "type": "string",
+          "description": "The general contact phone number for the clinic or doctor."
+        },
+        "globalMessage": {
+          "type": "string",
+          "description": "A message set by the doctor to be displayed globally across the patient-facing application."
+        },
+        "unavailableDates": {
+          "type": "array",
+          "description": "An array of specific dates (YYYY-MM-DD) when the doctor is completely unavailable for appointments.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "doctorId",
+        "chatPricing",
+        "videoPricing",
+        "clinicVisitPricing",
+        "clinicAddress",
+        "contactEmail",
+        "contactPhoneNumber"
+      ]
+    },
+    "Review": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Review",
+      "type": "object",
+      "description": "Captures patient feedback and ratings for the doctor, which can be internally managed or potentially featured as testimonials.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Review entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the User entity for the patient who submitted the review. (Relationship: User 1:N Review)"
+        },
+        "doctorId": {
+          "type": "string",
+          "description": "Reference to the User entity for the doctor being reviewed. (Relationship: User 1:N Review)"
+        },
+        "rating": {
+          "type": "number",
+          "description": "The rating given by the patient, typically on a scale (e.g., 1 to 5 stars)."
+        },
+        "comment": {
+          "type": "string",
+          "description": "The textual feedback or detailed comment provided by the patient."
+        },
+        "reviewDate": {
+          "type": "string",
+          "description": "The date when the review was submitted.",
+          "format": "date"
+        },
+        "isApprovedForTestimonials": {
+          "type": "boolean",
+          "description": "Indicates if this review has been approved by the doctor for consideration as a public testimonial (managed via Sanity CMS)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The timestamp when the review was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "doctorId",
+        "rating",
+        "comment",
+        "reviewDate",
+        "createdAt"
+      ]
+    },
+    "Notification": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Notification",
+      "type": "object",
+      "description": "Represents a notification to be delivered to a user, typically stored in Realtime Database for real-time updates.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Notification entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User entity who is the recipient of this notification. (Relationship: User 1:N Notification)"
+        },
+        "message": {
+          "type": "string",
+          "description": "The descriptive content of the notification message."
+        },
+        "type": {
+          "type": "string",
+          "description": "The category or type of notification (e.g., 'booking_accepted', 'prescription_added', 'medicine_reminder')."
+        },
+        "relatedEntityId": {
+          "type": "string",
+          "description": "Optional: Reference to the ID of the entity that triggered this notification (e.g., a Booking ID, Prescription ID)."
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "Indicates whether the recipient user has viewed or acknowledged this notification."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The timestamp when the notification was generated and sent.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "message",
+        "type",
+        "isRead",
+        "createdAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "user",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores core user profile information for both patients and the doctor. The document ID matches the Firebase Auth UID. Includes a 'role' field (patient/doctor) for basic access control.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique Firebase Auth UID of the user (patient or doctor)."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_doctor/{doctorId}",
+        "definition": {
+          "entityName": "user",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "A dedicated collection for Database Access Control (DBAC) to explicitly mark the single doctor. The existence of a document here (whose ID is the doctor's UID) grants 'doctor' privileges in security rules, promoting Authorization Independence. The document itself can be empty or contain minimal identifying info.",
+          "params": [
+            {
+              "name": "doctorId",
+              "description": "The unique Firebase Auth UID of the single doctor."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/doctor_profile/{doctorId}",
+        "definition": {
+          "entityName": "doctorProfile",
+          "schema": {
+            "$ref": "#/backend/entities/DoctorProfile"
+          },
+          "description": "Stores the specific professional profile details for the single doctor. The document ID is the doctor's UID. Includes 'userId' field matching the doctor's UID for Authorization Independence.",
+          "params": [
+            {
+              "name": "doctorId",
+              "description": "The unique Firebase Auth UID of the single doctor."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/app_config/{doctorId}",
+        "definition": {
+          "entityName": "appConfig",
+          "schema": {
+            "$ref": "#/backend/entities/AppConfig"
+          },
+          "description": "Stores global application settings and doctor-specific configurations (e.g., pricing, clinic details). This is a singleton document whose ID is the doctor's UID. Includes 'doctorId' field for Authorization Independence.",
+          "params": [
+            {
+              "name": "doctorId",
+              "description": "The unique Firebase Auth UID of the single doctor."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/patients/{patientId}/bookings/{bookingId}",
+        "definition": {
+          "entityName": "booking",
+          "schema": {
+            "$ref": "#/backend/entities/Booking"
+          },
+          "description": "Manages individual patient appointment bookings. Patient can only access their own bookings. Includes denormalized 'patientId' and 'doctorId' for Authorization Independence, allowing direct security rule evaluation.",
+          "params": [
+            {
+              "name": "patientId",
+              "description": "The unique Firebase Auth UID of the patient."
+            },
+            {
+              "name": "bookingId",
+              "description": "The unique identifier for the booking."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/patients/{patientId}/prescriptions/{prescriptionId}",
+        "definition": {
+          "entityName": "prescription",
+          "schema": {
+            "$ref": "#/backend/entities/Prescription"
+          },
+          "description": "Stores prescriptions issued to a specific patient. Patient can only access their own prescriptions. Includes denormalized 'patientId' and 'doctorId' for Authorization Independence.",
+          "params": [
+            {
+              "name": "patientId",
+              "description": "The unique Firebase Auth UID of the patient."
+            },
+            {
+              "name": "prescriptionId",
+              "description": "The unique identifier for the prescription."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/patients/{patientId}/medicine_schedules/{medicineScheduleId}",
+        "definition": {
+          "entityName": "medicineSchedule",
+          "schema": {
+            "$ref": "#/backend/entities/MedicineSchedule"
+          },
+          "description": "Manages individual medicine dosage schedules for a patient. Patient can only access their own schedules. Includes denormalized 'patientId' and 'doctorId' (from Prescription) for Authorization Independence, enabling direct security rule checks without fetching parent documents.",
+          "params": [
+            {
+              "name": "patientId",
+              "description": "The unique Firebase Auth UID of the patient."
+            },
+            {
+              "name": "medicineScheduleId",
+              "description": "The unique identifier for the medicine schedule entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/reviews/{reviewId}",
+        "definition": {
+          "entityName": "review",
+          "schema": {
+            "$ref": "#/backend/entities/Review"
+          },
+          "description": "Captures patient feedback and ratings for the doctor. Patients can create and manage their own reviews, while the doctor can read all. Includes denormalized 'patientId' and 'doctorId' for Authorization Independence.",
+          "params": [
+            {
+              "name": "reviewId",
+              "description": "The unique identifier for the review."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The recommended Firestore structure prioritizes Authorization Independence, Structural Segregation, and DBAC (Database Access Control) to achieve simple, robust, and debuggable security rules. All collections maintain a homogeneous security posture, meaning documents within a single collection share the same access patterns. \n\n**Authorization Independence via Denormalization:**\n- The core principle of avoiding `get()` calls in security rules is achieved by denormalizing authorization-critical fields directly into the documents where they are needed. For entities like `Booking`, `Prescription`, and `Review`, the `patientId` and `doctorId` are explicitly stored within each document. This allows security rules to evaluate access based solely on `request.auth.uid` against these fields, without needing to fetch parent documents or related entities.\n- Specifically for `MedicineSchedule`, the `doctorId` will be denormalized from the `Prescription` entity. While `prescriptionId` and `patientId` are already present, including `doctorId` directly in `MedicineSchedule` documents allows the doctor to query and manage all medicine schedules without needing to perform a `get()` on the parent prescription, thereby simplifying rules and supporting atomic operations.\n- The `User` collection itself stores the `role` ('patient' or 'doctor'), and a dedicated `/roles_doctor/{doctorId}` collection is used for explicit role-based access control for the single doctor. The mere existence of a document in this collection with the `request.auth.uid` as its ID grants doctor privileges, adhering to the 'existence over content' DBAC strategy.\n\n**QAPs (Rules are not Filters):**\n- **Structural Segregation** is heavily utilized to support secure `list` operations. Patient-specific data (`Booking`, `Prescription`, `MedicineSchedule`) is nested under `/patients/{patientId}/...`. This structure inherently restricts a patient's queries to their own data (`/patients/$(request.auth.uid)/bookings`) and allows security rules to easily verify that the `patientId` in the path matches `request.auth.uid`.\n- For the doctor, who needs to view all bookings, prescriptions, and schedules across all patients, the security rules will grant access to these subcollections based on the `doctorId` field within the documents (e.g., `resource.data.doctorId == request.auth.uid`) or by checking the `/roles_doctor` collection. This allows the doctor to perform collection group queries or specific collection queries that are properly indexed and secured.\n- The top-level `/reviews` collection allows patients to create their own reviews and the doctor to read all reviews, with authorization enforced by `patientId` and `doctorId` fields denormalized within each `Review` document.\n- Singleton documents for `DoctorProfile` and `AppConfig` are identified by the doctor's `userId` as their document ID, ensuring that only the authenticated doctor can access and modify these critical settings."
+  }
+}
