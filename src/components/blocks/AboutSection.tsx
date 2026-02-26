@@ -11,6 +11,16 @@ export default function AboutSection({ about }: { about: any }) {
   return (
     <section className="py-20 md:py-28 bg-background">
       <div className="container">
+        {/* Section Title */}
+        <div className="mx-auto max-w-3xl text-center mb-16">
+          <h2 className="font-headline text-3xl md:text-4xl font-bold">
+            About the <span className="text-primary">Doctor</span>
+          </h2>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Get to know the person behind your healthcare and our commitment to your wellness.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Image Container */}
           <div className="relative flex justify-center">
@@ -24,17 +34,17 @@ export default function AboutSection({ about }: { about: any }) {
                 data-ai-hint={about.imageHint}
               />
               {/* Trust Badge overlay */}
-              <div className="absolute -bottom-6 -left-6 bg-accent text-accent-foreground p-4 rounded-xl shadow-lg z-20 flex items-center gap-3 hidden md:flex border-4 border-background">
+              <div className="absolute -bottom-6 -left-6 bg-accent text-accent-foreground p-4 rounded-xl shadow-lg z-20 hidden md:flex items-center gap-3 border-4 border-background">
                  <ShieldCheck className="h-8 w-8" />
                  <div>
                     <p className="font-headline font-bold leading-tight">Verified</p>
-                    <p className="text-xs font-ui opacity-90 text-justify">Medical Practitioner</p>
+                    <p className="text-xs font-ui opacity-90">Medical Practitioner</p>
                  </div>
               </div>
               {/* Experience overlay */}
               <div className="absolute -top-6 -right-6 bg-primary text-primary-foreground p-5 rounded-xl shadow-lg z-20 hidden md:block border-4 border-background">
                  <p className="text-2xl font-bold font-headline leading-tight">{about.experience}</p>
-                 <p className="text-xs font-ui opacity-90 text-justify uppercase tracking-wider">Experience</p>
+                 <p className="text-xs font-ui opacity-90 uppercase tracking-wider">Experience</p>
               </div>
             </div>
           </div>
@@ -45,9 +55,9 @@ export default function AboutSection({ about }: { about: any }) {
                <Award className="h-4 w-4" />
                Expert Healthcare
             </div>
-            <h2 className="font-headline text-3xl md:text-4xl font-bold">
+            <h3 className="font-headline text-3xl font-bold">
               Meet <span className="text-primary">{about.doctorName}</span>
-            </h2>
+            </h3>
             <p 
               className="text-lg text-muted-foreground text-justify leading-relaxed" 
               dangerouslySetInnerHTML={{ __html: about.missionStatement }} 
