@@ -54,7 +54,7 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useFirestore, useUser, useCollection, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
+import { useFirestore, useUser, useCollection, useMemoFirebase, useDoc, setDocumentNonBlocking } from '@/firebase';
 import { collection, query, orderBy, doc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
@@ -86,15 +86,18 @@ export default function AdminPrescriptionsPage() {
   // Fetch Patients for selection
   const patientsQuery = useMemoFirebase(() => {
     if (!db) return null;
-    return collection(db, 'users'); // Simplification: in real app filter by role='patient'
+    return collection(db, 'users');
   }, [db]);
   const { data: users } = useCollection(patientsQuery);
   const patients = users?.filter(u => u.role === 'patient') || [];
 
-  // Fetch all prescriptions (aggregated from patients)
-  // Note: Real app would need a root-level collection or cloud function for cross-patient list
-  // For MVP, we'll display a placeholder list or search results
-  const [prescriptions, setPrescriptions] = React.useState<any[]>([]);
+  // Fetch Predefined Categories from Settings
+  const settingsRef = useMemoFirebase(() => {
+    if (!db) return null;
+    return doc(db, 'app_config', 'clinical_settings');
+  }, [db]);
+  const { data: settings } = useDoc(settingsRef);
+  const categoriesList = settings?.prescriptionCategories || ['General', 'Follow-up', 'Consultation', 'Emergency'];
 
   const handleAddMedicine = () => {
     setMedicines([...medicines, { name: '', dosage: '1-0-1', timing: 'After Food', duration: '5 Days', notes: '' }]);
@@ -124,8 +127,6 @@ export default function AdminPrescriptionsPage() {
     setIsSubmitting(true);
     const rxId = `RX-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
     
-    // Format medicines as strings for the PrescriptionCard parsing logic
-    // Format: "Name | Dosage | Timing | Duration | Notes"
     const medicineItems = medicines.map(m => 
       `${m.name} | ${m.dosage} | ${m.timing} | ${m.duration} | ${m.notes}`
     );
@@ -181,7 +182,6 @@ export default function AdminPrescriptionsPage() {
             </DialogHeader>
 
             <div className="grid gap-6 py-4">
-              {/* Basic Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Select Patient</Label>
@@ -200,16 +200,21 @@ export default function AdminPrescriptionsPage() {
                 </div>
                 <div className="space-y-2">
                   <Label>Consultation Category</Label>
-                  <Input 
-                    placeholder="e.g., Fever, Post-Op, Diabetic" 
-                    value={category} 
-                    onChange={(e) => setCategory(e.target.value)} 
-                    className="h-11"
-                  />
+                  <Select value={category} onValueChange={setCategory}>
+                    <SelectTrigger className="h-11">
+                      <SelectValue placeholder="Choose category..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categoriesList.map((cat: string) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
-              {/* Medicines Builder */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <Label className="text-xs font-black uppercase tracking-widest text-primary">Medication Guide</Label>
@@ -289,7 +294,6 @@ export default function AdminPrescriptionsPage() {
                 </div>
               </div>
 
-              {/* Remarks */}
               <div className="space-y-2">
                 <Label>Clinical Remarks & Diet Advice</Label>
                 <Textarea 
@@ -312,7 +316,6 @@ export default function AdminPrescriptionsPage() {
         </Dialog>
       </div>
 
-      {/* Summary Cards */}
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="shadow-sm border-none bg-white">
           <CardHeader className="pb-2">
@@ -384,7 +387,6 @@ export default function AdminPrescriptionsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {/* Prescriptions would be fetched here. Showing placeholders for now. */}
               <TableRow className="hover:bg-slate-50 border-slate-100 transition-colors">
                 <TableCell className="pl-6"><code className="text-xs font-bold text-primary bg-primary/5 px-2 py-1 rounded">RX-7721</code></TableCell>
                 <TableCell className="font-bold text-slate-900 text-sm">Anjali Sharma</TableCell>
