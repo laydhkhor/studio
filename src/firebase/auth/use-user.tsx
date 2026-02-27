@@ -8,6 +8,10 @@ import { useFirebase, type UserHookResult } from '@/firebase/provider';
  * @returns {UserHookResult} Object with user, isUserLoading, userError.
  */
 export const useUser = (): UserHookResult => {
-  const { user, isUserLoading, userError } = useFirebase();
-  return { user, isUserLoading, userError };
+  const context = useFirebase();
+  return { 
+    user: context.user, 
+    isUserLoading: context.isUserLoading, 
+    userError: context.userError 
+  };
 };
