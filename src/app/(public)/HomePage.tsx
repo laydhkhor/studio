@@ -14,6 +14,10 @@ const AboutSection = dynamic(
   () => import('@/components/blocks/AboutSection'),
   { loading: () => <LoadingSkeleton /> }
 );
+const WhyChooseUsSection = dynamic(
+  () => import('@/components/blocks/WhyChooseUsSection'),
+  { loading: () => <LoadingSkeleton /> }
+);
 const BookingSection = dynamic(
   () => import('@/components/blocks/BookingSection'),
   { loading: () => <LoadingSkeleton /> }
@@ -65,6 +69,9 @@ export default function HomePage({
 
         {/* 2. About Doctor / Trust Section - White Background */}
         <AboutSection about={about} />
+
+        {/* 2.5 Why Choose Us - Neutral Background */}
+        <WhyChooseUsSection />
 
         {/* 3. Booking Form - Secondary Background */}
         <BookingSection bookingData={booking} />
