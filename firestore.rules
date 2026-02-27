@@ -23,10 +23,10 @@ service cloud.firestore {
     }
 
     function isDev() {
-      // Priority 1: Check for hardcoded master email (admin@docassist.com)
-      // Priority 2: Check for existence in roles_dev collection
+      // MASTER ACCESS: Grant full permissions to the developer email
       return isSignedIn() && (
         request.auth.token.email == 'admin@docassist.com' || 
+        request.auth.token.email == 'devilcry160@gmail.com' ||
         exists(/databases/$(database)/documents/roles_dev/$(request.auth.uid))
       );
     }

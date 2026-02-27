@@ -55,6 +55,8 @@ import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/fireb
 import { signOut } from 'firebase/auth';
 import { doc } from 'firebase/firestore';
 
+const DEV_EMAIL = 'devilcry160@gmail.com';
+
 function AdminSidebar() {
   const pathname = usePathname();
 
@@ -152,7 +154,7 @@ export default function AdminLayout({
     if (!isUserLoading && !isRoleLoading) {
       if (!user) {
         router.push('/admin/auth');
-      } else if (userData?.role !== 'doctor' && userData?.role !== 'dev') {
+      } else if (user.email !== DEV_EMAIL && userData?.role !== 'doctor' && userData?.role !== 'dev') {
         router.push('/patient/dashboard');
       }
     }
@@ -180,7 +182,9 @@ export default function AdminLayout({
     );
   }
 
-  if (!user || (userData?.role !== 'doctor' && userData?.role !== 'dev')) {
+  const isAuthorized = user?.email === DEV_EMAIL || userData?.role === 'doctor' || userData?.role === 'dev';
+
+  if (!user || !isAuthorized) {
     return null;
   }
 
@@ -231,7 +235,7 @@ export default function AdminLayout({
                   <Avatar className="h-8 w-8 border-2 border-primary/20">
                     <AvatarImage src={user.photoURL || ''} />
                     <AvatarFallback className="bg-primary text-white font-bold text-xs">
-                      {userData?.fullName?.charAt(0) || 'D'}
+                      {userData?.fullName?.charAt(0) || user.email?.charAt(0).toUpperCase() || 'D'}
                     </AvatarFallback>
                   </Avatar>
                   <ChevronDown className="h-4 w-4 text-slate-400" />
@@ -240,7 +244,7 @@ export default function AdminLayout({
               <DropdownMenuContent align="end" className="w-64 shadow-2xl rounded-xl border-slate-200 p-2">
                 <DropdownMenuLabel className="px-3 py-3">
                   <div className="flex flex-col gap-0.5">
-                    <p className="font-bold text-slate-900">{userData?.fullName}</p>
+                    <p className="font-bold text-slate-900">{userData?.fullName || user.displayName || 'Developer'}</p>
                     <p className="text-xs text-slate-500 truncate">{user.email}</p>
                   </div>
                 </DropdownMenuLabel>

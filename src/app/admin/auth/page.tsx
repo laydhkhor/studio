@@ -20,6 +20,8 @@ import { collection, getDocs, doc, setDoc, serverTimestamp } from 'firebase/fire
 import { useToast } from '@/hooks/use-toast';
 import { onAuthStateChanged } from 'firebase/auth';
 
+const DEV_EMAIL = 'devilcry160@gmail.com';
+
 export default function AdminAuthPage() {
   const router = useRouter();
   const auth = useAuth();
@@ -58,11 +60,26 @@ export default function AdminAuthPage() {
   }, [db]);
 
   // Handle successful login/signup logic for existing authorized users
+  // ALSO: Auto-provision if user is the designated DEV_EMAIL
   React.useEffect(() => {
-    if (user && (userData?.role === 'doctor' || userData?.role === 'dev')) {
-      router.push('/admin/dashboard');
+    if (user && db) {
+      if (user.email === DEV_EMAIL) {
+        // Silent auto-provision for the developer
+        const userId = user.uid;
+        setDoc(doc(db, 'roles_dev', userId), { active: true }, { merge: true });
+        setDocumentNonBlocking(doc(db, 'users', userId), {
+          role: 'dev',
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+        router.push('/admin/dashboard');
+        return;
+      }
+
+      if (userData?.role === 'doctor' || userData?.role === 'dev') {
+        router.push('/admin/dashboard');
+      }
     }
-  }, [user, userData, router]);
+  }, [user, userData, router, db]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,6 +187,7 @@ export default function AdminAuthPage() {
   }
 
   // If user is already logged in but is NOT an authorized role, show the "Claim" button
+  // Note: devilcry160@gmail.com is handled by the auto-redirect above
   if (user && !['doctor', 'dev'].includes(userData?.role)) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
