@@ -37,7 +37,7 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-              <Button size="lg" asChild className="w-full sm:w-auto h-14 px-10 text-lg font-ui rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all border-b-4 border-primary-foreground/20">
+              <Button size="lg" asChild className="w-full sm:w-auto h-14 px-10 text-lg font-ui rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">
                 <Link href="/login?redirect=/booking">
                   Book Appointment <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -120,8 +120,11 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
                 </div>
 
                 {/* Status Indicator */}
-                <div className="absolute -top-4 -right-4 z-20 bg-accent text-white px-5 py-2 rounded-xl font-bold shadow-xl shadow-accent/20 text-xs font-ui uppercase tracking-widest flex items-center gap-2 border-b-2 border-black/10">
-                   <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                <div className="absolute -top-4 -right-4 z-20 bg-white border border-slate-100 text-accent px-4 py-2 rounded-2xl font-bold shadow-2xl text-[10px] font-ui uppercase tracking-widest flex items-center gap-2.5">
+                   <span className="relative flex h-2 w-2">
+                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                     <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                   </span>
                    Available Today
                 </div>
             </div>
