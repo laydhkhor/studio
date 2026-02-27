@@ -1,15 +1,36 @@
-
 'use client';
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar as CalendarIcon, ShieldCheck, CheckCircle2, Clock, Loader2, Video, AlertCircle } from 'lucide-react';
-import { useFirestore, useUser, setDocumentNonBlocking, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, doc, updateDoc, serverTimestamp, addDoc } from 'firebase/firestore';
+import { 
+  Calendar as CalendarIcon, 
+  ShieldCheck, 
+  CheckCircle2, 
+  Clock, 
+  Loader2, 
+  Video, 
+  AlertCircle,
+  Stethoscope
+} from 'lucide-react';
+import { 
+  useFirestore, 
+  useUser, 
+  useCollection, 
+  useMemoFirebase 
+} from '@/firebase';
+import { 
+  collection, 
+  doc, 
+  updateDoc, 
+  serverTimestamp, 
+  setDoc,
+  addDoc,
+  query,
+  where
+} from 'firebase/firestore';
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import Script from 'next/script';
@@ -30,14 +51,15 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
     const [selectedSlotIndex, setSelectedSlotIndex] = React.useState<number | null>(null);
     const [isProcessing, setIsProcessing] = React.useState(false);
 
-    // Fetch live schedules
+    // 1. Fetch live schedules from the doctor's calendar
     const schedulesQuery = useMemoFirebase(() => {
       if (!db) return null;
       return collection(db, 'doctor_schedules');
     }, [db]);
 
-    const { data: rawSchedules } = useCollection(schedulesQuery);
+    const { data: rawSchedules, isLoading: isLoadingSchedules } = useCollection(schedulesQuery);
     
+    // Filter for dates that have at least one unbooked slot
     const availableDates = React.useMemo(() => {
       if (!rawSchedules) return [];
       return rawSchedules
@@ -49,24 +71,34 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
       return availableDates.find(s => s.date === selectedDate);
     }, [availableDates, selectedDate]);
 
-    const handleRazorpayPayment = async (slotTime: string) => {
+    const handleBookingInitiation = async () => {
       if (!user) {
-        toast({ variant: 'destructive', title: 'Login Required', description: 'Please sign in to book an appointment.' });
+        toast({ 
+          variant: 'destructive', 
+          title: 'Authentication Required', 
+          description: 'Please sign in to secure your clinical slot.' 
+        });
         router.push(`/login?redirect=/booking`);
         return;
       }
 
+      if (!selectedDate || selectedSlotIndex === null || !currentSchedule) return;
+
+      const slot = currentSchedule.slots[selectedSlotIndex];
+      
       setIsProcessing(true);
 
+      // Simulation of Razorpay Payment Flow
+      // In production, this would call your backend to create an order
       const options = {
-        key: 'rzp_test_dummykey',
-        amount: 40000,
+        key: 'rzp_test_dummy',
+        amount: 40000, // INR 400.00
         currency: 'INR',
         name: 'DocAssist Clinic',
-        description: `Video Consultation - ${selectedDate} at ${slotTime}`,
+        description: `Video Consultation - ${selectedDate} at ${slot.time}`,
         image: 'https://placehold.co/100x100/3b82f6/white?text=DA',
         handler: function (response: any) {
-          confirmBooking(slotTime, response.razorpay_payment_id);
+          finalizeBooking(slot.time, response.razorpay_payment_id || 'PAYMENT_ID_MOCK');
         },
         prefill: {
           name: user.displayName || 'Patient',
@@ -83,23 +115,29 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
       };
 
       try {
-        const rzp = new window.Razorpay(options);
-        rzp.open();
+        if (window.Razorpay) {
+          const rzp = new window.Razorpay(options);
+          rzp.open();
+        } else {
+          // Fallback if Razorpay script didn't load (prototyping fallback)
+          finalizeBooking(slot.time, 'MOCK_PAY_SUCCESS');
+        }
       } catch (e) {
         setIsProcessing(false);
-        toast({ variant: 'destructive', title: 'Payment Failed', description: 'Payment gateway could not be loaded.' });
+        toast({ variant: 'destructive', title: 'Payment Error', description: 'Could not connect to payment gateway.' });
       }
     };
 
-    const confirmBooking = async (slotTime: string, paymentId: string) => {
+    const finalizeBooking = async (slotTime: string, paymentId: string) => {
       if (!db || !user || !currentSchedule || selectedSlotIndex === null) return;
 
       const bookingId = `BK-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+      // Generate a mock meeting link
       const meetingLink = `https://meet.google.com/doc-${Math.random().toString(36).substring(2, 5)}-${Math.random().toString(36).substring(2, 5)}`;
       const appointmentDateTime = `${selectedDate}T${slotTime}:00`;
 
       try {
-        // 1. Update Schedule Slot
+        // A. Update the Doctor's Schedule (Lock the slot)
         const scheduleRef = doc(db, 'doctor_schedules', selectedDate);
         const updatedSlots = [...currentSchedule.slots];
         updatedSlots[selectedSlotIndex] = {
@@ -109,43 +147,47 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
         };
         await updateDoc(scheduleRef, { slots: updatedSlots });
 
-        // 2. Create Patient Booking in flat collection
-        const bookingRef = doc(db, 'appointments', bookingId);
-        setDocumentNonBlocking(bookingRef, {
+        // B. Create the Appointment Record (Flat collection)
+        const appointmentRef = doc(db, 'appointments', bookingId);
+        await setDoc(appointmentRef, {
           id: bookingId,
           patientId: user.uid,
           doctorId: 'main-doctor', 
           appointmentDateTime,
-          type: 'Video',
+          type: 'Video Consultation',
           status: 'Accepted',
           meetingLink,
           paymentId,
           amount: 400,
-          createdAt: serverTimestamp()
-        }, { merge: true });
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
 
-        // 3. Create Global Notification
-        const notifCol = collection(db, 'notifications');
-        addDoc(notifCol, {
+        // C. Create a Notification
+        const notificationsRef = collection(db, 'notifications');
+        await addDoc(notificationsRef, {
           userId: user.uid,
-          message: `Consultation confirmed for ${selectedDate} at ${slotTime}.`,
+          message: `Booking confirmed: Video consultation on ${format(parse(selectedDate, 'yyyy-MM-dd', new Date()), 'PPP')} at ${slotTime}.`,
           type: 'booking_accepted',
           isRead: false,
           createdAt: serverTimestamp()
         });
 
         toast({
-          title: 'Appointment Confirmed!',
-          description: `Your clinical slot is secured. Redirecting to dashboard...`,
+          title: 'Consultation Secured!',
+          description: `Your slot at ${slotTime} is confirmed. Redirecting to your dashboard...`,
         });
         
         setTimeout(() => {
           router.push('/patients-dashboard');
-        }, 1500);
+        }, 2000);
       } catch (error) {
-        console.error(error);
-        toast({ variant: 'destructive', title: 'Booking Error', description: 'Failed to finalize appointment.' });
-      } finally {
+        console.error('Booking Error:', error);
+        toast({ 
+          variant: 'destructive', 
+          title: 'System Error', 
+          description: 'Failed to record your appointment. Please contact support.' 
+        });
         setIsProcessing(false);
       }
     };
@@ -156,56 +198,58 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
         <section className="bg-transparent py-10" id="booking">
             <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
             <div className="container">
-                <div className="grid lg:grid-cols-12 gap-0 border rounded-[2rem] overflow-hidden shadow-2xl">
-                    {/* Left Side: Info */}
-                    <div className="lg:col-span-4 bg-primary p-8 md:p-12 text-white space-y-8 flex flex-col justify-between">
-                        <div className="space-y-6">
+                <div className="grid lg:grid-cols-12 gap-0 border-none rounded-[3rem] overflow-hidden shadow-2xl bg-white">
+                    {/* Left: Benefits & Information */}
+                    <div className="lg:col-span-4 bg-slate-900 p-8 md:p-12 text-white flex flex-col justify-between relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32" />
+                        
+                        <div className="relative z-10 space-y-8">
                             <div className="space-y-2">
-                                <h3 className="text-2xl font-headline font-bold">Consultation Package</h3>
-                                <p className="text-primary-foreground/80 text-sm">Professional video diagnostic session.</p>
+                                <div className="bg-primary/20 w-fit p-3 rounded-2xl mb-4">
+                                  <Stethoscope className="h-8 w-8 text-primary" />
+                                </div>
+                                <h3 className="text-3xl font-headline font-bold">Video Clinic</h3>
+                                <p className="text-slate-400 text-sm">Evidence-based diagnosis from your home.</p>
                             </div>
                             
                             <div className="space-y-6">
-                                <div className="flex gap-4 items-start">
-                                    <div className="bg-white/20 p-2.5 rounded-xl"><Clock className="h-5 w-5" /></div>
-                                    <div>
-                                      <p className="font-bold text-sm">10-Minute Clinical Slot</p>
-                                      <p className="text-xs text-primary-foreground/70">Structured diagnostic window</p>
-                                    </div>
-                                </div>
-                                <div className="flex gap-4 items-start">
-                                    <div className="bg-white/20 p-2.5 rounded-xl"><Video className="h-5 w-5" /></div>
-                                    <div>
-                                      <p className="font-bold text-sm">Google Meet Access</p>
-                                      <p className="text-xs text-primary-foreground/70">Secure end-to-end encryption</p>
-                                    </div>
-                                </div>
-                                <div className="flex gap-4 items-start">
-                                    <div className="bg-white/20 p-2.5 rounded-xl"><CheckCircle2 className="h-5 w-5" /></div>
-                                    <div>
-                                      <p className="font-bold text-sm">Digital RX Issued</p>
-                                      <p className="text-xs text-primary-foreground/70">Immediate dashboard delivery</p>
-                                    </div>
-                                </div>
+                                {[
+                                  { icon: Clock, t: '10-Min Diagnostic Window', s: 'Focused clinical attention' },
+                                  { icon: Video, t: 'Secure Google Meet', s: 'End-to-end encrypted connection' },
+                                  { icon: ShieldCheck, t: 'Verified Digital RX', s: 'Immediate dashboard delivery' }
+                                ].map((item, i) => (
+                                  <div key={i} className="flex gap-4 items-start group">
+                                      <div className="bg-white/5 p-2.5 rounded-xl group-hover:bg-primary/20 transition-colors">
+                                        <item.icon className="h-5 w-5 text-primary" />
+                                      </div>
+                                      <div>
+                                        <p className="font-bold text-sm text-white">{item.t}</p>
+                                        <p className="text-xs text-slate-500">{item.s}</p>
+                                      </div>
+                                  </div>
+                                ))}
                             </div>
                         </div>
 
-                        <div className="bg-white/10 p-6 rounded-2xl border border-white/10">
+                        <div className="relative z-10 mt-12 bg-white/5 p-6 rounded-2xl border border-white/10">
                             <div className="flex items-center gap-3 mb-2">
-                              <AlertCircle className="h-4 w-4 text-white" />
-                              <p className="text-xs font-bold uppercase tracking-widest">Clinical Note</p>
+                              <AlertCircle className="h-4 w-4 text-primary" />
+                              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Patient Protocol</p>
                             </div>
-                            <p className="text-xs text-primary-foreground/80 leading-relaxed italic">
-                                "Please ensure you have a stable internet connection and are in a quiet room 5 minutes before your scheduled time."
+                            <p className="text-[11px] text-slate-400 leading-relaxed italic">
+                                "Please join the session 5 minutes early with a stable connection and any recent test reports ready for review."
                             </p>
                         </div>
                     </div>
 
-                    {/* Right Side: Slot Selection */}
-                    <div className="lg:col-span-8 p-8 md:p-12 space-y-10 bg-white">
-                        {/* Date Selection */}
-                        <div className="space-y-4">
-                            <Label className="text-xs uppercase font-black tracking-widest text-slate-400">1. Select Consultation Date</Label>
+                    {/* Right: Interaction Area */}
+                    <div className="lg:col-span-8 p-8 md:p-12 space-y-12">
+                        {/* 1. Date Selection */}
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between">
+                              <Label className="text-xs font-black uppercase tracking-widest text-slate-400">1. Select Consultation Date</Label>
+                              {isLoadingSchedules && <Loader2 className="h-4 w-4 animate-spin text-primary" />}
+                            </div>
                             <div className="flex flex-wrap gap-3">
                                 {availableDates.length > 0 ? availableDates.map((schedule) => (
                                     <button
@@ -215,29 +259,40 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                           setSelectedSlotIndex(null);
                                         }}
                                         className={cn(
-                                            "px-6 py-4 rounded-2xl border-2 transition-all font-bold text-sm flex flex-col items-center min-w-[100px]",
+                                            "px-6 py-4 rounded-2xl border-2 transition-all font-bold text-sm flex flex-col items-center min-w-[110px] group",
                                             selectedDate === schedule.date 
-                                                ? "border-primary bg-primary text-white shadow-lg scale-105" 
-                                                : "border-slate-100 bg-slate-50 text-slate-600 hover:border-primary/30"
+                                                ? "border-primary bg-primary text-white shadow-xl scale-105" 
+                                                : "border-slate-50 bg-slate-50 text-slate-600 hover:border-primary/20 hover:bg-white hover:shadow-md"
                                         )}
                                     >
-                                        <span className="text-[10px] uppercase opacity-70 mb-1">{format(parse(schedule.date, 'yyyy-MM-dd', new Date()), 'EEE')}</span>
-                                        {format(parse(schedule.date, 'yyyy-MM-dd', new Date()), 'MMM dd')}
+                                        <span className={cn(
+                                          "text-[10px] uppercase font-black tracking-tighter mb-1",
+                                          selectedDate === schedule.date ? "text-white/70" : "text-slate-400"
+                                        )}>
+                                          {format(parse(schedule.date, 'yyyy-MM-dd', new Date()), 'EEE')}
+                                        </span>
+                                        <span className="text-lg">{format(parse(schedule.date, 'yyyy-MM-dd', new Date()), 'dd')}</span>
+                                        <span className={cn(
+                                          "text-[10px] font-bold uppercase",
+                                          selectedDate === schedule.date ? "text-white/80" : "text-primary"
+                                        )}>
+                                          {format(parse(schedule.date, 'yyyy-MM-dd', new Date()), 'MMM')}
+                                        </span>
                                     </button>
-                                )) : (
-                                  <div className="p-12 border-2 border-dashed border-slate-100 rounded-3xl w-full text-center">
+                                )) : !isLoadingSchedules && (
+                                  <div className="py-12 border-2 border-dashed border-slate-100 rounded-[2rem] w-full text-center bg-slate-50/50">
                                     <CalendarIcon className="h-10 w-10 text-slate-200 mx-auto mb-4" />
-                                    <p className="text-slate-400 text-sm font-medium">No clinical slots currently available.</p>
-                                    <p className="text-xs text-slate-300 mt-1">Our schedules are updated daily. Please check back soon.</p>
+                                    <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">No Clinical Slots Found</p>
+                                    <p className="text-xs text-slate-300 mt-1">Check back later or contact the clinic directly.</p>
                                   </div>
                                 )}
                             </div>
                         </div>
 
-                        {/* Slot Selection */}
+                        {/* 2. Slot Selection */}
                         {selectedDate && (
-                            <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
-                                <Label className="text-xs uppercase font-black tracking-widest text-slate-400">2. Choose Your 10-Min Window</Label>
+                            <div className="space-y-6 animate-in fade-in slide-in-from-top-2 duration-500">
+                                <Label className="text-xs font-black uppercase tracking-widest text-slate-400">2. Choose Your 10-Min Window</Label>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                                     {currentSchedule?.slots?.map((slot: any, index: number) => (
                                         <button
@@ -245,18 +300,18 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                             disabled={slot.isBooked}
                                             onClick={() => setSelectedSlotIndex(index)}
                                             className={cn(
-                                                "p-3 rounded-xl border font-mono text-sm transition-all relative overflow-hidden h-12 flex items-center justify-center",
+                                                "p-4 rounded-xl border-2 font-mono text-sm transition-all relative overflow-hidden h-14 flex items-center justify-center",
                                                 slot.isBooked 
                                                     ? "bg-slate-50 text-slate-300 border-slate-100 cursor-not-allowed" 
                                                     : selectedSlotIndex === index 
-                                                        ? "bg-primary/10 border-primary text-primary font-bold shadow-sm" 
-                                                        : "bg-white border-slate-200 text-slate-600 hover:border-primary hover:bg-primary/5"
+                                                        ? "bg-primary/5 border-primary text-primary font-black shadow-inner" 
+                                                        : "bg-white border-slate-100 text-slate-600 hover:border-primary/20 hover:shadow-sm"
                                             )}
                                         >
                                             {slot.time}
                                             {slot.isBooked && (
-                                              <div className="absolute inset-0 bg-slate-100/50 flex items-center justify-center">
-                                                <span className="text-[8px] uppercase font-black -rotate-12 bg-white px-1 shadow-sm text-slate-400">Taken</span>
+                                              <div className="absolute inset-0 bg-slate-100/40 flex items-center justify-center">
+                                                <span className="text-[8px] uppercase font-black -rotate-12 bg-white px-1.5 py-0.5 rounded shadow-sm text-slate-400">Reserved</span>
                                               </div>
                                             )}
                                         </button>
@@ -265,30 +320,34 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                             </div>
                         )}
 
-                        {/* CTA */}
-                        <div className="pt-6 border-t border-slate-100">
-                            <div className="flex flex-col sm:flex-row items-center gap-6">
+                        {/* 3. Confirmation & Checkout */}
+                        <div className="pt-8 border-t border-slate-100">
+                            <div className="flex flex-col sm:flex-row items-center gap-8">
                               <Button 
-                                  onClick={() => {
-                                    const time = currentSchedule?.slots[selectedSlotIndex!]?.time;
-                                    handleRazorpayPayment(time);
-                                  }}
+                                  onClick={handleBookingInitiation}
                                   size="lg" 
                                   disabled={!selectedDate || selectedSlotIndex === null || isProcessing}
-                                  className="w-full sm:flex-1 h-16 rounded-3xl text-lg font-bold shadow-xl shadow-primary/20 group"
+                                  className="w-full sm:flex-1 h-16 rounded-2xl text-lg font-black shadow-2xl shadow-primary/20 group relative overflow-hidden"
                               >
                                   {isProcessing ? (
-                                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                    <div className="flex items-center gap-3">
+                                      <Loader2 className="h-5 w-5 animate-spin" />
+                                      <span>Contacting Secure Gateway...</span>
+                                    </div>
                                   ) : (
-                                    <CheckCircle2 className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
+                                    <div className="flex items-center gap-3">
+                                      <CheckCircle2 className="h-5 w-5 transition-transform group-hover:scale-110" />
+                                      <span>Secure Diagnostic Slot</span>
+                                    </div>
                                   )}
-                                  {isProcessing ? 'Contacting Bank...' : 'Secure Slot & Confirm'}
                               </Button>
-                              <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-1">
-                                  <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                                      <ShieldCheck className="h-3 w-3 text-emerald-500" /> Razorpay Secured 
+                              <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-1.5">
+                                  <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                      <ShieldCheck className="h-4 w-4 text-emerald-500" /> Razorpay Verified 
                                   </div>
-                                  <p className="text-[10px] text-slate-400 max-w-[200px]">Standard clinical fee applies at checkout.</p>
+                                  <p className="text-[10px] font-bold text-slate-300 max-w-[180px] uppercase leading-tight">
+                                    Instant Confirmation • Digital RX Included
+                                  </p>
                               </div>
                             </div>
                         </div>
