@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -57,7 +56,7 @@ export default function AdminAuthPage() {
     checkDoctor();
   }, [db]);
 
-  // Handle successful login/signup logic for new doctors
+  // Handle successful login/signup logic for existing doctors
   React.useEffect(() => {
     if (user && userData?.role === 'doctor') {
       router.push('/admin/dashboard');
@@ -69,11 +68,19 @@ export default function AdminAuthPage() {
     if (!auth) return;
     setIsLoading(true);
 
+    const handleAuthError = (error: any) => {
+      setIsLoading(false);
+      toast({
+        variant: 'destructive',
+        title: 'Authentication Failed',
+        description: error.message || 'An error occurred during sign in.',
+      });
+    };
+
     if (isAdminExists) {
-      initiateEmailSignIn(auth, email, password);
+      initiateEmailSignIn(auth, email, password).catch(handleAuthError);
     } else {
-      // For initial bootstrap, the effect below will handle role creation
-      initiateEmailSignUp(auth, email, password);
+      initiateEmailSignUp(auth, email, password).catch(handleAuthError);
     }
   };
 

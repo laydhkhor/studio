@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -57,7 +56,14 @@ export default function LoginPage() {
     e.preventDefault();
     if (!auth) return;
     setIsLoading(true);
-    initiateEmailSignIn(auth, email, password);
+    initiateEmailSignIn(auth, email, password).catch((error: any) => {
+      setIsLoading(false);
+      toast({
+        variant: 'destructive',
+        title: 'Login Failed',
+        description: error.message || 'Check your credentials and try again.',
+      });
+    });
   };
 
   const handleGoogleLogin = async () => {

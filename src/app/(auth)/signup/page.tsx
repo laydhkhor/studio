@@ -51,7 +51,14 @@ export default function SignupPage() {
       return;
     }
     setIsLoading(true);
-    initiateEmailSignUp(auth, email, password);
+    initiateEmailSignUp(auth, email, password).catch((error: any) => {
+      setIsLoading(false);
+      toast({
+        variant: 'destructive',
+        title: 'Signup Failed',
+        description: error.message || 'An unexpected error occurred.',
+      });
+    });
   };
 
   const handleGoogleSignup = async () => {
