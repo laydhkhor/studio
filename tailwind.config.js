@@ -1,3 +1,4 @@
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
@@ -16,9 +17,9 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        body: ['Open Sans', 'sans-serif'],
-        headline: ['Montserrat', 'sans-serif'],
-        ui: ['Poppins', 'sans-serif'],
+        body: ['var(--font-open-sans)', 'sans-serif'],
+        headline: ['var(--font-montserrat)', 'sans-serif'],
+        ui: ['var(--font-poppins)', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',

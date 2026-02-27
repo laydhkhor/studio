@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -52,16 +53,15 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Open Sans', sans-serif;
+    @apply bg-background text-foreground font-body;
   }
 }
 
 @layer utilities {
   .font-headline {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-montserrat), sans-serif;
   }
   .font-ui {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-poppins), sans-serif;
   }
 }
