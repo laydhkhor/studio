@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -24,7 +23,7 @@ import { doc } from 'firebase/firestore';
 
 export default function LoginPage() {
   const { auth } = useAuth() ? { auth: useAuth() } : { auth: null };
-  const { user } = useUser();
+  const { user, isUserLoading } = useUser();
   const db = useFirestore();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -39,20 +38,26 @@ export default function LoginPage() {
     return doc(db, 'users', user.uid);
   }, [db, user]);
 
-  const { data: userData } = useDoc(userDocRef);
+  const { data: userData, isLoading: isDocLoading } = useDoc(userDocRef);
 
   React.useEffect(() => {
-    if (user && userData) {
-      const redirectUrl = searchParams.get('redirect');
-      if (redirectUrl) {
-        router.push(redirectUrl);
+    // Only proceed if we aren't loading the auth state or the user profile
+    if (!isUserLoading && !isDocLoading && user) {
+      if (userData) {
+        const redirectUrl = searchParams.get('redirect');
+        if (redirectUrl) {
+          router.push(redirectUrl);
+        } else {
+          const isSuperAdmin = user.email === 'devilcry160@gmail.com';
+          const isAdmin = userData.role === 'doctor' || userData.role === 'dev' || isSuperAdmin;
+          router.push(isAdmin ? '/admin/dashboard' : '/patients-dashboard');
+        }
       } else {
-        const isSuperAdmin = user.email === 'devilcry160@gmail.com';
-        const isAdmin = userData.role === 'doctor' || userData.role === 'dev' || isSuperAdmin;
-        router.push(isAdmin ? '/admin/dashboard' : '/patients-dashboard');
+        // Logged in but no profile record found? Send to complete profile
+        router.push('/complete-profile');
       }
     }
-  }, [user, userData, router, searchParams]);
+  }, [user, userData, isUserLoading, isDocLoading, router, searchParams]);
 
   const handleEmailLogin = (e: React.FormEvent) => {
     e.preventDefault();
