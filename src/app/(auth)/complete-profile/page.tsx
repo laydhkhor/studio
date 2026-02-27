@@ -78,7 +78,7 @@ export default function CompleteProfilePage() {
       description: 'Your profile has been successfully set up.',
     });
     
-    router.push('/');
+    router.push('/patient/dashboard');
   };
 
   if (isUserLoading) {

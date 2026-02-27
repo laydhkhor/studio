@@ -16,13 +16,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { GoogleIcon } from '@/components/icons';
 import { Loader2, ArrowLeft } from 'lucide-react';
-import { useAuth, useUser, initiateEmailSignIn } from '@/firebase';
+import { useAuth, useUser, initiateEmailSignIn, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
+import { doc } from 'firebase/firestore';
 
 export default function LoginPage() {
   const { auth } = useAuth() ? { auth: useAuth() } : { auth: null };
   const { user } = useUser();
+  const db = useFirestore();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -31,21 +33,30 @@ export default function LoginPage() {
   const [password, setPassword] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const redirectUrl = searchParams.get('redirect') || '/';
+  const userDocRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, 'users', user.uid);
+  }, [db, user]);
+
+  const { data: userData } = useDoc(userDocRef);
 
   // React to successful login
   React.useEffect(() => {
-    if (user) {
-      router.push(redirectUrl);
+    if (user && userData) {
+      const redirectUrl = searchParams.get('redirect');
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      } else {
+        router.push(userData.role === 'doctor' ? '/admin/dashboard' : '/patient/dashboard');
+      }
     }
-  }, [user, router, redirectUrl]);
+  }, [user, userData, router, searchParams]);
 
   const handleEmailLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth) return;
     setIsLoading(true);
     initiateEmailSignIn(auth, email, password);
-    // Success will be handled by the useEffect above
   };
 
   const handleGoogleLogin = async () => {
@@ -54,7 +65,6 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // Redirect handled by useEffect
     } catch (error: any) {
       toast({
         variant: 'destructive',
