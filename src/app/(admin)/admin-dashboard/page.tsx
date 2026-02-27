@@ -1,217 +1,182 @@
 'use client';
 
 import * as React from 'react';
-import {
-  Users,
-  CalendarDays,
-  DollarSign,
+import { 
+  Users, 
+  CalendarCheck, 
+  Activity, 
+  ArrowUpRight, 
   TrendingUp,
-  Download,
-  Activity,
-  ArrowUpRight,
   Clock,
-  ShieldCheck,
-  CheckCircle2,
-} from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
+  User,
+  ExternalLink
+} from 'lucide-react';
+import { 
+  Card, 
+  CardContent, 
+  CardHeader, 
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Area, AreaChart, XAxis, YAxis, CartesianGrid } from "recharts";
-import { Badge } from "@/components/ui/badge";
+  CardDescription
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where, orderBy, limit } from 'firebase/firestore';
 import Link from 'next/link';
+import { format } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
 
-const chartData = [
-  { month: "Jan", revenue: 45000, consultations: 120 },
-  { month: "Feb", revenue: 52000, consultations: 145 },
-  { month: "Mar", revenue: 48000, consultations: 130 },
-  { month: "Apr", revenue: 61000, consultations: 160 },
-  { month: "May", revenue: 55000, consultations: 155 },
-  { month: "Jun", revenue: 67000, consultations: 180 },
-  { month: "Jul", revenue: 72000, consultations: 195 },
-];
+export default function AdminDashboardPage() {
+  const db = useFirestore();
 
-const chartConfig = {
-  revenue: {
-    label: "Revenue",
-    color: "hsl(var(--primary))",
-  },
-} satisfies ChartConfig;
+  // 1. Fetch upcoming bookings (limit 5)
+  const bookingsQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    // Real app would fetch all bookings across all patients
+    // For MVP, we'll fetch from a global 'all_bookings' or just show stats
+    // Let's fetch from notifications as a proxy for recent activity if global bookings aren't ready
+    return query(collection(db, 'notifications'), orderBy('createdAt', 'desc'), limit(5));
+  }, [db]);
 
-const upcomingEvents = [
-  {
-    patient: "Anjali Sharma",
-    time: "10:30 AM",
-    type: "Video Call",
-    concern: "Fever Follow-up",
-    status: "Confirmed",
-  },
-  {
-    patient: "Rajesh Kumar",
-    time: "11:15 AM",
-    type: "Clinic Visit",
-    concern: "Diabetic Check",
-    status: "In-Transit",
-  },
-  {
-    patient: "Priya Mondal",
-    time: "02:00 PM",
-    type: "Chat",
-    concern: "Report Review",
-    status: "Pending",
-  },
-];
+  const { data: recentActivity, isLoading: isBookingsLoading } = useCollection(bookingsQuery);
 
-export default function AdminDashboard() {
+  // 2. Fetch total patients count
+  const patientsQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'users'), where('role', '==', 'patient'));
+  }, [db]);
+  const { data: patients } = useCollection(patientsQuery);
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight font-headline text-slate-900">Practice Overview</h1>
-          <p className="text-slate-500 font-medium">Monitoring your clinical performance and patient traffic.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" className="h-11 rounded-xl bg-white border-slate-200 text-slate-600 font-bold shadow-sm">
-            <Download className="mr-2 h-4 w-4" /> Export Data
-          </Button>
-          <Button asChild className="h-11 rounded-xl font-bold shadow-lg shadow-primary/20">
-            <Link href="/admin-dashboard/bookings">
-              <CalendarDays className="mr-2 h-4 w-4" /> New Booking
-            </Link>
-          </Button>
-        </div>
+    <div className="space-y-8">
+      <div>
+        <h1 className="font-headline text-3xl font-bold text-slate-900">Clinical Overview</h1>
+        <p className="text-muted-foreground font-ui">Welcome back, Doctor. Here's your practice summary for today.</p>
       </div>
-      
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-sm border-none bg-white overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">Total Revenue</CardTitle>
-            <div className="bg-primary/10 p-2 rounded-lg text-primary">
-              <DollarSign className="h-4 w-4" />
-            </div>
+
+      {/* Stats Grid */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="shadow-sm border-none bg-primary text-primary-foreground">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
+            <Users className="h-4 w-4 opacity-70" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-900">₹1,25,430</div>
-            <div className="flex items-center mt-1 text-emerald-600 font-bold text-xs">
-              <ArrowUpRight className="h-3 w-3 mr-1" /> +20.1% <span className="text-slate-400 font-medium ml-1">vs last month</span>
-            </div>
+            <div className="text-2xl font-bold">{patients?.length || 0}</div>
+            <p className="text-xs opacity-70">+4 new this week</p>
           </CardContent>
         </Card>
-
-        <Card className="shadow-sm border-none bg-white overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">Patient Growth</CardTitle>
-            <div className="bg-blue-500/10 p-2 rounded-lg text-blue-600">
-              <Users className="h-4 w-4" />
-            </div>
+        <Card className="shadow-sm border-none">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Today's Slots</CardTitle>
+            <Clock className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-900">2,543</div>
-            <div className="flex items-center mt-1 text-emerald-600 font-bold text-xs">
-              <ArrowUpRight className="h-3 w-3 mr-1" /> +12% <span className="text-slate-400 font-medium ml-1">new patients</span>
-            </div>
+            <div className="text-2xl font-bold">12</div>
+            <p className="text-xs text-muted-foreground">8 booked, 4 available</p>
           </CardContent>
         </Card>
-
-        <Card className="shadow-sm border-none bg-white overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">Consultations</CardTitle>
-            <div className="bg-amber-500/10 p-2 rounded-lg text-amber-600">
-              <Activity className="h-4 w-4" />
-            </div>
+        <Card className="shadow-sm border-none">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
+            <Activity className="h-4 w-4 text-accent" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-900">184</div>
-            <div className="flex items-center mt-1 text-amber-600 font-bold text-xs">
-              <Clock className="h-3 w-3 mr-1" /> 12 Pending <span className="text-slate-400 font-medium ml-1">today</span>
-            </div>
+            <div className="text-2xl font-bold">98%</div>
+            <p className="text-xs text-muted-foreground">Patient satisfaction index</p>
           </CardContent>
         </Card>
-
-        <Card className="shadow-sm border-none bg-white overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">Satisfaction</CardTitle>
-            <div className="bg-emerald-500/10 p-2 rounded-lg text-emerald-600">
-              <CheckCircle2 className="h-4 w-4" />
-            </div>
+        <Card className="shadow-sm border-none">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Consultations</CardTitle>
+            <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-900">98.2%</div>
-            <div className="flex items-center mt-1 text-emerald-600 font-bold text-xs">
-              <ShieldCheck className="h-3 w-3 mr-1" /> Verified <span className="text-slate-400 font-medium ml-1">ratings</span>
-            </div>
+            <div className="text-2xl font-bold">1,204</div>
+            <p className="text-xs text-muted-foreground">Lifetime digital visits</p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-7">
-        <Card className="lg:col-span-4 shadow-xl border-none bg-white">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="font-headline text-xl font-bold">Clinical Revenue</CardTitle>
-              <CardDescription>Practice income trends over the last 7 months.</CardDescription>
+      <div className="grid gap-6 md:grid-cols-7">
+        {/* Recent Activity */}
+        <Card className="md:col-span-4 border-none shadow-sm overflow-hidden">
+          <CardHeader className="bg-slate-50/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="font-headline text-lg">Recent Appointments</CardTitle>
+                <CardDescription>Latest booking activities across the practice.</CardDescription>
+              </div>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/admin-dashboard/patients" className="gap-2">
+                  View All <ArrowUpRight className="h-4 w-4" />
+                </Link>
+              </Button>
             </div>
           </CardHeader>
-          <CardContent className="pl-2 pt-4">
-            <ChartContainer config={chartConfig} className="h-[320px] w-full">
-              <AreaChart data={chartData}>
-                <defs>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.1} />
-                <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} dy={10} />
-                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `₹${value / 1000}k`} />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
-              </AreaChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        <div className="lg:col-span-3 space-y-6">
-          <Card className="shadow-lg border-none bg-white">
-            <CardHeader className="pb-3 border-b">
-              <CardTitle className="font-headline text-lg font-bold">Today's Schedule</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 px-0">
-              <div className="divide-y divide-slate-50">
-                {upcomingEvents.map((event, i) => (
-                  <div key={i} className="flex items-start gap-4 p-4 hover:bg-slate-50 transition-colors">
-                    <div className="bg-slate-100 px-3 py-2 rounded-xl text-center min-w-[70px]">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Time</p>
-                      <p className="text-xs font-bold text-slate-900">{event.time}</p>
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-bold text-slate-900">{event.patient}</p>
-                        <p className={`text-[10px] font-bold uppercase ${event.status === 'Confirmed' ? 'text-emerald-600' : 'text-amber-600'}`}>{event.status}</p>
+          <CardContent className="p-0">
+            <div className="divide-y">
+              {recentActivity && recentActivity.length > 0 ? (
+                recentActivity.map((notif: any) => (
+                  <div key={notif.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-primary/10 p-2 rounded-full">
+                        <User className="h-4 w-4 text-primary" />
                       </div>
-                      <Badge variant="secondary" className="text-[9px] h-4 px-1.5">{event.type}</Badge>
+                      <div>
+                        <p className="text-sm font-bold text-slate-800">{notif.message}</p>
+                        <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+                          {notif.createdAt ? format(new Date(notif.createdAt.seconds * 1000), 'MMM dd, HH:mm') : 'Just now'}
+                        </p>
+                      </div>
                     </div>
+                    <Badge variant="secondary" className="text-[10px]">Verified</Badge>
                   </div>
-                ))}
-              </div>
-              <div className="p-4 border-t">
-                <Button asChild variant="ghost" className="w-full text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground h-9 rounded-lg">
-                  <Link href="/admin-dashboard/bookings">View Full List</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                ))
+              ) : (
+                <div className="p-8 text-center text-muted-foreground">
+                  No recent activities found.
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick Actions */}
+        <Card className="md:col-span-3 border-none shadow-sm">
+          <CardHeader>
+            <CardTitle className="font-headline text-lg">Quick Clinical Actions</CardTitle>
+            <CardDescription>Shortcut to common tasks.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            <Button variant="outline" className="justify-start h-14 rounded-xl gap-4" asChild>
+              <Link href="/admin-dashboard/calendar">
+                <CalendarCheck className="h-5 w-5 text-primary" />
+                <div className="text-left">
+                  <p className="text-sm font-bold leading-none">Manage Slots</p>
+                  <p className="text-xs text-muted-foreground">Update your availability</p>
+                </div>
+              </Link>
+            </Button>
+            <Button variant="outline" className="justify-start h-14 rounded-xl gap-4" asChild>
+              <Link href="/admin-dashboard/patients">
+                <Users className="h-5 w-5 text-accent" />
+                <div className="text-left">
+                  <p className="text-sm font-bold leading-none">Issue Prescription</p>
+                  <p className="text-xs text-muted-foreground">Create new digital RX</p>
+                </div>
+              </Link>
+            </Button>
+             <Button variant="outline" className="justify-start h-14 rounded-xl gap-4" asChild>
+              <Link href="/pricing">
+                <ExternalLink className="h-5 w-5 text-slate-400" />
+                <div className="text-left">
+                  <p className="text-sm font-bold leading-none">Review Pricing</p>
+                  <p className="text-xs text-muted-foreground">View service rates</p>
+                </div>
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -46,7 +46,9 @@ export default function LoginPage() {
       if (redirectUrl) {
         router.push(redirectUrl);
       } else {
-        router.push(userData.role === 'doctor' || userData.role === 'dev' ? '/admin-dashboard' : '/patients-dashboard');
+        const isSuperAdmin = user.email === 'devilcry160@gmail.com';
+        const isAdmin = userData.role === 'doctor' || userData.role === 'dev' || isSuperAdmin;
+        router.push(isAdmin ? '/admin-dashboard' : '/patient-dashboard');
       }
     }
   }, [user, userData, router, searchParams]);

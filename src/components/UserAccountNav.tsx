@@ -8,6 +8,8 @@ import {
   LayoutDashboard, 
   LogOut, 
   ShieldCheck,
+  FileText,
+  Calendar
 } from 'lucide-react';
 import { 
   useUser, 
@@ -81,16 +83,32 @@ export default function UserAccountNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={isAuthorizedAdmin ? "/admin-dashboard" : "/patients-dashboard"} className="cursor-pointer">
+            <Link href={isAuthorizedAdmin ? "/admin-dashboard" : "/patient-dashboard"} className="cursor-pointer">
               <LayoutDashboard className="mr-2 h-4 w-4" />
-              <span>{isAuthorizedAdmin ? 'Clinical Dashboard' : 'My Health Dashboard'}</span>
+              <span>Dashboard</span>
             </Link>
           </DropdownMenuItem>
           {!isAuthorizedAdmin && (
+            <>
+              <DropdownMenuItem asChild>
+                <Link href="/patient-dashboard/prescriptions" className="cursor-pointer">
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>Prescriptions</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/patient-dashboard/profile" className="cursor-pointer">
+                  <UserIcon className="mr-2 h-4 w-4" />
+                  <span>Medical Profile</span>
+                </Link>
+              </DropdownMenuItem>
+            </>
+          )}
+          {isAuthorizedAdmin && (
             <DropdownMenuItem asChild>
-              <Link href="/patient/profile" className="cursor-pointer">
-                <UserIcon className="mr-2 h-4 w-4" />
-                <span>Medical Profile</span>
+              <Link href="/admin-dashboard/calendar" className="cursor-pointer">
+                <Calendar className="mr-2 h-4 w-4" />
+                <span>Manage Slots</span>
               </Link>
             </DropdownMenuItem>
           )}
