@@ -1,3 +1,4 @@
+
 export const doctorDetails = {
   name: 'Dr. Pritam Pattyanayek',
   education: 'MBBS, Kolkata R.G. Kar Medical College',
@@ -14,6 +15,11 @@ export const adminNavItems = [
     href: '/admin/dashboard',
     icon: 'LayoutDashboard',
     label: 'Dashboard',
+  },
+  {
+    href: '/admin/calendar',
+    icon: 'Calendar',
+    label: 'Calendar & Slots',
   },
   {
     href: '/admin/patients',
