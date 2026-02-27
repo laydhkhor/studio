@@ -118,13 +118,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex h-screen w-full bg-[#f8fafc] overflow-hidden">
         <Sidebar collapsible="icon" className="border-r border-slate-200 shadow-sm shrink-0">
           <SidebarHeader className="h-20 flex items-center justify-center px-4 shrink-0">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center gap-3">
               <div className="bg-slate-900 p-2 rounded-xl shadow-lg ring-1 ring-white/10 shrink-0">
                 <Logo className="h-5 w-5 text-white" />
               </div>
               <div className="flex flex-col group-data-[collapsible=icon]:hidden overflow-hidden">
-                <span className="font-headline text-[13px] font-black text-slate-900 leading-none tracking-tight whitespace-nowrap">DocAssist <span className="text-primary">Pro</span></span>
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1 whitespace-nowrap">Clinical Workspace</span>
+                <span className="font-headline text-[13px] font-black text-slate-900 leading-none tracking-tight whitespace-nowrap text-center">DocAssist <span className="text-primary">Pro</span></span>
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1 whitespace-nowrap text-center">Clinical Workspace</span>
               </div>
             </div>
           </SidebarHeader>
