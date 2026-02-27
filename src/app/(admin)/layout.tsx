@@ -84,7 +84,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     } else if (!isUserLoading && user && !isDocLoading && userData) {
       const isSuperAdmin = user.email === 'devilcry160@gmail.com';
       if (userData.role !== 'doctor' && userData.role !== 'dev' && !isSuperAdmin) {
-        router.push('/patient-dashboard');
+        router.push('/patients-dashboard');
       }
     }
   }, [user, isUserLoading, userData, isDocLoading, router]);

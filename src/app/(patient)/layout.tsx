@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -48,9 +49,9 @@ export default function PatientLayout({ children }: { children: React.ReactNode 
   };
 
   const navLinks = [
-    { href: '/patient-dashboard', icon: LayoutDashboard, label: 'Overview' },
-    { href: '/patient-dashboard/prescriptions', icon: FileText, label: 'Records' },
-    { href: '/patient-dashboard/profile', icon: User, label: 'My Profile' },
+    { href: '/patients-dashboard', icon: LayoutDashboard, label: 'Overview' },
+    { href: '/patients-dashboard/prescriptions', icon: FileText, label: 'Records' },
+    { href: '/patients-dashboard/profile', icon: User, label: 'My Profile' },
   ];
 
   if (isUserLoading || isDocLoading) {

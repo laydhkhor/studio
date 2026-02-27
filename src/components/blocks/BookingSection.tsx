@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -108,7 +109,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
         };
         await updateDoc(scheduleRef, { slots: updatedSlots });
 
-        // 2. Create Patient Booking in flat collection as per IR
+        // 2. Create Patient Booking in flat collection
         const bookingRef = doc(db, 'appointments', bookingId);
         setDocumentNonBlocking(bookingRef, {
           id: bookingId,
@@ -139,7 +140,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
         });
         
         setTimeout(() => {
-          router.push('/patient-dashboard');
+          router.push('/patients-dashboard');
         }, 1500);
       } catch (error) {
         console.error(error);

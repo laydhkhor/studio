@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -78,7 +79,7 @@ export default function CompleteProfilePage() {
       description: 'Your profile has been successfully set up.',
     });
     
-    router.push('/patient/dashboard');
+    router.push('/patients-dashboard');
   };
 
   if (isUserLoading) {

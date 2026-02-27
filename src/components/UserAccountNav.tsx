@@ -1,7 +1,8 @@
+
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
+import Link from 'link';
 import { useRouter } from 'next/navigation';
 import { 
   User as UserIcon, 
@@ -83,7 +84,7 @@ export default function UserAccountNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={isAuthorizedAdmin ? "/admin-dashboard" : "/patient-dashboard"} className="cursor-pointer">
+            <Link href={isAuthorizedAdmin ? "/admin/dashboard" : "/patients-dashboard"} className="cursor-pointer">
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>Dashboard</span>
             </Link>
@@ -91,13 +92,13 @@ export default function UserAccountNav() {
           {!isAuthorizedAdmin && (
             <>
               <DropdownMenuItem asChild>
-                <Link href="/patient-dashboard/prescriptions" className="cursor-pointer">
+                <Link href="/patients-dashboard/prescriptions" className="cursor-pointer">
                   <FileText className="mr-2 h-4 w-4" />
                   <span>Prescriptions</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/patient-dashboard/profile" className="cursor-pointer">
+                <Link href="/patients-dashboard/profile" className="cursor-pointer">
                   <UserIcon className="mr-2 h-4 w-4" />
                   <span>Medical Profile</span>
                 </Link>
@@ -106,7 +107,7 @@ export default function UserAccountNav() {
           )}
           {isAuthorizedAdmin && (
             <DropdownMenuItem asChild>
-              <Link href="/admin-dashboard/calendar" className="cursor-pointer">
+              <Link href="/admin/calendar" className="cursor-pointer">
                 <Calendar className="mr-2 h-4 w-4" />
                 <span>Manage Slots</span>
               </Link>

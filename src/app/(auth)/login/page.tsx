@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -48,7 +49,7 @@ export default function LoginPage() {
       } else {
         const isSuperAdmin = user.email === 'devilcry160@gmail.com';
         const isAdmin = userData.role === 'doctor' || userData.role === 'dev' || isSuperAdmin;
-        router.push(isAdmin ? '/admin/dashboard' : '/patient-dashboard');
+        router.push(isAdmin ? '/admin/dashboard' : '/patients-dashboard');
       }
     }
   }, [user, userData, router, searchParams]);
