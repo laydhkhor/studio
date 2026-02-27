@@ -182,9 +182,13 @@ export const postsData = [
         publishedAt: '2024-07-20T10:00:00Z',
         authorName: 'Dr. Pritam Pattyanayek',
         body: [
-          { _key: '1a', _type: 'block', style: 'normal', children: [{ _key: '1a1', _type: 'span', text: 'Regular health check-ups are one of the most important steps you can take to manage your health. They are a cornerstone of preventive medicine, helping to detect potential health issues before they become serious problems. Many chronic diseases, such as diabetes, hypertension, and heart disease, can develop silently without any noticeable symptoms in their early stages.' }] },
-          { _key: '2a', _type: 'block', style: 'h2', children: [{ _key: '2a1', _type: 'span', text: 'What Happens During a Check-up?' }] },
-          { _key: '3a', _type: 'block', style: 'normal', children: [{ _key: '3a1', _type: 'span', text: 'During a routine check-up, your doctor will typically perform a physical exam, review your medical history, and discuss your lifestyle. Depending on your age and risk factors, they may also recommend specific screenings, such as blood pressure checks, cholesterol tests, and cancer screenings. This is also an excellent opportunity to discuss any health concerns you may have and receive personalized advice on diet, exercise, and stress management.' }] },
+          { _key: '1a', _type: 'block', style: 'normal', children: [{ _key: '1a1', _type: 'span', text: 'Regular check-ups are the cornerstone of preventive healthcare. They help detect potential issues early, often before symptoms appear.' }] },
+          { _key: '2a', _type: 'block', style: 'h2', children: [{ _key: '2a1', _type: 'span', text: 'Key Benefits' }] },
+          { _key: '3a', _type: 'block', listItem: 'bullet', children: [{ _key: '3a1', _type: 'span', text: 'Early detection of chronic diseases like diabetes and hypertension.' }] },
+          { _key: '4a', _type: 'block', listItem: 'bullet', children: [{ _key: '4a1', _type: 'span', text: 'Establishing a baseline for your personal health metrics.' }] },
+          { _key: '5a', _type: 'block', listItem: 'bullet', children: [{ _key: '5a1', _type: 'span', text: 'Direct access to professional medical advice and lifestyle counseling.' }] },
+          { _key: '6a', _type: 'block', style: 'h2', children: [{ _key: '6a1', _type: 'span', text: 'What to Expect' }] },
+          { _key: '7a', _type: 'block', style: 'normal', children: [{ _key: '7a1', _type: 'span', text: 'During your visit, your doctor will review your history, perform clinical tests, and provide a personalized care plan.' }] },
         ]
     },
     {
@@ -199,7 +203,11 @@ export const postsData = [
         publishedAt: '2024-07-15T11:00:00Z',
         authorName: 'Dr. Pritam Pattyanayek',
         body: [
-            { _key: '1b', _type: 'block', style: 'normal', children: [{ _key: '1b1', _type: 'span', text: 'A heart-healthy diet is a powerful tool in the fight against cardiovascular disease. By making smart food choices, you can control risk factors like high cholesterol, blood pressure, and excess weight. The key is not about strict limitations, but about focusing on fresh, whole foods.' }] }
+            { _key: '1b', _type: 'block', style: 'normal', children: [{ _key: '1b1', _type: 'span', text: 'Maintaining a healthy heart starts with what you put on your plate. Small changes can lead to big improvements.' }] },
+            { _key: '2b', _type: 'block', style: 'h2', children: [{ _key: '2b1', _type: 'span', text: 'Daily Dietary Goals' }] },
+            { _key: '3b', _type: 'block', listItem: 'bullet', children: [{ _key: '3b1', _type: 'span', text: 'Increase intake of fiber-rich whole grains and leafy greens.' }] },
+            { _key: '4b', _type: 'block', listItem: 'bullet', children: [{ _key: '4b1', _type: 'span', text: 'Choose healthy fats like those found in nuts and seeds.' }] },
+            { _key: '5b', _type: 'block', listItem: 'bullet', children: [{ _key: '5b1', _type: 'span', text: 'Minimize sodium and processed sugars to control blood pressure.' }] }
         ]
     },
     {
@@ -214,7 +222,11 @@ export const postsData = [
         publishedAt: '2024-07-10T12:00:00Z',
         authorName: 'Dr. Pritam Pattyanayek',
         body: [
-             { _key: '1c', _type: 'block', style: 'normal', children: [{ _key: '1c1', _type: 'span', text: 'In today\'s fast-paced world, stress has become a common part of life. While a little stress can be motivating, chronic stress can have a significant negative impact on both your mental and physical health. Learning to manage stress effectively is crucial for long-term well-being.' }] }
+             { _key: '1c', _type: 'block', style: 'normal', children: [{ _key: '1c1', _type: 'span', text: 'Chronic stress affects every system in the body. Developing effective coping strategies is vital for long-term health.' }] },
+             { _key: '2c', _type: 'block', style: 'h2', children: [{ _key: '2c1', _type: 'span', text: 'Stress Reduction Techniques' }] },
+             { _key: '3c', _type: 'block', listItem: 'bullet', children: [{ _key: '3c1', _type: 'span', text: 'Practice mindful breathing for 10 minutes daily.' }] },
+             { _key: '4c', _type: 'block', listItem: 'bullet', children: [{ _key: '4c1', _type: 'span', text: 'Maintain a regular sleep schedule (7-8 hours).' }] },
+             { _key: '5c', _type: 'block', listItem: 'bullet', children: [{ _key: '5c1', _type: 'span', text: 'Stay physically active to release endorphins.' }] }
         ]
     },
      {
@@ -229,7 +241,11 @@ export const postsData = [
         publishedAt: '2024-06-25T09:00:00Z',
         authorName: 'Dr. Pritam Pattyanayek',
         body: [
-             { _key: '1d', _type: 'block', style: 'normal', children: [{ _key: '1d1', _type: 'span', text: 'Telemedicine, or the practice of caring for patients remotely, has seen a dramatic rise in popularity. It offers a convenient way to receive medical advice, diagnoses, and prescriptions without leaving your home. This technology is particularly beneficial for routine follow-ups, managing chronic conditions, and for those with mobility challenges.' }] }
+             { _key: '1d', _type: 'block', style: 'normal', children: [{ _key: '1d1', _type: 'span', text: 'Telemedicine is revolutionizing healthcare by breaking geographical barriers and offering unmatched convenience.' }] },
+             { _key: '2d', _type: 'block', style: 'h2', children: [{ _key: '2d1', _type: 'span', text: 'Why Choose Digital Consults?' }] },
+             { _key: '3d', _type: 'block', listItem: 'bullet', children: [{ _key: '3d1', _type: 'span', text: 'Immediate access to specialists from the comfort of your home.' }] },
+             { _key: '4d', _type: 'block', listItem: 'bullet', children: [{ _key: '4d1', _type: 'span', text: 'Secure digital prescriptions sent directly to your phone.' }] },
+             { _key: '5d', _type: 'block', listItem: 'bullet', children: [{ _key: '5d1', _type: 'span', text: 'Significant reduction in travel time and clinical wait times.' }] }
         ]
     }
 ];

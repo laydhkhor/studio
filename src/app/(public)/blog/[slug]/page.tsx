@@ -78,13 +78,32 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   />
               </div>}
               
-              <div className="prose lg:prose-xl mx-auto text-justify text-muted-foreground">
+              <div className="prose lg:prose-xl mx-auto text-slate-700">
                   {post.body.map((block: any) => {
                     const text = block.children.map((span: any) => span.text).join('');
+                    
                     if (block.style === 'h2') {
-                        return <h2 key={block._key}>{text}</h2>;
+                        return (
+                            <h2 key={block._key} className="font-headline text-2xl font-bold mt-10 mb-4 text-slate-900 border-l-4 border-primary pl-4">
+                                {text}
+                            </h2>
+                        );
                     }
-                    return <p key={block._key}>{text}</p>;
+                    
+                    if (block.listItem === 'bullet') {
+                        return (
+                            <div key={block._key} className="flex gap-3 mb-3 ml-2">
+                                <div className="h-2 w-2 rounded-full bg-primary mt-2.5 shrink-0" />
+                                <p className="text-lg leading-relaxed">{text}</p>
+                            </div>
+                        );
+                    }
+                    
+                    return (
+                        <p key={block._key} className="text-lg leading-relaxed mb-6 font-ui">
+                            {text}
+                        </p>
+                    );
                   })}
               </div>
 
