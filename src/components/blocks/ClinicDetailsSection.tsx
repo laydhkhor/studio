@@ -114,8 +114,10 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
                 fullAddress
               )}`;
               return (
-                <Card key={clinic.id} className="shadow-lg border-none flex flex-col bg-white overflow-hidden hover:shadow-xl transition-shadow">
-                  <div className="h-2 bg-primary w-full"></div>
+                <Card key={clinic.id} className="shadow-lg border-none flex flex-col bg-white overflow-hidden hover:shadow-xl transition-shadow relative">
+                  {/* Thinner Top Decorative Bar */}
+                  <div className="h-1 bg-primary w-full opacity-90"></div>
+                  
                   <CardHeader className="p-8 pb-4">
                     <CardTitle className="font-headline text-2xl font-bold">
                       {clinic.name}
@@ -161,6 +163,9 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
                       </a>
                     </Button>
                   </CardFooter>
+
+                  {/* Matching Bottom Decorative Bar */}
+                  <div className="h-1 bg-primary w-full opacity-20"></div>
                 </Card>
               );
             })
