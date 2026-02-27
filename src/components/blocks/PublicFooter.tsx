@@ -26,14 +26,14 @@ export default function PublicFooter({ navLinks, clinicInfo }: any) {
       <div className="container py-20">
         <div className="grid gap-12 lg:gap-16 md:grid-cols-12">
           {/* Brand Column */}
-          <div className="md:col-span-4 space-y-6">
+          <div className="md:col-span-3 space-y-6">
             <Link href="/" className="flex items-center gap-2">
               <Logo className="h-10 w-10 text-primary" />
               <span className="font-headline text-3xl font-bold text-white">
                 DocAssist
               </span>
             </Link>
-            <p className="text-slate-400 text-base leading-relaxed max-w-xs">
+            <p className="text-slate-400 text-base leading-relaxed">
               Providing modern, compassionate healthcare solutions for the community of Purba Medinipur. Expert consultations by <strong>Dr. Pritam Pattyanayek</strong>.
             </p>
             <div className="flex gap-4">
@@ -49,19 +49,19 @@ export default function PublicFooter({ navLinks, clinicInfo }: any) {
             </div>
           </div>
 
-          {/* Links Column */}
-          <div className="md:col-span-2 space-y-6">
+          {/* Links Column - Two columns for links */}
+          <div className="md:col-span-3 space-y-6">
             <h3 className="font-headline text-white font-bold tracking-wider text-sm uppercase">Quick Links</h3>
-            <ul className="space-y-4">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-4">
               {navLinks.map((link: any) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="hover:text-primary transition-colors block">
+                  <Link href={link.href} className="hover:text-primary transition-colors block text-sm">
                     {link.label}
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link href="/review" className="hover:text-primary transition-colors block font-bold text-primary">
+              <li className="col-span-2">
+                <Link href="/review" className="hover:text-primary transition-colors block font-bold text-primary text-sm">
                   Patient Reviews
                 </Link>
               </li>
