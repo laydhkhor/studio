@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking, useStorage } from '@/firebase';
 import { doc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
