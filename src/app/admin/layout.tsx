@@ -1,8 +1,9 @@
+
 'use client';
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import {
   Users,
   Search,
@@ -124,6 +125,7 @@ export default function AdminLayout({
   const { user, isUserLoading } = useUser();
   const db = useFirestore();
   const router = useRouter();
+  const pathname = usePathname();
 
   const userDocRef = useMemoFirebase(() => {
     if (!db || !user) return null;
@@ -133,7 +135,10 @@ export default function AdminLayout({
   const { data: userData, isLoading: isRoleLoading } = useDoc(userDocRef);
 
   // Check for doctor role and redirect if unauthorized
+  // Skip this check for the auth page itself
   React.useEffect(() => {
+    if (pathname === '/admin/auth') return;
+
     if (!isUserLoading && !isRoleLoading) {
       if (!user) {
         router.push('/admin/auth');
@@ -141,7 +146,7 @@ export default function AdminLayout({
         router.push('/patient/dashboard');
       }
     }
-  }, [user, isUserLoading, userData, isRoleLoading, router]);
+  }, [user, isUserLoading, userData, isRoleLoading, router, pathname]);
 
   const handleLogout = async () => {
     if (auth) {
@@ -149,6 +154,11 @@ export default function AdminLayout({
       router.push('/admin/auth');
     }
   };
+
+  // If we are on the auth page, just render the children
+  if (pathname === '/admin/auth') {
+    return <div className="min-h-screen w-full">{children}</div>;
+  }
 
   if (isUserLoading || isRoleLoading) {
     return (
