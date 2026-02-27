@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -40,14 +41,13 @@ export default function LoginPage() {
 
   const { data: userData } = useDoc(userDocRef);
 
-  // React to successful login
   React.useEffect(() => {
     if (user && userData) {
       const redirectUrl = searchParams.get('redirect');
       if (redirectUrl) {
         router.push(redirectUrl);
       } else {
-        router.push(userData.role === 'doctor' ? '/admin/dashboard' : '/patient/dashboard');
+        router.push(userData.role === 'doctor' || userData.role === 'dev' ? '/dashboard' : '/user-dashboard');
       }
     }
   }, [user, userData, router, searchParams]);
@@ -58,11 +58,7 @@ export default function LoginPage() {
     setIsLoading(true);
     initiateEmailSignIn(auth, email, password).catch((error: any) => {
       setIsLoading(false);
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: error.message || 'Check your credentials and try again.',
-      });
+      toast({ variant: 'destructive', title: 'Login Failed', description: error.message });
     });
   };
 
@@ -73,11 +69,7 @@ export default function LoginPage() {
     try {
       await signInWithPopup(auth, provider);
     } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: error.message,
-      });
+      toast({ variant: 'destructive', title: 'Login Failed', description: error.message });
       setIsLoading(false);
     }
   };
@@ -85,73 +77,31 @@ export default function LoginPage() {
   return (
     <div className="w-full max-w-sm space-y-4">
       <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-2">
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to Home
+        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Home
       </Link>
       <Card className="shadow-2xl border-none">
         <CardHeader className="text-center pb-2">
           <CardTitle className="font-headline text-3xl font-bold">Welcome Back</CardTitle>
-          <CardDescription className="font-ui text-base">
-            Sign in to manage your health record.
-          </CardDescription>
+          <CardDescription className="font-ui">Sign in to manage your health record.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 pt-4">
-          <Button variant="outline" onClick={handleGoogleLogin} disabled={isLoading} className="h-12 font-ui">
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon className="mr-2 h-5 w-5" />}
-            Continue with Google
+          <Button variant="outline" onClick={handleGoogleLogin} disabled={isLoading} className="h-12">
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon className="mr-2 h-5 w-5" />} Continue with Google
           </Button>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
-                Or use email
-              </span>
-            </div>
-          </div>
           <form onSubmit={handleEmailLogin} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="m@example.com" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-11"
-                required 
-              />
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="/forgot-password"
-                  className="ml-auto inline-block text-xs underline font-ui hover:text-primary transition-colors"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input 
-                id="password" 
-                type="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="h-11"
-                required 
-              />
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
-            <Button type="submit" className="w-full h-12 font-bold text-base" disabled={isLoading}>
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Sign In'}
-            </Button>
+            <Button type="submit" className="w-full h-12 font-bold" disabled={isLoading}>{isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Sign In'}</Button>
           </form>
         </CardContent>
-        <CardFooter className="text-center text-sm font-ui flex justify-center border-t py-4 bg-slate-50/50 rounded-b-lg">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="underline font-bold text-primary ml-1 hover:text-primary/80 transition-colors">
-            Sign up for free
-          </Link>
+        <CardFooter className="flex justify-center border-t py-4 text-sm">
+          Don't have an account? <Link href="/signup" className="font-bold text-primary ml-1">Sign up</Link>
         </CardFooter>
       </Card>
     </div>

@@ -43,7 +43,7 @@ export default function UserAccountNav() {
   }, [db, user]);
 
   const { data: userData } = useDoc(userDocRef);
-  const isDoctor = userData?.role === 'doctor';
+  const isAuthorizedAdmin = userData?.role === 'doctor' || userData?.role === 'dev';
 
   const handleLogout = async () => {
     if (auth) {
@@ -70,13 +70,11 @@ export default function UserAccountNav() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-bold leading-none">{userData?.fullName || 'User'}</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {user.email}
-            </p>
-            {isDoctor && (
+            <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+            {isAuthorizedAdmin && (
               <div className="flex items-center gap-1 mt-1">
                 <ShieldCheck className="h-3 w-3 text-primary" />
-                <span className="text-[10px] font-bold text-primary uppercase tracking-tighter">Verified Doctor</span>
+                <span className="text-[10px] font-bold text-primary uppercase tracking-tighter">Verified Practitioner</span>
               </div>
             )}
           </div>
@@ -84,12 +82,12 @@ export default function UserAccountNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={isDoctor ? "/admin/dashboard" : "/patient/dashboard"} className="cursor-pointer">
+            <Link href={isAuthorizedAdmin ? "/dashboard" : "/user-dashboard"} className="cursor-pointer">
               <LayoutDashboard className="mr-2 h-4 w-4" />
-              <span>{isDoctor ? 'Clinical Dashboard' : 'Patient Dashboard'}</span>
+              <span>{isAuthorizedAdmin ? 'Clinical Dashboard' : 'My Health Dashboard'}</span>
             </Link>
           </DropdownMenuItem>
-          {!isDoctor && (
+          {!isAuthorizedAdmin && (
             <DropdownMenuItem asChild>
               <Link href="/patient/profile" className="cursor-pointer">
                 <UserIcon className="mr-2 h-4 w-4" />
