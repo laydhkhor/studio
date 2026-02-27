@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Menu } from 'lucide-react';
+import { Menu, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -14,9 +14,12 @@ import {
 } from '@/components/ui/sheet';
 import { Logo } from '@/components/icons';
 import { cn } from '@/lib/utils';
+import { useUser } from '@/firebase';
+import UserAccountNav from '@/components/UserAccountNav';
 
 export default function PublicHeader({ navLinks }: any) {
   const [isScrolled, setIsScrolled] = React.useState(false);
+  const { user, isUserLoading } = useUser();
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +37,7 @@ export default function PublicHeader({ navLinks }: any) {
     <header
       className={cn(
         'sticky top-0 z-50 w-full transition-all duration-300 font-ui bg-card',
-        isScrolled && 'shadow-lg'
+        isScrolled && 'shadow-lg border-b'
       )}
     >
       <div className="container relative flex h-16 items-center justify-between">
@@ -44,69 +47,6 @@ export default function PublicHeader({ navLinks }: any) {
             DocAssist
           </span>
         </Link>
-
-        {/* Mobile Menu */}
-        <div className="md:hidden">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-full max-w-sm flex flex-col p-0"
-            >
-              <SheetHeader className="p-6 pb-4 border-b">
-                <SheetTitle asChild>
-                  <Link
-                    href="/"
-                    className="flex items-center gap-2"
-                  >
-                    <Logo className="h-6 w-6 text-primary" />
-                    <span className="font-headline text-xl font-bold text-primary">
-                      DocAssist
-                    </span>
-                  </Link>
-                </SheetTitle>
-              </SheetHeader>
-              <div className="flex flex-1 flex-col justify-between">
-                <nav className="mt-8 flex flex-col gap-4 px-6">
-                  {navLinks.map((link: any) => (
-                    <SheetClose asChild key={link.href}>
-                      <Link
-                        href={link.href}
-                        className="text-lg font-medium text-foreground hover:text-primary"
-                      >
-                        {link.label}
-                      </Link>
-                    </SheetClose>
-                  ))}
-                </nav>
-                <div className="space-y-2 border-t p-6">
-                   <SheetClose asChild>
-                      <Button asChild className="w-full" size="lg">
-                        <Link href="/login">Login</Link>
-                      </Button>
-                   </SheetClose>
-                   <SheetClose asChild>
-                      <Button
-                        asChild
-                        className="w-full"
-                        size="lg"
-                        variant="default"
-                      >
-                        <Link href="/login?redirect=/booking">
-                          Book Now
-                        </Link>
-                      </Button>
-                   </SheetClose>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6 text-sm font-medium">
@@ -120,13 +60,108 @@ export default function PublicHeader({ navLinks }: any) {
               </Link>
             ))}
         </nav>
-        <div className="hidden md:flex items-center gap-2">
-            <Button asChild variant="ghost">
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/login?redirect=/booking">Book Now</Link>
-            </Button>
+
+        <div className="flex items-center gap-4">
+          {/* Auth State Desktop */}
+          <div className="hidden md:flex items-center gap-2">
+            {isUserLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : user ? (
+              <>
+                <Button asChild size="sm" className="font-ui">
+                   <Link href="/login?redirect=/booking">Book Now</Link>
+                </Button>
+                <UserAccountNav />
+              </>
+            ) : (
+              <>
+                <Button asChild variant="ghost" size="sm">
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href="/login?redirect=/booking">Book Now</Link>
+                </Button>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu */}
+          <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                className="w-full max-w-sm flex flex-col p-0"
+              >
+                <SheetHeader className="p-6 pb-4 border-b">
+                  <SheetTitle asChild>
+                    <Link
+                      href="/"
+                      className="flex items-center gap-2"
+                    >
+                      <Logo className="h-6 w-6 text-primary" />
+                      <span className="font-headline text-xl font-bold text-primary">
+                        DocAssist
+                      </span>
+                    </Link>
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-1 flex-col justify-between">
+                  <nav className="mt-8 flex flex-col gap-4 px-6">
+                    {navLinks.map((link: any) => (
+                      <SheetClose asChild key={link.href}>
+                        <Link
+                          href={link.href}
+                          className="text-lg font-medium text-foreground hover:text-primary transition-colors"
+                        >
+                          {link.label}
+                        </Link>
+                      </SheetClose>
+                    ))}
+                  </nav>
+                  <div className="space-y-3 border-t p-6 bg-slate-50">
+                     {user ? (
+                        <div className="flex flex-col gap-3">
+                           <div className="flex items-center gap-3 mb-2">
+                              <UserAccountNav />
+                              <span className="font-bold text-sm">{user.email}</span>
+                           </div>
+                           <SheetClose asChild>
+                              <Button asChild className="w-full" size="lg">
+                                <Link href="/login?redirect=/booking">Book New Appointment</Link>
+                              </Button>
+                           </SheetClose>
+                        </div>
+                     ) : (
+                        <>
+                          <SheetClose asChild>
+                            <Button asChild variant="outline" className="w-full bg-white" size="lg">
+                              <Link href="/login">Login</Link>
+                            </Button>
+                          </SheetClose>
+                          <SheetClose asChild>
+                            <Button
+                              asChild
+                              className="w-full"
+                              size="lg"
+                            >
+                              <Link href="/login?redirect=/booking">
+                                Book Now
+                              </Link>
+                            </Button>
+                          </SheetClose>
+                        </>
+                     )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>
