@@ -35,10 +35,9 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
-import { collection, query, where, serverTimestamp, doc } from 'firebase/firestore';
+import { collection, query, where, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { PrescriptionCard } from '@/components/blocks/PrescriptionCard';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 interface Medicine {
@@ -91,16 +90,15 @@ export default function PrescriptionBuilderPage() {
 
     setIsSubmitting(true);
 
-    // Format medicines into standard string format for storage
-    // "Name | Dosage | Timing | Duration | Notes"
     const formattedMedicines = medicines.map(m => 
       `${m.name} | ${m.dosage || 'As directed'} | ${m.timing || 'Daily'} | ${m.duration || '-'} | ${m.notes || ''}`
     );
 
     const prescriptionId = `RX-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
-    const prescriptionRef = collection(db, 'patients', patientId, 'prescriptions');
+    // Save to top-level prescriptions collection
+    const prescriptionsRef = collection(db, 'prescriptions');
 
-    addDocumentNonBlocking(prescriptionRef, {
+    addDocumentNonBlocking(prescriptionsRef, {
       id: prescriptionId,
       patientId,
       issuedDate: new Date().toISOString(),
@@ -131,7 +129,7 @@ export default function PrescriptionBuilderPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 h-full flex flex-col">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-headline text-3xl font-bold">Prescription Builder</h1>
@@ -159,8 +157,8 @@ export default function PrescriptionBuilderPage() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-12 gap-8 items-start">
-        <div className={cn("space-y-8 transition-all duration-500", isPreviewMode ? "lg:col-span-5" : "lg:col-span-12")}>
+      <div className="grid lg:grid-cols-12 gap-8 items-start flex-1 overflow-hidden">
+        <div className={cn("space-y-8 transition-all duration-500 overflow-y-auto h-full pr-2 custom-scrollbar", isPreviewMode ? "lg:col-span-5" : "lg:col-span-12")}>
           <Card className="border-none shadow-sm bg-white overflow-hidden">
             <CardHeader className="bg-slate-50/50 border-b border-slate-100">
               <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-400">1. Patient Identification</CardTitle>
@@ -276,16 +274,16 @@ export default function PrescriptionBuilderPage() {
         </div>
 
         {/* Live Preview Panel */}
-        <div className={cn("lg:sticky lg:top-24 transition-all duration-500", isPreviewMode ? "lg:col-span-7" : "hidden")}>
-           <div className="space-y-4">
+        <div className={cn("lg:sticky lg:top-0 h-full overflow-y-auto transition-all duration-500", isPreviewMode ? "lg:col-span-7" : "hidden")}>
+           <div className="space-y-4 pr-2">
               <div className="flex items-center gap-3 bg-primary/5 p-4 rounded-2xl border border-primary/10">
                  <AlertCircle className="h-5 w-5 text-primary" />
                  <p className="text-xs font-bold text-primary uppercase tracking-widest leading-none mt-0.5">Clinical Preview Mode</p>
               </div>
-              <div className="bg-white p-2 rounded-[2rem] shadow-2xl border border-slate-100">
+              <div className="bg-white p-2 rounded-[2rem] shadow-2xl border border-slate-100 scale-90 origin-top">
                  <PrescriptionCard prescription={mockPrescriptionForPreview} />
               </div>
-              <p className="text-[10px] text-muted-foreground text-center italic px-10 leading-relaxed">
+              <p className="text-[10px] text-muted-foreground text-center italic px-10 leading-relaxed pb-8">
                 "Preview matches the final PDF layout the patient will receive. Check all medicine names and dosages carefully before finalizing."
               </p>
            </div>

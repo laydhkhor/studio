@@ -7,7 +7,7 @@ import {
   Video, 
   Pill, 
   FileText, 
-  ArrowRight,
+  ArrowRight, 
   ShieldCheck,
   User,
   HeartPulse,
@@ -34,11 +34,12 @@ export default function PatientDashboardPage() {
   const { user } = useUser();
   const db = useFirestore();
 
-  // 1. Fetch upcoming appointments
+  // 1. Fetch upcoming appointments from top-level collection
   const bookingsQuery = useMemoFirebase(() => {
     if (!db || !user) return null;
     return query(
-      collection(db, 'patients', user.uid, 'bookings'), 
+      collection(db, 'appointments'), 
+      where('patientId', '==', user.uid),
       where('status', '==', 'Accepted'),
       orderBy('appointmentDateTime', 'asc'), 
       limit(2)
@@ -47,11 +48,12 @@ export default function PatientDashboardPage() {
 
   const { data: bookings } = useCollection(bookingsQuery);
 
-  // 2. Fetch recent prescriptions
+  // 2. Fetch recent prescriptions from top-level collection
   const prescriptionsQuery = useMemoFirebase(() => {
     if (!db || !user) return null;
     return query(
-      collection(db, 'patients', user.uid, 'prescriptions'), 
+      collection(db, 'prescriptions'), 
+      where('patientId', '==', user.uid),
       orderBy('issuedDate', 'desc'), 
       limit(1)
     );
@@ -107,8 +109,8 @@ export default function PatientDashboardPage() {
                          <div className="p-6 flex-grow space-y-4">
                             <div className="flex flex-wrap items-center justify-between gap-4">
                                <div className="space-y-1">
-                                  <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10">Video Consultation</Badge>
-                                  <h3 className="text-lg font-bold">Clinical Diagnostic Session</h3>
+                                  <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10">{booking.type || 'Clinical Consult'}</Badge>
+                                  <h3 className="text-lg font-bold">Diagnostic Session</h3>
                                </div>
                                <div className="flex items-center gap-3">
                                   <div className="flex flex-col items-end">
@@ -123,11 +125,13 @@ export default function PatientDashboardPage() {
                                   <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Ready for Connection</span>
                                </div>
-                               <Button size="sm" asChild className="rounded-xl font-bold bg-slate-900 group-hover:bg-primary transition-colors">
-                                  <a href={booking.meetingLink} target="_blank" rel="noopener noreferrer">
-                                     <Video className="mr-2 h-4 w-4" /> Join Session
-                                  </a>
-                               </Button>
+                               {booking.meetingLink && (
+                                 <Button size="sm" asChild className="rounded-xl font-bold bg-slate-900 hover:bg-primary transition-colors">
+                                    <a href={booking.meetingLink} target="_blank" rel="noopener noreferrer">
+                                       <Video className="mr-2 h-4 w-4" /> Join Session
+                                    </a>
+                                 </Button>
+                               )}
                             </div>
                          </div>
                       </CardContent>
@@ -221,7 +225,7 @@ export default function PatientDashboardPage() {
                     </div>
                  </div>
                  <p className="text-[11px] text-muted-foreground leading-relaxed italic px-2">
-                   "If you experience any adverse reactions to prescribed medications, please use the emergency contact feature or visit the nearest clinic immediately."
+                   "If you experience any adverse reactions to prescribed medications, please visit the nearest clinic immediately."
                  </p>
               </CardContent>
               <CardFooter>

@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -40,7 +39,6 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
     
     const availableDates = React.useMemo(() => {
       if (!rawSchedules) return [];
-      // Sort dates
       return rawSchedules
         .filter(s => s.slots?.some((slot: any) => !slot.isBooked))
         .sort((a, b) => a.date.localeCompare(b.date));
@@ -59,10 +57,9 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
 
       setIsProcessing(true);
 
-      // Payment Details
       const options = {
-        key: 'rzp_test_dummykey', // Demo key
-        amount: 40000, // INR 400 in paise
+        key: 'rzp_test_dummykey',
+        amount: 40000,
         currency: 'INR',
         name: 'DocAssist Clinic',
         description: `Video Consultation - ${selectedDate} at ${slotTime}`,
@@ -101,7 +98,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
       const appointmentDateTime = `${selectedDate}T${slotTime}:00`;
 
       try {
-        // 1. Update Schedule Slot (Atomic mark as booked)
+        // 1. Update Schedule Slot
         const scheduleRef = doc(db, 'doctor_schedules', selectedDate);
         const updatedSlots = [...currentSchedule.slots];
         updatedSlots[selectedSlotIndex] = {
@@ -111,8 +108,8 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
         };
         await updateDoc(scheduleRef, { slots: updatedSlots });
 
-        // 2. Create Patient Booking
-        const bookingRef = doc(db, 'patients', user.uid, 'bookings', bookingId);
+        // 2. Create Patient Booking in flat collection as per IR
+        const bookingRef = doc(db, 'appointments', bookingId);
         setDocumentNonBlocking(bookingRef, {
           id: bookingId,
           patientId: user.uid,
@@ -123,7 +120,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
           meetingLink,
           paymentId,
           amount: 400,
-          createdAt: new Date().toISOString()
+          createdAt: serverTimestamp()
         }, { merge: true });
 
         // 3. Create Global Notification
@@ -142,7 +139,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
         });
         
         setTimeout(() => {
-          router.push('/patient/dashboard');
+          router.push('/patient-dashboard');
         }, 1500);
       } catch (error) {
         console.error(error);
@@ -158,7 +155,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
         <section className="bg-transparent py-10" id="booking">
             <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
             <div className="container">
-                <div className="grid lg:grid-cols-12 gap-0">
+                <div className="grid lg:grid-cols-12 gap-0 border rounded-[2rem] overflow-hidden shadow-2xl">
                     {/* Left Side: Info */}
                     <div className="lg:col-span-4 bg-primary p-8 md:p-12 text-white space-y-8 flex flex-col justify-between">
                         <div className="space-y-6">

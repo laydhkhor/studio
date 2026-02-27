@@ -25,11 +25,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collectionGroup, query, orderBy, where, collection, getDocs } from 'firebase/firestore';
+import { query, orderBy, collection } from 'firebase/firestore';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -37,10 +36,10 @@ export default function AppointmentsPage() {
   const db = useFirestore();
   const [searchTerm, setSearchTerm] = React.useState('');
 
-  // Use collectionGroup to find all bookings across all patients
+  // Fetch all appointments from the flat collection
   const bookingsQuery = useMemoFirebase(() => {
     if (!db) return null;
-    return query(collectionGroup(db, 'bookings'), orderBy('appointmentDateTime', 'desc'));
+    return query(collection(db, 'appointments'), orderBy('appointmentDateTime', 'desc'));
   }, [db]);
 
   const { data: bookings, isLoading } = useCollection(bookingsQuery);
@@ -49,7 +48,8 @@ export default function AppointmentsPage() {
     if (!bookings) return [];
     return bookings.filter(b => 
       b.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      b.status.toLowerCase().includes(searchTerm.toLowerCase())
+      b.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      b.patientId.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [bookings, searchTerm]);
 
@@ -71,7 +71,7 @@ export default function AppointmentsPage() {
                   <div className="flex flex-wrap items-center justify-between gap-4">
                      <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                           <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[9px] font-bold uppercase tracking-widest">Video Consult</Badge>
+                           <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[9px] font-bold uppercase tracking-widest">{booking.type || 'Clinical Consult'}</Badge>
                            <Badge variant="outline" className="text-[9px] font-bold uppercase tracking-widest">{booking.status}</Badge>
                         </div>
                         <h3 className="text-lg font-bold text-slate-800">Booking: {booking.id}</h3>
@@ -96,11 +96,13 @@ export default function AppointmentsPage() {
                         <Button variant="outline" size="sm" className="rounded-xl h-9 text-xs font-bold border-slate-200" asChild>
                            <Link href={`/admin/patients?id=${booking.patientId}`}>View Record</Link>
                         </Button>
-                        <Button size="sm" asChild className="rounded-xl h-9 text-xs font-bold bg-slate-900 group-hover:bg-primary transition-colors">
-                           <a href={booking.meetingLink} target="_blank" rel="noopener noreferrer">
-                              <Video className="mr-2 h-3.5 w-3.5" /> Join Meet
-                           </a>
-                        </Button>
+                        {booking.meetingLink && (
+                          <Button size="sm" asChild className="rounded-xl h-9 text-xs font-bold bg-slate-900 hover:bg-primary transition-colors">
+                             <a href={booking.meetingLink} target="_blank" rel="noopener noreferrer">
+                                <Video className="mr-2 h-3.5 w-3.5" /> Join Meet
+                             </a>
+                          </Button>
+                        )}
                      </div>
                   </div>
                </div>
@@ -111,14 +113,14 @@ export default function AppointmentsPage() {
         <div className="py-24 text-center flex flex-col items-center gap-3 bg-white rounded-[2rem] border-2 border-dashed border-slate-100">
            <div className="bg-slate-50 p-6 rounded-full"><CalendarDays className="h-10 w-10 text-slate-200" /></div>
            <p className="font-bold text-slate-400">No appointments in this category.</p>
-           <p className="text-xs text-slate-300 max-w-xs mx-auto">Appointments will appear here once booked by patients through the public wellness portal.</p>
+           <p className="text-xs text-slate-300 max-w-xs mx-auto">Appointments will appear here once booked by patients through the clinical portal.</p>
         </div>
       )}
     </div>
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 h-full flex flex-col">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-headline text-3xl font-bold">Clinical Sessions</h1>
@@ -137,7 +139,7 @@ export default function AppointmentsPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="upcoming" className="w-full">
+      <Tabs defaultValue="upcoming" className="w-full flex-1 flex flex-col">
         <TabsList className="grid w-full grid-cols-2 max-w-[400px] h-12 bg-white border p-1 rounded-2xl">
           <TabsTrigger value="upcoming" className="rounded-xl font-bold text-xs uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">
             Upcoming ({upcoming.length})
@@ -147,7 +149,7 @@ export default function AppointmentsPage() {
           </TabsTrigger>
         </TabsList>
         
-        <div className="mt-8">
+        <div className="mt-8 flex-1 overflow-y-auto">
           {isLoading ? (
             <div className="py-32 text-center">
                <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto mb-4" />

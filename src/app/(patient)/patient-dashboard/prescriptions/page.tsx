@@ -20,10 +20,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { collection, query, orderBy, where } from 'firebase/firestore';
 import { PrescriptionCard } from '@/components/blocks/PrescriptionCard';
 import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
 
 export default function PatientPrescriptionsPage() {
   const { user } = useUser();
@@ -32,8 +31,10 @@ export default function PatientPrescriptionsPage() {
 
   const prescriptionsQuery = useMemoFirebase(() => {
     if (!db || !user) return null;
+    // Fetch from top-level prescriptions collection filtered by patient
     return query(
-      collection(db, 'patients', user.uid, 'prescriptions'), 
+      collection(db, 'prescriptions'), 
+      where('patientId', '==', user.uid),
       orderBy('issuedDate', 'desc')
     );
   }, [db, user]);
