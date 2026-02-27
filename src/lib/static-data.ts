@@ -39,8 +39,22 @@ export const aboutData = {
     doctorName: 'Dr. Pritam Pattyanayek',
     image: images.doctor_about.src,
     imageHint: images.doctor_about.hint,
-    missionStatement: 'Our mission is to provide accessible, high-quality <span class="text-primary">healthcare</span> to our community. We believe in a patient-centric approach, where your <span class="text-primary">health</span> and comfort are our top <span class="text-primary">priorities</span>. <span class="font-semibold text-primary">Dr. Pattyanayek</span> is committed to building lasting relationships with his patients.',
-    bio: 'With over 15 years of experience in internal medicine, Dr. Pattyanayek is a respected and trusted name in the Mahishadal and Nandakumar regions. He is passionate about preventive care and empowering his patients with the knowledge to lead healthier lives.',
+    missionStatement: 'Providing accessible, high-quality <span class="text-primary">healthcare</span> through evidence-based medicine and patient-centric care.',
+    highlights: [
+        '15+ years of clinical excellence in Internal Medicine.',
+        'Specialized in Chronic Disease Management (Diabetes & Hypertension).',
+        'Pioneer in Telemedicine & Digital Health in Purba Medinipur.',
+        'Committed to preventive care and community health education.'
+    ],
+    services: [
+        { title: 'General Consultation', description: 'Comprehensive physical exams and diagnosis.' },
+        { title: 'Heart Health', description: 'Hypertension management and cardiovascular risk assessment.' },
+        { title: 'Diabetes Care', description: 'Advanced blood sugar management and dietary planning.' },
+        { title: 'Preventive Care', description: 'Early detection screenings and lifestyle counseling.' },
+        { title: 'E-Prescriptions', description: 'Verified digital prescriptions delivered via secure app.' },
+        { title: 'Follow-up Care', description: 'Dedicated post-consultation monitoring and support.' }
+    ],
+    bio: 'With over 15 years of experience, Dr. Pattyanayek is a respected name in Mahishadal and Nandakumar. He focuses on long-term wellness rather than just treating immediate symptoms.',
     education: 'MBBS from R.G. Kar Medical College, Kolkata',
     experience: '15+ Years',
     patientsServed: '2500+',
