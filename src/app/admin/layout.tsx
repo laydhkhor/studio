@@ -2,18 +2,16 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
-  Bell,
-  Home,
-  LineChart,
-  Package,
-  Package2,
-  Settings,
-  ShoppingCart,
   Users,
   Search,
-  PanelLeft,
-  ChevronDown,
+  LayoutDashboard,
+  Calendar,
+  ClipboardPlus,
+  Sparkles,
+  Settings,
+  Loader2,
 } from 'lucide-react';
 
 import {
@@ -21,14 +19,7 @@ import {
   adminSettingsNav,
   doctorDetails,
 } from '@/lib/placeholder-data';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,11 +34,9 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Logo } from '@/components/icons';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getLucideIcon } from '@/lib/utils';
 import {
   Sidebar,
@@ -56,15 +45,13 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuSub,
   SidebarProvider,
-  SidebarInset,
   SidebarFooter,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { useAuth } from '@/firebase';
+import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { signOut } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
+import { doc } from 'firebase/firestore';
 
 function AdminSidebar() {
   return (
@@ -72,11 +59,11 @@ function AdminSidebar() {
       <SidebarHeader>
         <Link
           href="/admin/dashboard"
-          className="flex items-center gap-2 font-semibold"
+          className="flex items-center gap-2 font-semibold p-2"
         >
           <Logo className="h-6 w-6 text-primary" />
           <span className="font-headline text-lg group-data-[collapsible=icon]:hidden">
-            DocAssist
+            DocAssist Admin
           </span>
         </Link>
       </SidebarHeader>
@@ -130,61 +117,106 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const auth = useAuth();
+  const { user, isUserLoading } = useUser();
+  const db = useFirestore();
   const router = useRouter();
+
+  const userDocRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, 'users', user.uid);
+  }, [db, user]);
+
+  const { data: userData, isLoading: isRoleLoading } = useDoc(userDocRef);
+
+  // Check for doctor role and redirect if unauthorized
+  React.useEffect(() => {
+    if (!isUserLoading && !isRoleLoading) {
+      if (!user) {
+        router.push('/admin/auth');
+      } else if (userData?.role !== 'doctor') {
+        router.push('/patient/dashboard');
+      }
+    }
+  }, [user, isUserLoading, userData, isRoleLoading, router]);
 
   const handleLogout = async () => {
     if (auth) {
       await signOut(auth);
-      router.push('/');
+      router.push('/admin/auth');
     }
   };
+
+  if (isUserLoading || isRoleLoading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Final check to prevent layout flash for non-doctors
+  if (!user || userData?.role !== 'doctor') {
+    return null;
+  }
 
   return (
     <SidebarProvider>
       <AdminSidebar />
-      <div className="flex flex-col w-full">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+      <div className="flex flex-col w-full min-h-screen bg-slate-50/50">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-4">
           <SidebarTrigger className="sm:hidden" />
           <Breadcrumb className="hidden md:flex">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/admin/dashboard">Dashboard</Link>
+                  <Link href="/admin/dashboard" className="font-bold text-slate-900">Clinical Dashboard</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+          
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+              placeholder="Search patients..."
+              className="w-full rounded-lg bg-white pl-8 md:w-[200px] lg:w-[320px] h-9"
             />
           </div>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
-                className="overflow-hidden rounded-full"
+                className="overflow-hidden rounded-full border-2 border-primary/20"
               >
-                <Avatar>
-                  <AvatarFallback>DP</AvatarFallback>
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={user.photoURL || ''} />
+                  <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                    {userData.fullName?.charAt(0) || 'D'}
+                  </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>{doctorDetails.name}</DropdownMenuLabel>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>
+                <p className="font-bold">{userData.fullName}</p>
+                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/admin/settings" className="cursor-pointer">Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 mt-4">
+        <main className="flex flex-1 flex-col gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           {children}
         </main>
       </div>
