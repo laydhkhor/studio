@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -47,7 +46,7 @@ export default function LoginPage() {
       if (redirectUrl) {
         router.push(redirectUrl);
       } else {
-        router.push(userData.role === 'doctor' || userData.role === 'dev' ? '/dashboard' : '/user-dashboard');
+        router.push(userData.role === 'doctor' || userData.role === 'dev' ? '/admin-dashboard' : '/patients-dashboard');
       }
     }
   }, [user, userData, router, searchParams]);

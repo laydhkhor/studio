@@ -82,7 +82,7 @@ export default function UserAccountNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={isAuthorizedAdmin ? "/dashboard" : "/user-dashboard"} className="cursor-pointer">
+            <Link href={isAuthorizedAdmin ? "/admin-dashboard" : "/patients-dashboard"} className="cursor-pointer">
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>{isAuthorizedAdmin ? 'Clinical Dashboard' : 'My Health Dashboard'}</span>
             </Link>

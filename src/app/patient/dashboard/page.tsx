@@ -1,6 +1,6 @@
 
 import { redirect } from 'next/navigation';
 
-export default function OldPatientDashboardRedirect() {
-  redirect('/user-dashboard');
+export default function RedirectPage() {
+  redirect('/patients-dashboard');
 }

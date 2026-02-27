@@ -12,27 +12,27 @@ export const doctorDetails = {
 
 export const adminNavItems = [
   {
-    href: '/dashboard',
+    href: '/admin-dashboard',
     icon: 'LayoutDashboard',
     label: 'Dashboard',
   },
   {
-    href: '/dashboard/calendar',
+    href: '/admin-dashboard/calendar',
     icon: 'Calendar',
     label: 'Calendar & Slots',
   },
   {
-    href: '/dashboard/patients',
+    href: '/admin-dashboard/patients',
     icon: 'Users',
     label: 'Patient Records',
   },
   {
-    href: '/dashboard/bookings',
+    href: '/admin-dashboard/bookings',
     icon: 'CalendarDays',
     label: 'Appointments',
   },
   {
-    href: '/dashboard/prescriptions',
+    href: '/admin-dashboard/prescriptions',
     icon: 'ClipboardPlus',
     label: 'Prescriptions',
   },
@@ -40,7 +40,7 @@ export const adminNavItems = [
 
 export const adminSettingsNav = [
     {
-    href: '/dashboard/settings',
+    href: '/admin-dashboard/settings',
     icon: 'Settings',
     label: 'Settings',
   }
