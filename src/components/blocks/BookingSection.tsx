@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -182,7 +181,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                     </div>
                                     <div className="flex gap-4 items-start">
                                         <div className="bg-white/20 p-2 rounded-xl"><ShieldCheck className="h-5 w-5" /></div>
-                                        <div><p className="font-bold text-sm">₹400 Fee</p><p className="text-xs text-primary-foreground/70">Standard consultation rate</p></div>
+                                        <div><p className="font-bold text-sm">Clinical Slot</p><p className="text-xs text-primary-foreground/70">Professional consultation</p></div>
                                     </div>
                                 </div>
 
@@ -271,10 +270,10 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                         ) : (
                                           <CheckCircle2 className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
                                         )}
-                                        {isProcessing ? 'Processing Transaction...' : 'Pay ₹400 & Confirm Appointment'}
+                                        {isProcessing ? 'Preparing Booking...' : 'Confirm Appointment & Proceed'}
                                     </Button>
                                     <div className="flex items-center justify-center gap-2 mt-4 text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                                        <ShieldCheck className="h-3 w-3" /> Secure Razorpay Payment 
+                                        <ShieldCheck className="h-3 w-3" /> Secure Payment Gateway 
                                     </div>
                                 </div>
                             </div>
