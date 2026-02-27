@@ -1,11 +1,130 @@
 rules_version = '2';
-
-// FORCED REDEPLOY: Standard Development Rules
-// Updated: 2025-02-14 (Reset to allow-all for development)
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;
+
+    /**
+     * CORE PHILOSOPHY:
+     * This ruleset implements a medical practice management security model focused on 
+     * Patient-Doctor confidentiality and Authorization Independence. While in 
+     * Prototyping Mode, we strictly enforce "Who" can access data based on 
+     * authenticated identity, while remaining flexible on the "What" (data schema) 
+     * to support rapid development.
+     * 
+     * DATA STRUCTURE:
+     * - User and Doctor profiles are keyed by their Firebase Auth UIDs for direct lookup.
+     * - Transactions (Appointments, Prescriptions, Reviews) are stored in top-level 
+     *   collections with denormalized 'patientId' and 'doctorId' fields.
+     * 
+     * KEY SECURITY DECISIONS:
+     * - Authorization Independence: We use denormalized IDs (patientId, doctorId) 
+     *   directly on transaction documents to avoid costly get() calls and complex 
+     *   nesting, allowing rules to be evaluated atomically.
+     * - Structural Segregation: General user data is separated from specialized 
+     *   professional doctor data to allow for different public/private visibility.
+     * - Relational Integrity: On creation, we enforce that the 'owner' or 'creator' 
+     *   field in the data matches the authenticated user to prevent spoofing.
+     */
+
+    // --- Global Helper Functions ---
+
+    /** @description Checks if the request is from a signed-in user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** @description Checks if the authenticated user's UID matches the provided ID. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** @description Combines ownership check with document existence for updates and deletes. */
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    /** @description Checks if the user is either the patient or the doctor on a shared document. */
+    function isParticipant(data) {
+      return isSignedIn() && (request.auth.uid == data.patientId || request.auth.uid == data.doctorId);
+    }
+
+    /** @description Validates that a field is not being changed during an update. */
+    function isUnchanged(field) {
+      return request.resource.data[field] == resource.data[field];
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Rules for user-specific profile data.
+     * @path /user_profiles/{userId}
+     * @allow (get) If the user is the owner. (create) If the ID matches the Auth UID.
+     * @deny (list) If requested by any other user.
+     * @principle Enforces strict path-based ownership.
+     */
+    match /user_profiles/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && isUnchanged('id');
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Rules for specialized professional doctor profiles.
+     * @path /doctor_profiles/{doctorId}
+     * @allow (get, list) For any user (public visibility). (update) For the doctor owner.
+     * @deny (create, update) If the user is not the doctor associated with this profile.
+     * @principle Public Read with Owner-Only Writes.
+     */
+    match /doctor_profiles/{doctorId} {
+      allow get, list: if true;
+      allow create: if isOwner(doctorId) && request.resource.data.userId == request.auth.uid;
+      allow update: if isExistingOwner(doctorId) && isUnchanged('userId');
+      allow delete: if isExistingOwner(doctorId);
+    }
+
+    /**
+     * @description Shared access for medical appointments.
+     * @path /appointments/{appointmentId}
+     * @allow (get) If the user is the patient or doctor in the record. (create) If the user's UID matches patientId or doctorId.
+     * @deny (update) If attempting to change the patient or doctor IDs.
+     * @principle Closed Collaborator access using denormalized IDs.
+     */
+    match /appointments/{appointmentId} {
+      allow get: if isParticipant(resource.data);
+      allow list: if isSignedIn(); // Filtered by patientId or doctorId in client queries.
+      allow create: if isSignedIn() && (request.resource.data.patientId == request.auth.uid || request.resource.data.doctorId == request.auth.uid);
+      allow update: if resource != null && isParticipant(resource.data) && isUnchanged('patientId') && isUnchanged('doctorId');
+      allow delete: if resource != null && isParticipant(resource.data);
+    }
+
+    /**
+     * @description Shared access for medical prescriptions.
+     * @path /prescriptions/{prescriptionId}
+     * @allow (get) If the user is the patient or doctor in the record. (create) If the doctor is the creator.
+     * @deny (delete) To preserve medical history records.
+     * @principle Enforces data integrity and participant-only access.
+     */
+    match /prescriptions/{prescriptionId} {
+      allow get: if isParticipant(resource.data);
+      allow list: if isSignedIn(); // Filtered by patientId or doctorId in client queries.
+      allow create: if isSignedIn() && request.resource.data.doctorId == request.auth.uid;
+      allow update: if resource != null && isParticipant(resource.data) && isUnchanged('patientId') && isUnchanged('doctorId');
+      allow delete: if false; // Prescriptions are permanent medical records.
+    }
+
+    /**
+     * @description Patient-authored reviews for the doctor.
+     * @path /doctor_reviews/{reviewId}
+     * @allow (get, list) For all users (public reviews). (create) For the patient who wrote it.
+     * @deny (update) If any user other than the original author attempts to modify it.
+     * @principle Public Read with Owner-Only Writes (Patient as owner).
+     */
+    match /doctor_reviews/{reviewId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && request.resource.data.patientId == request.auth.uid;
+      allow update: if resource != null && isOwner(resource.data.patientId) && isUnchanged('patientId');
+      allow delete: if resource != null && isOwner(resource.data.patientId);
     }
   }
 }
