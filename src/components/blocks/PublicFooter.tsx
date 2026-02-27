@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -6,7 +5,7 @@ import Link from 'next/link';
 import { Logo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Star } from 'lucide-react';
+import { Star, Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function PublicFooter({ navLinks, clinicInfo }: any) {
@@ -23,82 +22,115 @@ export default function PublicFooter({ navLinks, clinicInfo }: any) {
   }
 
   return (
-    <footer className="bg-card font-ui text-card-foreground border-t">
-      <div className="container py-12">
-        <div className="grid gap-8 md:grid-cols-12">
-          <div className="md:col-span-3">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <Logo className="h-8 w-8 text-primary" />
-              <span className="font-headline text-2xl font-bold text-primary">
+    <footer className="bg-slate-900 text-slate-300 font-ui border-t">
+      <div className="container py-20">
+        <div className="grid gap-12 lg:gap-16 md:grid-cols-12">
+          {/* Brand Column */}
+          <div className="md:col-span-4 space-y-6">
+            <Link href="/" className="flex items-center gap-2">
+              <Logo className="h-10 w-10 text-primary" />
+              <span className="font-headline text-3xl font-bold text-white">
                 DocAssist
               </span>
             </Link>
-            <p className="text-muted-foreground text-sm text-justify">
-              Your trusted partner in <span className="text-primary">healthcare</span>. Providing quality consultations with <span className="font-semibold text-primary">Dr. Pritam Pattyanayek</span>.
+            <p className="text-slate-400 text-base leading-relaxed max-w-xs">
+              Providing modern, compassionate healthcare solutions for the community of Purba Medinipur. Expert consultations by <strong>Dr. Pritam Pattyanayek</strong>.
             </p>
+            <div className="flex gap-4">
+               <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-white/10 rounded-full">
+                  <Facebook className="h-5 w-5" />
+               </Button>
+               <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-white/10 rounded-full">
+                  <Instagram className="h-5 w-5" />
+               </Button>
+               <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-white/10 rounded-full">
+                  <Twitter className="h-5 w-5" />
+               </Button>
+            </div>
           </div>
-          <div className="md:col-span-3">
-            <h3 className="font-semibold tracking-wider text-sm uppercase">Quick Links</h3>
-            <ul className="mt-4 space-y-2 columns-2">
+
+          {/* Links Column */}
+          <div className="md:col-span-2 space-y-6">
+            <h3 className="font-headline text-white font-bold tracking-wider text-sm uppercase">Quick Links</h3>
+            <ul className="space-y-4">
               {navLinks.map((link: any) => (
-                <li key={link.href} className="break-inside-avoid">
-                  <Link href={link.href} className="text-muted-foreground hover:text-primary text-sm">
+                <li key={link.href}>
+                  <Link href={link.href} className="hover:text-primary transition-colors block">
                     {link.label}
                   </Link>
                 </li>
               ))}
-              <li className="break-inside-avoid">
-                <Link href="/review" className="text-muted-foreground hover:text-primary text-sm">
-                  Reviews
+              <li>
+                <Link href="/review" className="hover:text-primary transition-colors block font-bold text-primary">
+                  Patient Reviews
                 </Link>
               </li>
             </ul>
           </div>
-          <div className="md:col-span-3">
-            <h3 className="font-semibold tracking-wider text-sm uppercase">Contact</h3>
-            <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-              <p>{clinicInfo.address}</p>
-              <p>{clinicInfo.email}</p>
-              <p>{clinicInfo.phone}</p>
+
+          {/* Contact Column */}
+          <div className="md:col-span-3 space-y-6">
+            <h3 className="font-headline text-white font-bold tracking-wider text-sm uppercase">Get In Touch</h3>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <MapPin className="h-5 w-5 text-primary shrink-0" />
+                <span className="text-sm leading-relaxed">{clinicInfo.address}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="h-5 w-5 text-primary shrink-0" />
+                <span className="text-sm">{clinicInfo.email}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="h-5 w-5 text-primary shrink-0" />
+                <span className="text-sm">{clinicInfo.phone}</span>
+              </div>
             </div>
           </div>
-          <div className="md:col-span-3">
-             <h3 className="font-semibold tracking-wider text-sm uppercase">Write a Review</h3>
-             <form className="mt-4 space-y-2">
-              <div className="flex justify-center md:justify-start space-x-1 mb-2 h-9">
+
+          {/* Review Form Column */}
+          <div className="md:col-span-3 space-y-6">
+             <h3 className="font-headline text-white font-bold tracking-wider text-sm uppercase">Share Feedback</h3>
+             <form className="space-y-4">
+              <div className="flex space-x-1 h-9">
                 {isClient && [...Array(5)].map((_, index) => {
                   const starValue = index + 1;
                   return (
-                    <Button
+                    <button
                       type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="size-auto p-0 hover:bg-transparent"
                       key={starValue}
                       onClick={() => setRating(starValue)}
                       onMouseEnter={() => setHover(starValue)}
                       onMouseLeave={() => setHover(0)}
+                      className="focus:outline-none transition-transform active:scale-90"
                       aria-label={`Rate ${starValue} star${starValue > 1 ? 's' : ''}`}
                     >
                       <Star
                         className={cn(
-                          "h-6 w-6 cursor-pointer transition-colors",
+                          "h-6 w-6 transition-colors",
                           starValue <= (hover || rating)
                             ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
+                            : "text-slate-700"
                         )}
                       />
-                    </Button>
+                    </button>
                   );
                 })}
               </div>
-              <Textarea placeholder="Share your experience..." />
-              <Button type="submit" className="w-full font-ui">Submit Review</Button>
+              <Textarea 
+                placeholder="Briefly tell us about your visit..." 
+                className="bg-slate-800 border-slate-700 focus:ring-primary text-white resize-none h-24"
+              />
+              <Button type="submit" className="w-full font-bold shadow-lg shadow-primary/20">Submit Feedback</Button>
             </form>
           </div>
         </div>
-        <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
-          <p suppressHydrationWarning>&copy; {new Date().getFullYear()} DocAssist. All rights reserved.</p>
+
+        <div className="mt-20 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+          <p suppressHydrationWarning>&copy; {new Date().getFullYear()} DocAssist Health Systems. All rights reserved.</p>
+          <div className="flex gap-6">
+             <Link href="/terms" className="hover:text-white transition-colors">Terms of Use</Link>
+             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+          </div>
         </div>
       </div>
     </footer>

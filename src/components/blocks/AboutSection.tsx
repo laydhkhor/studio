@@ -3,98 +3,100 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Award, GraduationCap, Users, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Award, GraduationCap, Users, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export default function AboutSection({ about }: { about: any }) {
   if (!about) return null;
 
   return (
-    <section className="py-20 md:py-28 bg-background">
+    <section className="py-24 md:py-32 bg-white">
       <div className="container">
         {/* Section Title */}
-        <div className="mx-auto max-w-3xl text-center mb-16">
-          <h2 className="font-headline text-3xl md:text-4xl font-bold">
+        <div className="mx-auto max-w-3xl text-center mb-20 space-y-4">
+          <span className="font-ui font-bold text-primary tracking-widest uppercase text-sm">Our Legacy</span>
+          <h2 className="font-headline text-3xl md:text-5xl font-bold text-foreground">
             About the <span className="text-primary">Doctor</span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Get to know the person behind your healthcare and our commitment to your wellness.
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            Founded on the principles of compassion and excellence, our practice is dedicated to the well-being of every patient.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Image Container */}
-          <div className="relative flex justify-center">
+          <div className="relative flex justify-center lg:justify-start">
             <div className="relative">
-              <Image
-                src={about.image}
-                alt={about.doctorName}
-                width={400}
-                height={400}
-                className="rounded-2xl object-cover aspect-square shadow-2xl border-8 border-card z-10 relative"
-                data-ai-hint={about.imageHint}
-              />
+              <div className="relative z-10">
+                <Image
+                  src={about.image}
+                  alt={about.doctorName}
+                  width={450}
+                  height={450}
+                  className="rounded-3xl object-cover aspect-square shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border-4 border-white"
+                  data-ai-hint={about.imageHint}
+                />
+              </div>
+              
               {/* Trust Badge overlay */}
-              <div className="absolute -bottom-6 -left-6 bg-accent text-accent-foreground p-4 rounded-xl shadow-lg z-20 hidden md:flex items-center gap-3 border-4 border-background">
-                 <ShieldCheck className="h-8 w-8" />
+              <div className="absolute -bottom-8 -right-8 bg-accent text-accent-foreground p-6 rounded-2xl shadow-xl z-20 hidden md:flex items-center gap-4 border-4 border-white">
+                 <div className="bg-white/20 p-2 rounded-lg">
+                    <ShieldCheck className="h-10 w-10" />
+                 </div>
                  <div>
-                    <p className="font-headline font-bold leading-tight">Verified</p>
-                    <p className="text-xs font-ui opacity-90">Medical Practitioner</p>
+                    <p className="font-headline font-bold text-xl leading-tight">Verified Specialist</p>
+                    <p className="text-sm font-ui opacity-90">WB Medical Council Reg.</p>
                  </div>
               </div>
-              {/* Experience overlay */}
-              <div className="absolute -top-6 -right-6 bg-primary text-primary-foreground p-5 rounded-xl shadow-lg z-20 hidden md:block border-4 border-background">
-                 <p className="text-2xl font-bold font-headline leading-tight">{about.experience}</p>
-                 <p className="text-xs font-ui opacity-90 uppercase tracking-wider">Experience</p>
-              </div>
+
+              {/* Decorative background element */}
+              <div className="absolute -top-10 -left-10 w-full h-full bg-primary/5 rounded-3xl -z-10 transform -rotate-3"></div>
             </div>
           </div>
 
           {/* Text Content */}
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold font-ui uppercase tracking-wider">
-               <Award className="h-4 w-4" />
-               Expert Healthcare
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <h3 className="font-headline text-3xl md:text-4xl font-bold">
+                Meet <span className="text-primary">{about.doctorName}</span>
+              </h3>
+              <div 
+                className="text-lg text-muted-foreground leading-relaxed text-justify space-y-4" 
+                dangerouslySetInnerHTML={{ __html: about.missionStatement }} 
+              />
+              <p className="text-lg text-muted-foreground leading-relaxed text-justify italic font-medium">
+                "{about.bio}"
+              </p>
             </div>
-            <h3 className="font-headline text-3xl font-bold">
-              Meet <span className="text-primary">{about.doctorName}</span>
-            </h3>
-            <p 
-              className="text-lg text-muted-foreground text-justify leading-relaxed" 
-              dangerouslySetInnerHTML={{ __html: about.missionStatement }} 
-            />
-            <p className="text-muted-foreground text-justify leading-relaxed italic border-l-4 border-primary/20 pl-4">
-              {about.bio}
-            </p>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
-               <div className="flex items-start gap-4">
-                  <div className="bg-secondary p-3 rounded-lg">
-                    <GraduationCap className="h-6 w-6 text-primary" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+               <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-primary/10 p-2 rounded-lg">
+                      <GraduationCap className="h-6 w-6 text-primary" />
+                    </div>
+                    <h4 className="font-headline font-bold">Education</h4>
                   </div>
-                  <div>
-                    <h4 className="font-headline font-semibold text-sm">Top Education</h4>
-                    <p className="text-xs text-muted-foreground font-ui">{about.education}</p>
-                  </div>
+                  <p className="text-sm text-muted-foreground font-ui pl-11">{about.education}</p>
                </div>
-               <div className="flex items-start gap-4">
-                  <div className="bg-secondary p-3 rounded-lg">
-                    <Users className="h-6 w-6 text-primary" />
+               <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-accent/10 p-2 rounded-lg">
+                      <Users className="h-6 w-6 text-accent" />
+                    </div>
+                    <h4 className="font-headline font-bold">Community Trust</h4>
                   </div>
-                   <div>
-                    <h4 className="font-headline font-semibold text-sm">Trust Factor</h4>
-                    <p className="text-xs text-muted-foreground font-ui">{about.patientsServed} Happy Patients</p>
-                  </div>
+                  <p className="text-sm text-muted-foreground font-ui pl-11">{about.patientsServed} Patients treated successfully in Purba Medinipur.</p>
                </div>
             </div>
 
-            <div className="pt-8 flex flex-col sm:flex-row gap-4">
-              <Button asChild className="font-ui">
+            <div className="pt-6 flex flex-col sm:flex-row gap-4">
+              <Button asChild size="lg" className="h-14 px-8 text-lg font-ui rounded-xl shadow-lg shadow-primary/20">
                 <Link href="/about">
-                  View Full Profile <ArrowRight className="ml-2 h-4 w-4" />
+                  Full Medical Profile <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-               <Button asChild variant="outline" className="font-ui">
-                <Link href="/contact">Get in Touch</Link>
+               <Button asChild variant="outline" size="lg" className="h-14 px-8 text-lg font-ui rounded-xl border-2 hover:bg-secondary/50">
+                <Link href="/contact">Schedule Consultation</Link>
               </Button>
             </div>
           </div>
