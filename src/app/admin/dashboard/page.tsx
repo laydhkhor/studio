@@ -34,6 +34,7 @@ import {
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import Link from 'next/link';
 
 const chartData = [
   { month: "Jan", revenue: 45000, consultations: 120 },
@@ -94,8 +95,10 @@ export default function AdminDashboard() {
           <Button variant="outline" className="h-11 rounded-xl bg-white border-slate-200 text-slate-600 font-bold shadow-sm">
             <Download className="mr-2 h-4 w-4" /> Export Data
           </Button>
-          <Button className="h-11 rounded-xl font-bold shadow-lg shadow-primary/20">
-            <CalendarDays className="mr-2 h-4 w-4" /> New Booking
+          <Button asChild className="h-11 rounded-xl font-bold shadow-lg shadow-primary/20">
+            <Link href="/admin/bookings">
+              <CalendarDays className="mr-2 h-4 w-4" /> New Booking
+            </Link>
           </Button>
         </div>
       </div>
@@ -263,8 +266,14 @@ export default function AdminDashboard() {
                 ))}
               </div>
               <div className="p-4 border-t">
-                <Button variant="ghost" className="w-full text-xs font-bold text-primary hover:bg-primary/5 h-9 rounded-lg">
-                  View Full Appointment List
+                <Button 
+                  asChild
+                  variant="ghost" 
+                  className="w-full text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground h-9 rounded-lg transition-colors"
+                >
+                  <Link href="/admin/bookings">
+                    View Full Appointment List
+                  </Link>
                 </Button>
               </div>
             </CardContent>
