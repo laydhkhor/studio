@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,6 +21,7 @@ import UserAccountNav from '@/components/UserAccountNav';
 export default function PublicHeader({ navLinks }: any) {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const { user, isUserLoading } = useUser();
+  const pathname = usePathname();
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -50,15 +52,21 @@ export default function PublicHeader({ navLinks }: any) {
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6 text-sm font-medium">
-            {navLinks.map((link: any) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-foreground/80 transition-colors hover:text-primary"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link: any) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "transition-colors hover:text-primary",
+                    isActive ? "text-primary font-bold" : "text-foreground/80"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -113,23 +121,29 @@ export default function PublicHeader({ navLinks }: any) {
                 </SheetHeader>
                 <div className="flex flex-1 flex-col justify-between">
                   <nav className="mt-8 flex flex-col gap-4 px-6">
-                    {navLinks.map((link: any) => (
-                      <SheetClose asChild key={link.href}>
-                        <Link
-                          href={link.href}
-                          className="text-lg font-medium text-foreground hover:text-primary transition-colors"
-                        >
-                          {link.label}
-                        </Link>
-                      </SheetClose>
-                    ))}
+                    {navLinks.map((link: any) => {
+                      const isActive = pathname === link.href;
+                      return (
+                        <SheetClose asChild key={link.href}>
+                          <Link
+                            href={link.href}
+                            className={cn(
+                              "text-lg transition-colors hover:text-primary",
+                              isActive ? "text-primary font-bold" : "text-foreground"
+                            )}
+                          >
+                            {link.label}
+                          </Link>
+                        </SheetClose>
+                      );
+                    })}
                   </nav>
                   <div className="space-y-3 border-t p-6 bg-slate-50">
                      {user ? (
                         <div className="flex flex-col gap-3">
                            <div className="flex items-center gap-3 mb-2">
                               <UserAccountNav />
-                              <span className="font-bold text-sm">{user.email}</span>
+                              <span className="font-bold text-sm truncate">{user.email}</span>
                            </div>
                            <SheetClose asChild>
                               <Button asChild className="w-full" size="lg">
