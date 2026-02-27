@@ -115,8 +115,8 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
               )}`;
               return (
                 <Card key={clinic.id} className="shadow-lg border-none flex flex-col bg-white overflow-hidden hover:shadow-xl transition-shadow relative">
-                  {/* Thinner Top Decorative Bar */}
-                  <div className="h-1 bg-primary w-full opacity-90"></div>
+                  {/* Ultra Thin Top Decorative Bar */}
+                  <div className="h-[2px] bg-primary w-full opacity-90"></div>
                   
                   <CardHeader className="p-8 pb-4">
                     <CardTitle className="font-headline text-2xl font-bold">
@@ -164,8 +164,8 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
                     </Button>
                   </CardFooter>
 
-                  {/* Matching Bottom Decorative Bar */}
-                  <div className="h-1 bg-primary w-full opacity-20"></div>
+                  {/* Matching Ultra Thin Bottom Decorative Bar */}
+                  <div className="h-[2px] bg-primary w-full opacity-90"></div>
                 </Card>
               );
             })
