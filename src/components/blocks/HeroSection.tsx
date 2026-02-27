@@ -1,111 +1,128 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Award, Users, Stethoscope, ShieldCheck } from 'lucide-react';
-import { Card } from '../ui/card';
+import { ArrowRight, Award, Users, Stethoscope, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export default function HeroSection({ home, about }: { home: any, about: any }) {
   return (
-    <section className="relative bg-gradient-to-b from-secondary/50 to-background overflow-hidden py-20 lg:py-32">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-3xl animate-blob"></div>
-        <div className="absolute top-[20%] -right-[5%] w-[30%] h-[30%] bg-accent/5 rounded-full blur-3xl animate-blob [animation-delay:2s]"></div>
+    <section className="relative bg-white overflow-hidden border-b">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
       </div>
 
-      <div className="container z-10 relative">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left Column - Text Content */}
-          <div className="text-center lg:text-left space-y-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold font-ui uppercase tracking-widest">
-               <ShieldCheck className="h-4 w-4" />
-               {home?.heroKicker}
+      <div className="container z-10 relative py-16 lg:py-24">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Left Column - Content */}
+          <div className="text-center lg:text-left space-y-8 max-w-2xl mx-auto lg:mx-0">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold font-ui uppercase tracking-widest border border-primary/20">
+               <ShieldCheck className="h-3.5 w-3.5" />
+               Registered Medical Practitioner
             </div>
             
-            <h1 className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-foreground"
-              dangerouslySetInnerHTML={{ __html: home?.heroHeading?.replace(/Health/g, '<span class="text-primary">Health</span>').replace(/Priority/g, '<span class="text-primary">Priority</span>').replace(/\n/g, '<br />') ?? '' }}
-            />
+            <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.15] text-slate-900">
+              Trusted <span className="text-primary">Medical Care</span> <br className="hidden md:block" />
+              for Your Family's Health
+            </h1>
             
-            <p className="max-w-xl mx-auto lg:mx-0 text-lg md:text-xl text-muted-foreground leading-relaxed"
-             dangerouslySetInnerHTML={{ __html: home?.heroSubheading?.replace(/Dr. Pritam Pattyanayek/g, '<span class="font-bold text-primary">Dr. Pritam Pattyanayek</span>') ?? '' }}
-            />
+            <p className="text-lg md:text-xl text-slate-600 leading-relaxed font-body">
+              Experience the highest standard of healthcare with <span className="font-semibold text-primary">Dr. Pritam Pattyanayek</span>. Providing compassionate, evidence-based medical consultations in Mahishadal and Nandakumar.
+            </p>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 font-ui pt-4">
-              <Button size="lg" asChild className="w-full sm:w-auto h-14 px-8 text-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+              <Button size="lg" asChild className="w-full sm:w-auto h-14 px-10 text-lg font-ui rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all border-b-4 border-primary-foreground/20">
                 <Link href="/login?redirect=/booking">
-                  Book an Appointment <ArrowRight className="ml-2 h-5 w-5" />
+                  Book Appointment <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 asChild
-                className="w-full sm:w-auto h-14 px-8 text-lg bg-background/50 backdrop-blur-sm"
+                className="w-full sm:w-auto h-14 px-10 text-lg font-ui rounded-xl border-2 hover:bg-slate-50"
               >
-                <Link href="/clinic">View Clinics</Link>
+                <Link href="/clinic">Our Locations</Link>
               </Button>
+            </div>
+
+            <div className="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-4 pt-4 border-t border-slate-100">
+              <div className="flex items-center gap-2 text-sm text-slate-500 font-ui">
+                <CheckCircle2 className="h-4 w-4 text-accent" />
+                <span>Video & Chat Support</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-slate-500 font-ui">
+                <CheckCircle2 className="h-4 w-4 text-accent" />
+                <span>Digital Prescriptions</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-slate-500 font-ui">
+                <CheckCircle2 className="h-4 w-4 text-accent" />
+                <span>15+ Years Excellence</span>
+              </div>
             </div>
           </div>
 
-          {/* Right Column - Image and Cards */}
-          <div className="relative flex justify-center items-center">
-            <div className="relative group">
-                {/* Main Doctor Image */}
-                {home?.heroImage && (
-                  <div className="relative z-10 p-4 bg-background rounded-full shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
-                    <Image
-                      src={home.heroImage}
-                      alt="Dr. Pritam Pattyanayek"
-                      width={500}
-                      height={500}
-                      className="rounded-full object-cover aspect-square z-10 relative"
-                      data-ai-hint={home.heroImageHint}
-                      priority
-                    />
-                  </div>
-                )}
-                
-                {/* Decorative Shapes */}
-                <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-accent/20 rounded-full animate-blob [animation-duration:10s]"></div>
-                <div className="absolute -inset-8 border-2 border-dashed border-primary/10 rounded-full animate-spin [animation-duration:30s]"></div>
+          {/* Right Column - Professional Image Block */}
+          <div className="relative flex justify-center">
+            <div className="relative w-full max-w-[500px]">
+                {/* Main Image Container */}
+                <div className="relative z-10 p-2 bg-white rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] border border-slate-100">
+                    <div className="overflow-hidden rounded-2xl bg-slate-50">
+                      <Image
+                        src={home.heroImage}
+                        alt="Dr. Pritam Pattyanayek"
+                        width={600}
+                        height={600}
+                        className="w-full h-auto object-cover aspect-[4/5] md:aspect-square"
+                        data-ai-hint={home.heroImageHint}
+                        priority
+                      />
+                    </div>
+                </div>
 
-                {/* Floating Stats Card */}
-                <Card className="absolute -bottom-6 -left-12 lg:-left-20 z-20 p-6 shadow-2xl bg-card/90 backdrop-blur-xl w-72 border-primary/10 animate-float">
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                            <div className="bg-primary/10 p-2 rounded-lg">
-                              <Award className="text-primary size-6" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-ui text-muted-foreground">Experience</p>
-                              <p className="font-headline font-bold text-lg">{about?.experience}</p>
-                            </div>
+                {/* Vertical Credential Bar */}
+                <div className="absolute -left-6 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-4 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/50 w-64">
+                    <div className="flex items-center gap-4">
+                        <div className="bg-primary/10 p-2.5 rounded-xl">
+                          <Award className="text-primary size-6" />
                         </div>
-                        <div className="flex items-center gap-4">
-                            <div className="bg-accent/10 p-2 rounded-lg">
-                              <Users className="text-accent size-6" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-ui text-muted-foreground">Happy Patients</p>
-                              <p className="font-headline font-bold text-lg">{about?.patientsServed}</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="bg-primary/10 p-2 rounded-lg">
-                              <Stethoscope className="text-primary size-6" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-ui text-muted-foreground">Consultations</p>
-                              <p className="font-headline font-bold text-lg">{about?.consultationsDone}</p>
-                            </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Experience</p>
+                          <p className="font-headline font-bold text-slate-900">{about?.experience}</p>
                         </div>
                     </div>
-                </Card>
+                    <div className="h-px bg-slate-100 w-full"></div>
+                    <div className="flex items-center gap-4">
+                        <div className="bg-accent/10 p-2.5 rounded-xl">
+                          <Users className="text-accent size-6" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Patient Trust</p>
+                          <p className="font-headline font-bold text-slate-900">{about?.patientsServed}+</p>
+                        </div>
+                    </div>
+                    <div className="h-px bg-slate-100 w-full"></div>
+                    <div className="flex items-center gap-4">
+                        <div className="bg-primary/10 p-2.5 rounded-xl">
+                          <Stethoscope className="text-primary size-6" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Consultations</p>
+                          <p className="font-headline font-bold text-slate-900">{about?.consultationsDone}+</p>
+                        </div>
+                    </div>
+                </div>
 
-                {/* Top Badge */}
-                <div className="absolute -top-4 -right-4 z-20 bg-accent text-accent-foreground px-4 py-2 rounded-full font-bold shadow-lg text-sm font-ui uppercase tracking-tighter flex items-center gap-2">
+                {/* Status Indicator */}
+                <div className="absolute -top-4 -right-4 z-20 bg-accent text-white px-5 py-2 rounded-xl font-bold shadow-xl shadow-accent/20 text-xs font-ui uppercase tracking-widest flex items-center gap-2 border-b-2 border-black/10">
                    <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div>
-                   Online Now
+                   Available Today
                 </div>
             </div>
           </div>
