@@ -31,7 +31,7 @@ export default function FeaturedBlogsSection({ featuredBlogs }: any) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {featuredBlogs.map((post: any) => (
-            <Card key={post._id} className="overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-none bg-secondary/5">
+            <Card key={post._id} className="overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-none bg-secondary/5 flex flex-col">
               <Link href={`/blog/${post.slug}`} className="block relative h-52">
                 <Image
                   src={post.mainImage}
@@ -41,17 +41,17 @@ export default function FeaturedBlogsSection({ featuredBlogs }: any) {
                   data-ai-hint={post.imageHint}
                 />
               </Link>
-              <CardHeader className="p-6 pb-2">
+              <CardHeader className="p-5 pb-1">
                 <CardTitle className="font-headline text-xl font-bold leading-tight line-clamp-2 min-h-[3rem]">
                   {post.title}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="px-6">
+              <CardContent className="px-5 py-0 flex-grow">
                 <p className="text-muted-foreground text-sm line-clamp-3 leading-relaxed">
                   {post.excerpt}
                 </p>
               </CardContent>
-              <CardFooter className="p-6 pt-2">
+              <CardFooter className="p-5 pt-3">
                  <Button variant="link" asChild className="p-0 font-bold text-primary h-auto">
                     <Link href={`/blog/${post.slug}`} className="flex items-center">
                       Read Article <ArrowRight className="ml-2 h-4 w-4"/>

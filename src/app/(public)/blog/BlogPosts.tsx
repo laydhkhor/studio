@@ -1,4 +1,3 @@
-
 'use client';
 import * as React from 'react';
 import Image from 'next/image';
@@ -131,26 +130,26 @@ export default function BlogPosts({ initialData }: { initialData: any }) {
                     data-ai-hint={post.imageHint}
                   />}
                 </Link>
-                <CardHeader>
+                <CardHeader className="p-5 pb-2">
                   <div className="flex justify-between items-center text-xs text-muted-foreground mb-2">
                     <Badge variant="outline">{post.category}</Badge>
                     <time dateTime={post.date}>
                       {format(new Date(post.date), 'MMMM d, yyyy')}
                     </time>
                   </div>
-                  <CardTitle className="font-headline h-14">
+                  <CardTitle className="font-headline text-lg font-bold line-clamp-2 min-h-[3rem]">
                     {post.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex-grow">
-                  <p className="text-muted-foreground text-justify">
+                <CardContent className="px-5 py-0 flex-grow">
+                  <p className="text-muted-foreground text-sm line-clamp-3">
                     {post.excerpt}
                   </p>
                 </CardContent>
-                <CardFooter>
-                  <Button variant="link" asChild className="p-0 font-ui">
-                    <Link href={`/blog/${post.slug}`}>
-                      Read More <ArrowRight className="ml-2" />
+                <CardFooter className="p-5 pt-3">
+                  <Button variant="link" asChild className="p-0 font-bold text-primary h-auto">
+                    <Link href={`/blog/${post.slug}`} className="flex items-center">
+                      Read More <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </CardFooter>
