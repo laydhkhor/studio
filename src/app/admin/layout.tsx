@@ -4,17 +4,12 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import {
-  Users,
   Search,
-  LayoutDashboard,
-  CalendarDays,
-  ClipboardPlus,
   Settings,
   Loader2,
   Bell,
   ChevronDown,
   LogOut,
-  ChevronRight,
   Stethoscope,
 } from 'lucide-react';
 
@@ -40,7 +35,6 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from '@/components/ui/breadcrumb';
-import { Logo } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getLucideIcon } from '@/lib/utils';
 import {
@@ -64,7 +58,7 @@ function AdminSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r border-slate-200">
-      <SidebarHeader className="h-16 flex items-center px-4">
+      <SidebarHeader className="h-16 flex items-center px-4 shrink-0">
         <Link
           href="/admin/dashboard"
           className="flex items-center gap-3 font-bold"
@@ -104,7 +98,7 @@ function AdminSidebar() {
           })}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-2 border-t">
+      <SidebarFooter className="p-2 border-t shrink-0">
         <SidebarMenu>
           {adminSettingsNav.map((item) => {
             const Icon = getLucideIcon(item.icon);
@@ -191,10 +185,10 @@ export default function AdminLayout({
   const currentPath = adminNavItems.find(item => item.href === pathname)?.label || 'Overview';
 
   return (
-    <SidebarProvider>
+    <SidebarProvider className="h-screen overflow-hidden">
       <AdminSidebar />
-      <SidebarInset className="flex flex-col w-full min-h-screen">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-white px-6">
+      <SidebarInset className="flex flex-col h-full overflow-hidden">
+        <header className="h-16 flex items-center gap-4 border-b bg-white px-6 shrink-0 z-20">
           <SidebarTrigger />
           <Breadcrumb className="hidden md:flex">
             <BreadcrumbList>
@@ -261,8 +255,10 @@ export default function AdminLayout({
             </DropdownMenu>
           </div>
         </header>
-        <main className="flex-1 bg-slate-50/50 p-6">
-          {children}
+        <main className="flex-1 overflow-y-auto bg-slate-50/50 p-6">
+          <div className="max-w-[1600px] mx-auto">
+            {children}
+          </div>
         </main>
       </SidebarInset>
     </SidebarProvider>
