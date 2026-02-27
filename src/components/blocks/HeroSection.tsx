@@ -86,8 +86,8 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
                     </div>
                 </div>
 
-                {/* Vertical Credential Bar */}
-                <div className="absolute -left-6 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-4 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/50 w-64">
+                {/* Credential Bar - Responsive Positioning */}
+                <div className="md:absolute md:-left-6 md:top-1/2 md:-translate-y-1/2 z-20 flex flex-col gap-4 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/50 w-full md:w-64 mt-6 md:mt-0">
                     <div className="flex items-center gap-4">
                         <div className="bg-primary/10 p-2.5 rounded-xl">
                           <Award className="text-primary size-6" />
