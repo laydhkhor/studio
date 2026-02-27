@@ -100,7 +100,7 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
           <Button
             variant="ghost"
             onClick={clearFilters}
-            className="w-full sm:w-auto text-primary hover:bg-primary/5"
+            className="w-full sm:w-auto transition-all"
           >
             Clear Filters
           </Button>
@@ -153,7 +153,7 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
                     </div>
                   </CardContent>
                   <CardFooter className="p-8 pt-0">
-                    <Button asChild className="w-full h-12 font-ui" variant="outline">
+                    <Button asChild className="w-full h-12 font-ui transition-all" variant="outline">
                       <a
                         href={mapsUrl}
                         target="_blank"

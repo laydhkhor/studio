@@ -41,7 +41,7 @@ export default function ContactPage() {
                 <Label htmlFor="message">Message</Label>
                 <Textarea id="message" placeholder="Your message..." className="min-h-[150px]" />
               </div>
-              <Button type="submit" className="w-full sm:w-auto font-ui">Send Message</Button>
+              <Button type="submit" className="w-full sm:w-auto font-ui transition-all">Send Message</Button>
             </form>
         </div>
       </div>

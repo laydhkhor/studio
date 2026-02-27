@@ -83,10 +83,10 @@ export default function PublicHeader({ navLinks }: any) {
               </>
             ) : (
               <>
-                <Button asChild variant="ghost" size="sm">
+                <Button asChild variant="ghost" size="sm" className="transition-all">
                   <Link href="/login">Login</Link>
                 </Button>
-                <Button asChild size="sm">
+                <Button asChild size="sm" className="transition-all">
                   <Link href="/login?redirect=/booking">Book Now</Link>
                 </Button>
               </>
@@ -154,14 +154,14 @@ export default function PublicHeader({ navLinks }: any) {
                      ) : (
                         <>
                           <SheetClose asChild>
-                            <Button asChild variant="outline" className="w-full bg-white" size="lg">
+                            <Button asChild variant="outline" className="w-full bg-white transition-all" size="lg">
                               <Link href="/login">Login</Link>
                             </Button>
                           </SheetClose>
                           <SheetClose asChild>
                             <Button
                               asChild
-                              className="w-full"
+                              className="w-full transition-all"
                               size="lg"
                             >
                               <Link href="/login?redirect=/booking">

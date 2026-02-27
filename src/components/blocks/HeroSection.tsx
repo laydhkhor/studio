@@ -37,7 +37,7 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-              <Button size="lg" asChild className="w-full sm:w-auto h-14 px-10 text-lg font-ui rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">
+              <Button size="lg" asChild className="w-full sm:w-auto h-14 px-10 text-lg font-ui rounded-xl shadow-lg shadow-primary/20 transition-all">
                 <Link href="/login?redirect=/booking">
                   Book Appointment <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -46,7 +46,7 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
                 size="lg"
                 variant="outline"
                 asChild
-                className="w-full sm:w-auto h-14 px-10 text-lg font-ui rounded-xl border-2 hover:bg-slate-50"
+                className="w-full sm:w-auto h-14 px-10 text-lg font-ui rounded-xl transition-all"
               >
                 <Link href="/clinic">Our Locations</Link>
               </Button>

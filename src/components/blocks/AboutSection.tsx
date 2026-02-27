@@ -86,12 +86,12 @@ export default function AboutSection({ about }: { about: any }) {
             </div>
 
             <div className="pt-6 flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="h-14 px-8 text-lg font-ui rounded-xl shadow-lg shadow-primary/20">
+              <Button asChild size="lg" className="h-14 px-8 text-lg font-ui rounded-xl shadow-lg shadow-primary/20 transition-all">
                 <Link href="/about">
                   Full Medical Profile <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-               <Button asChild variant="outline" size="lg" className="h-14 px-8 text-lg font-ui rounded-xl border-2 hover:bg-slate-50">
+               <Button asChild variant="outline" size="lg" className="h-14 px-8 text-lg font-ui rounded-xl transition-all">
                 <Link href="/contact">Contact Info</Link>
               </Button>
             </div>
