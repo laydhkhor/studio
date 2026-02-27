@@ -3,11 +3,18 @@
 import * as React from 'react';
 import {
   Users,
-  Calendar,
+  CalendarDays,
   ClipboardPlus,
   DollarSign,
   TrendingUp,
   Download,
+  Activity,
+  ArrowUpRight,
+  ArrowDownRight,
+  Clock,
+  ShieldCheck,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 import {
   Card,
@@ -24,17 +31,18 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 const chartData = [
-  { month: "Jan", revenue: 45000 },
-  { month: "Feb", revenue: 52000 },
-  { month: "Mar", revenue: 48000 },
-  { month: "Apr", revenue: 61000 },
-  { month: "May", revenue: 55000 },
-  { month: "Jun", revenue: 67000 },
-  { month: "Jul", revenue: 72000 },
+  { month: "Jan", revenue: 45000, consultations: 120 },
+  { month: "Feb", revenue: 52000, consultations: 145 },
+  { month: "Mar", revenue: 48000, consultations: 130 },
+  { month: "Apr", revenue: 61000, consultations: 160 },
+  { month: "May", revenue: 55000, consultations: 155 },
+  { month: "Jun", revenue: 67000, consultations: 180 },
+  { month: "Jul", revenue: 72000, consultations: 195 },
 ];
 
 const chartConfig = {
@@ -44,176 +52,253 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const recentConsultations = [
+const upcomingEvents = [
   {
-    name: "Anjali Sharma",
-    email: "anjali@example.com",
-    type: "Video",
-    amount: "₹400",
-    initials: "AS",
+    patient: "Anjali Sharma",
+    time: "10:30 AM",
+    type: "Video Call",
+    concern: "Fever Follow-up",
+    status: "Confirmed",
   },
   {
-    name: "Rajesh Kumar",
-    email: "rajesh.k@example.com",
-    type: "Clinic",
-    amount: "₹500",
-    initials: "RK",
+    patient: "Rajesh Kumar",
+    time: "11:15 AM",
+    type: "Clinic Visit",
+    concern: "Diabetic Check",
+    status: "In-Transit",
   },
   {
-    name: "Priya Mondal",
-    email: "priya.m@example.com",
+    patient: "Priya Mondal",
+    time: "02:00 PM",
     type: "Chat",
-    amount: "₹200",
-    initials: "PM",
+    concern: "Report Review",
+    status: "Pending",
   },
-  {
-    name: "Amit Ghosh",
-    email: "ghosh.amit@example.com",
-    type: "Video",
-    amount: "₹400",
-    initials: "AG",
-  },
-  {
-    name: "Sunita Das",
-    email: "sunita.das@example.com",
-    type: "Clinic",
-    amount: "₹500",
-    initials: "SD",
-  },
+];
+
+const paymentStatuses = [
+  { patient: "Amit Ghosh", amount: "₹400", date: "Today", method: "UPI", status: "Paid" },
+  { patient: "Sunita Das", amount: "₹500", date: "Today", method: "Cash", status: "Due" },
+  { patient: "Bikram Roy", amount: "₹400", date: "Yesterday", method: "Card", status: "Paid" },
 ];
 
 export default function AdminDashboard() {
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight font-headline">Clinical Dashboard</h2>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" className="h-9">
-            <Download className="mr-2 h-4 w-4" />
-            Download Report
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight font-headline text-slate-900">Practice Overview</h1>
+          <p className="text-slate-500 font-medium">Monitoring your clinical performance and patient traffic.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="h-11 rounded-xl bg-white border-slate-200 text-slate-600 font-bold shadow-sm">
+            <Download className="mr-2 h-4 w-4" /> Export Data
+          </Button>
+          <Button className="h-11 rounded-xl font-bold shadow-lg shadow-primary/20">
+            <CalendarDays className="mr-2 h-4 w-4" /> New Booking
           </Button>
         </div>
       </div>
       
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="bg-muted/50 p-1">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-          <TabsTrigger value="settings" disabled>Settings</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="shadow-sm border-primary/5">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">₹1,25,430</div>
-                <p className="text-xs text-muted-foreground">+20.1% from last month</p>
-              </CardContent>
-            </Card>
-            <Card className="shadow-sm border-primary/5">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">2,543</div>
-                <p className="text-xs text-muted-foreground">+18% from last month</p>
-              </CardContent>
-            </Card>
-            <Card className="shadow-sm border-primary/5">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">New Consultations</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">+12</div>
-                <p className="text-xs text-muted-foreground">Next 24 hours</p>
-              </CardContent>
-            </Card>
-            <Card className="shadow-sm border-primary/5">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Prescriptions</CardTitle>
-                <ClipboardPlus className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">48</div>
-                <p className="text-xs text-muted-foreground">Issued this week</p>
-              </CardContent>
-            </Card>
+      {/* KPI Cards */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="shadow-sm border-none bg-white overflow-hidden group">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">Total Revenue</CardTitle>
+            <div className="bg-primary/10 p-2 rounded-lg text-primary">
+              <DollarSign className="h-4 w-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-slate-900">₹1,25,430</div>
+            <div className="flex items-center mt-1 text-emerald-600 font-bold text-xs">
+              <ArrowUpRight className="h-3 w-3 mr-1" /> +20.1% <span className="text-slate-400 font-medium ml-1">vs last month</span>
+            </div>
+          </CardContent>
+          <div className="h-1.5 w-full bg-slate-50">
+            <div className="h-full bg-primary w-[70%]" />
           </div>
+        </Card>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="lg:col-span-4 shadow-sm border-primary/5">
-              <CardHeader>
-                <CardTitle className="font-headline text-lg">Revenue Overview</CardTitle>
-                <CardDescription>
-                  Monthly clinical revenue performance across all channels.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pl-2">
-                <ChartContainer config={chartConfig} className="h-[350px] w-full">
-                  <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                    <XAxis
-                      dataKey="month"
-                      stroke="#888888"
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <YAxis
-                      stroke="#888888"
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                      tickFormatter={(value) => `₹${value / 1000}k`}
-                    />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Bar
-                      dataKey="revenue"
-                      fill="var(--color-revenue)"
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                </ChartContainer>
-              </CardContent>
-            </Card>
+        <Card className="shadow-sm border-none bg-white overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">Patient Growth</CardTitle>
+            <div className="bg-blue-500/10 p-2 rounded-lg text-blue-600">
+              <Users className="h-4 w-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-slate-900">2,543</div>
+            <div className="flex items-center mt-1 text-emerald-600 font-bold text-xs">
+              <ArrowUpRight className="h-3 w-3 mr-1" /> +12% <span className="text-slate-400 font-medium ml-1">new patients</span>
+            </div>
+          </CardContent>
+          <div className="h-1.5 w-full bg-slate-50">
+            <div className="h-full bg-blue-500 w-[45%]" />
+          </div>
+        </Card>
 
-            <Card className="lg:col-span-3 shadow-sm border-primary/5">
-              <CardHeader>
-                <CardTitle className="font-headline text-lg">Recent Consultations</CardTitle>
-                <CardDescription>
-                  You had 24 consultations this week.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-8">
-                  {recentConsultations.map((patient, i) => (
-                    <div key={i} className="flex items-center">
-                      <Avatar className="h-9 w-9">
-                        <AvatarImage src={`/avatars/${i + 1}.png`} alt="Avatar" />
-                        <AvatarFallback>{patient.initials}</AvatarFallback>
-                      </Avatar>
-                      <div className="ml-4 space-y-1">
-                        <p className="text-sm font-bold leading-none">{patient.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {patient.type} Consultation
-                        </p>
-                      </div>
-                      <div className="ml-auto font-bold text-sm">{patient.amount}</div>
+        <Card className="shadow-sm border-none bg-white overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">Consultations</CardTitle>
+            <div className="bg-amber-500/10 p-2 rounded-lg text-amber-600">
+              <Activity className="h-4 w-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-slate-900">184</div>
+            <div className="flex items-center mt-1 text-amber-600 font-bold text-xs">
+              <Clock className="h-3 w-3 mr-1" /> 12 Pending <span className="text-slate-400 font-medium ml-1">today</span>
+            </div>
+          </CardContent>
+          <div className="h-1.5 w-full bg-slate-50">
+            <div className="h-full bg-amber-500 w-[80%]" />
+          </div>
+        </Card>
+
+        <Card className="shadow-sm border-none bg-white overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">Satisfaction</CardTitle>
+            <div className="bg-emerald-500/10 p-2 rounded-lg text-emerald-600">
+              <CheckCircle2 className="h-4 w-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-slate-900">98.2%</div>
+            <div className="flex items-center mt-1 text-emerald-600 font-bold text-xs">
+              <ShieldCheck className="h-3 w-3 mr-1" /> Verified <span className="text-slate-400 font-medium ml-1">patient ratings</span>
+            </div>
+          </CardContent>
+          <div className="h-1.5 w-full bg-slate-50">
+            <div className="h-full bg-emerald-500 w-[98%]" />
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-7">
+        {/* Main Analytics Tab */}
+        <Card className="lg:col-span-4 shadow-xl border-none bg-white">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="font-headline text-xl font-bold">Clinical Revenue</CardTitle>
+              <CardDescription>Practice income trends over the last 7 months.</CardDescription>
+            </div>
+            <Tabs defaultValue="revenue" className="w-[200px]">
+              <TabsList className="grid w-full grid-cols-2 bg-slate-50 p-1 h-9">
+                <TabsTrigger value="revenue" className="text-[10px] uppercase font-bold">Revenue</TabsTrigger>
+                <TabsTrigger value="traffic" className="text-[10px] uppercase font-bold">Traffic</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </CardHeader>
+          <CardContent className="pl-2 pt-4">
+            <ChartContainer config={chartConfig} className="h-[320px] w-full">
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.1} />
+                <XAxis
+                  dataKey="month"
+                  stroke="#94a3b8"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  dy={10}
+                />
+                <YAxis
+                  stroke="#94a3b8"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `₹${value / 1000}k`}
+                />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Area
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#colorRevenue)"
+                />
+              </AreaChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        {/* Side Operational Column */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Upcoming Events */}
+          <Card className="shadow-lg border-none bg-white">
+            <CardHeader className="pb-3 border-b">
+              <div className="flex items-center justify-between">
+                <CardTitle className="font-headline text-lg font-bold">Today's Schedule</CardTitle>
+                <Badge variant="outline" className="bg-primary/5 text-primary border-primary/10">3 Live</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4 px-0">
+              <div className="divide-y divide-slate-50">
+                {upcomingEvents.map((event, i) => (
+                  <div key={i} className="flex items-start gap-4 p-4 hover:bg-slate-50 transition-colors">
+                    <div className="bg-slate-100 px-3 py-2 rounded-xl text-center min-w-[70px]">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Time</p>
+                      <p className="text-xs font-bold text-slate-900">{event.time}</p>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-bold text-slate-900">{event.patient}</p>
+                        <p className={`text-[10px] font-bold uppercase ${
+                          event.status === 'Confirmed' ? 'text-emerald-600' : 'text-amber-600'
+                        }`}>{event.status}</p>
+                      </div>
+                      <p className="text-xs text-slate-500 flex items-center gap-1">
+                        <Badge variant="secondary" className="text-[9px] h-4 px-1.5">{event.type}</Badge>
+                        <span className="text-[10px]">• {event.concern}</span>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="p-4 border-t">
+                <Button variant="ghost" className="w-full text-xs font-bold text-primary hover:bg-primary/5 h-9 rounded-lg">
+                  View Full Appointment List
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Payment Statuses */}
+          <Card className="shadow-lg border-none bg-white">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-headline text-lg font-bold">Payment Feed</CardTitle>
+            </CardHeader>
+            <CardContent className="px-0">
+              <div className="space-y-4 px-6 pb-2">
+                {paymentStatuses.map((pay, i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-full ${pay.status === 'Paid' ? 'bg-emerald-50' : 'bg-red-50'}`}>
+                        <DollarSign className={`h-3 w-3 ${pay.status === 'Paid' ? 'text-emerald-600' : 'text-red-600'}`} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-slate-900">{pay.patient}</p>
+                        <p className="text-[10px] text-slate-400">{pay.date} via {pay.method}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-black text-slate-900">{pay.amount}</p>
+                      <p className={`text-[10px] font-bold ${pay.status === 'Paid' ? 'text-emerald-600' : 'text-red-600'}`}>{pay.status}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

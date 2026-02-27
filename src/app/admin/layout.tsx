@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -8,19 +7,20 @@ import {
   Users,
   Search,
   LayoutDashboard,
-  Calendar,
+  CalendarDays,
   ClipboardPlus,
-  Sparkles,
   Settings,
   Loader2,
   Bell,
   ChevronDown,
+  LogOut,
+  ChevronRight,
+  Stethoscope,
 } from 'lucide-react';
 
 import {
   adminNavItems,
   adminSettingsNav,
-  doctorDetails,
 } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
 import {
@@ -37,6 +37,8 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
 } from '@/components/ui/breadcrumb';
 import { Logo } from '@/components/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -51,39 +53,50 @@ import {
   SidebarProvider,
   SidebarFooter,
   SidebarTrigger,
+  SidebarInset,
 } from '@/components/ui/sidebar';
 import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { doc } from 'firebase/firestore';
 
 function AdminSidebar() {
+  const pathname = usePathname();
+
   return (
-    <Sidebar className="border-r border-slate-200">
-      <SidebarHeader className="h-16 flex items-center px-6 border-b border-slate-100">
+    <Sidebar collapsible="icon" className="border-r border-slate-200">
+      <SidebarHeader className="h-16 flex items-center px-4">
         <Link
           href="/admin/dashboard"
-          className="flex items-center gap-2 font-bold"
+          className="flex items-center gap-3 font-bold"
         >
-          <Logo className="h-7 w-7 text-primary" />
-          <span className="font-headline text-lg tracking-tight">
-            DocAssist Admin
+          <div className="bg-primary p-1.5 rounded-lg">
+            <Stethoscope className="h-5 w-5 text-white" />
+          </div>
+          <span className="font-headline text-lg tracking-tight group-data-[collapsible=icon]:hidden">
+            DocAssist <span className="text-primary">Pro</span>
           </span>
         </Link>
       </SidebarHeader>
-      <SidebarContent className="p-4">
-        <SidebarMenu className="space-y-1">
+      <SidebarContent className="px-2 pt-4">
+        <SidebarMenu className="gap-1">
           {adminNavItems.map((item) => {
             const Icon = getLucideIcon(item.icon);
+            const isActive = pathname === item.href;
             return (
               <SidebarMenuItem key={item.label}>
                 <SidebarMenuButton
                   asChild
-                  tooltip={{ children: item.label, side: 'right' }}
-                  className="h-10 px-3 hover:bg-primary/5 hover:text-primary transition-colors rounded-lg"
+                  isActive={isActive}
+                  tooltip={item.label}
+                  className={`h-11 px-3 transition-all rounded-lg ${
+                    isActive 
+                      ? 'bg-primary/10 text-primary font-bold' 
+                      : 'hover:bg-slate-100 text-slate-600'
+                  }`}
                 >
                   <Link href={item.href}>
-                    {Icon && <Icon className="h-5 w-5" />}
-                    <span className="font-medium">{item.label}</span>
+                    {Icon && <Icon className={isActive ? 'text-primary' : 'text-slate-400'} />}
+                    <span>{item.label}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -91,20 +104,22 @@ function AdminSidebar() {
           })}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-4 border-t border-slate-100">
+      <SidebarFooter className="p-2 border-t">
         <SidebarMenu>
           {adminSettingsNav.map((item) => {
             const Icon = getLucideIcon(item.icon);
+            const isActive = pathname === item.href;
             return (
               <SidebarMenuItem key={item.label}>
                 <SidebarMenuButton
                   asChild
-                  tooltip={{ children: item.label, side: 'right' }}
-                  className="h-10 px-3 hover:bg-primary/5 hover:text-primary transition-colors rounded-lg"
+                  isActive={isActive}
+                  tooltip={item.label}
+                  className="h-11 px-3 hover:bg-slate-100 transition-colors rounded-lg text-slate-600"
                 >
                   <Link href={item.href}>
-                    {Icon && <Icon className="h-5 w-5" />}
-                    <span className="font-medium">{item.label}</span>
+                    {Icon && <Icon className="text-slate-400" />}
+                    <span>{item.label}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -134,8 +149,6 @@ export default function AdminLayout({
 
   const { data: userData, isLoading: isRoleLoading } = useDoc(userDocRef);
 
-  // Check for doctor role and redirect if unauthorized
-  // Skip this check for the auth page itself
   React.useEffect(() => {
     if (pathname === '/admin/auth') return;
 
@@ -155,96 +168,103 @@ export default function AdminLayout({
     }
   };
 
-  // If we are on the auth page, just render the children
   if (pathname === '/admin/auth') {
-    return <div className="min-h-screen w-full">{children}</div>;
+    return <div className="min-h-screen w-full bg-slate-50">{children}</div>;
   }
 
   if (isUserLoading || isRoleLoading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-slate-50">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      <div className="flex h-screen w-full items-center justify-center bg-white">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto" />
+          <p className="text-sm font-medium text-slate-400">Authenticating Provider...</p>
+        </div>
       </div>
     );
   }
 
-  // Final check to prevent layout flash for non-doctors
   if (!user || userData?.role !== 'doctor') {
     return null;
   }
 
+  // Determine current page for breadcrumbs
+  const currentPath = adminNavItems.find(item => item.href === pathname)?.label || 'Overview';
+
   return (
     <SidebarProvider>
       <AdminSidebar />
-      <div className="flex flex-col w-full min-h-screen bg-slate-50/30">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-md px-6">
-          <SidebarTrigger className="sm:hidden" />
+      <SidebarInset className="flex flex-col w-full min-h-screen">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-white px-6">
+          <SidebarTrigger />
           <Breadcrumb className="hidden md:flex">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/admin/dashboard" className="font-bold text-slate-900 tracking-tight">Practice Overview</Link>
+                  <Link href="/admin/dashboard" className="text-slate-400">Practice</Link>
                 </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="font-bold text-slate-900">{currentPath}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
           
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative ml-auto flex-1 md:grow-0 max-w-sm w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               type="search"
-              placeholder="Search patients..."
-              className="w-full rounded-full bg-white pl-10 md:w-[200px] lg:w-[320px] h-10 border-slate-200 focus:ring-primary/20"
+              placeholder="Quick search clinical records..."
+              className="w-full rounded-xl bg-slate-50 pl-10 h-10 border-transparent focus:bg-white focus:ring-primary/20 transition-all"
             />
           </div>
 
-          <div className="flex items-center gap-4 border-l pl-4 ml-2 border-slate-200">
+          <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" className="text-slate-500 hover:bg-slate-100 rounded-full relative">
               <Bell className="h-5 w-5" />
-              <span className="absolute top-2 right-2 h-2 w-2 bg-primary rounded-full border-2 border-white" />
+              <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-white" />
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex items-center gap-3 h-10 px-2 rounded-full hover:bg-slate-100 transition-all"
+                  className="flex items-center gap-2 h-10 px-1 rounded-full hover:bg-slate-100 transition-all"
                 >
-                  <Avatar className="h-8 w-8 border border-slate-200">
+                  <Avatar className="h-8 w-8 border-2 border-primary/20">
                     <AvatarImage src={user.photoURL || ''} />
-                    <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                    <AvatarFallback className="bg-primary text-white font-bold text-xs">
                       {userData?.fullName?.charAt(0) || 'D'}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="hidden lg:flex flex-col items-start text-left">
-                    <p className="text-xs font-bold leading-none">{userData?.fullName}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-tighter font-bold">Specialist</p>
-                  </div>
                   <ChevronDown className="h-4 w-4 text-slate-400" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-60 shadow-xl border-slate-200 p-2">
-                <DropdownMenuLabel className="px-3 py-2">
-                  <p className="font-bold">{userData?.fullName}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+              <DropdownMenuContent align="end" className="w-64 shadow-2xl rounded-xl border-slate-200 p-2">
+                <DropdownMenuLabel className="px-3 py-3">
+                  <div className="flex flex-col gap-0.5">
+                    <p className="font-bold text-slate-900">{userData?.fullName}</p>
+                    <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                  </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="mx-1" />
-                <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
-                  <Link href="/admin/settings">Profile Settings</Link>
+                <DropdownMenuItem asChild className="rounded-lg cursor-pointer py-2 px-3">
+                  <Link href="/admin/settings" className="flex items-center gap-2">
+                    <Settings className="h-4 w-4 text-slate-400" /> Clinic Profile
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-lg cursor-pointer">Help & Support</DropdownMenuItem>
                 <DropdownMenuSeparator className="mx-1" />
-                <DropdownMenuItem onClick={handleLogout} className="rounded-lg text-destructive cursor-pointer focus:bg-destructive/10 focus:text-destructive">
-                  Sign Out
+                <DropdownMenuItem onClick={handleLogout} className="rounded-lg text-red-600 cursor-pointer py-2 px-3 focus:bg-red-50 focus:text-red-600 font-medium">
+                  <LogOut className="h-4 w-4 mr-2" /> Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </header>
-        <main className="flex-1">
+        <main className="flex-1 bg-slate-50/50 p-6">
           {children}
         </main>
-      </div>
+      </SidebarInset>
     </SidebarProvider>
   );
 }

@@ -18,23 +18,18 @@ export const adminNavItems = [
   {
     href: '/admin/patients',
     icon: 'Users',
-    label: 'Patients',
+    label: 'Patient Records',
   },
   {
     href: '/admin/bookings',
-    icon: 'Calendar',
-    label: 'Bookings',
+    icon: 'CalendarDays',
+    label: 'Appointments',
   },
   {
     href: '/admin/prescriptions',
     icon: 'ClipboardPlus',
     label: 'Prescriptions',
   },
-  {
-    href: '/admin/seo-tool',
-    icon: 'Sparkles',
-    label: 'SEO Tool',
-  }
 ];
 
 export const adminSettingsNav = [
