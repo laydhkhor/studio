@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -7,9 +8,7 @@ import {
   User as UserIcon, 
   LayoutDashboard, 
   LogOut, 
-  Settings,
   ShieldCheck,
-  Stethoscope
 } from 'lucide-react';
 import { 
   useUser, 

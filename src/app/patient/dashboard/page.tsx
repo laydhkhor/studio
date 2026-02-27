@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -7,7 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Calendar, ClipboardList, Clock, Activity, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 
 export default function PatientDashboard() {
@@ -26,7 +26,7 @@ export default function PatientDashboard() {
   const { data: bookings, isLoading } = useCollection(bookingsQuery);
 
   return (
-    <div className="container py-10 space-y-8">
+    <div className="container py-10 space-y-8 max-w-6xl">
       <header>
         <h1 className="text-3xl font-headline font-bold">Welcome back, {user?.displayName || 'Patient'}</h1>
         <p className="text-muted-foreground">Here is your health summary and upcoming appointments.</p>
@@ -49,18 +49,18 @@ export default function PatientDashboard() {
             <ClipboardList className="h-4 w-4 text-accent" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2</div>
+            <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground mt-1">Ready for pickup or refill</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Last Check-up</CardTitle>
+            <CardTitle className="text-sm font-medium">Health Status</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">May 12</div>
-            <p className="text-xs text-muted-foreground mt-1">Dr. Pritam Pattyanayek</p>
+            <div className="text-2xl font-bold">Active</div>
+            <p className="text-xs text-muted-foreground mt-1">Account verified</p>
           </CardContent>
         </Card>
       </div>
@@ -73,7 +73,7 @@ export default function PatientDashboard() {
               <CardDescription>Your latest booking history.</CardDescription>
             </div>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/booking">New Booking <ArrowRight className="ml-2 h-4 w-4"/></Link>
+              <Link href="/login?redirect=/booking">New Booking <ArrowRight className="ml-2 h-4 w-4"/></Link>
             </Button>
           </CardHeader>
           <CardContent>
@@ -100,7 +100,7 @@ export default function PatientDashboard() {
               ) : (
                 <div className="text-center py-8">
                   <p className="text-sm text-muted-foreground">No bookings found.</p>
-                  <Button variant="link" asChild><Link href="/booking">Book your first session</Link></Button>
+                  <Button variant="link" asChild><Link href="/login?redirect=/booking">Book your first session</Link></Button>
                 </div>
               )}
             </div>
