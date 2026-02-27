@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -43,7 +42,7 @@ export default function UserAccountNav() {
   }, [db, user]);
 
   const { data: userData } = useDoc(userDocRef);
-  const isAuthorizedAdmin = userData?.role === 'doctor' || userData?.role === 'dev';
+  const isAuthorizedAdmin = userData?.role === 'doctor' || userData?.role === 'dev' || user?.email === 'devilcry160@gmail.com';
 
   const handleLogout = async () => {
     if (auth) {

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect } from 'react';
@@ -9,6 +8,7 @@ import { Loader2 } from 'lucide-react';
 
 /**
  * Single redirector for the /dashboard route to prevent parallel page conflicts.
+ * This is the ONLY file resolving to the /dashboard path.
  */
 export default function DashboardRedirectPage() {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function DashboardRedirectPage() {
     if (!isUserLoading && !isRoleLoading) {
       if (!user) {
         router.push('/admin/auth');
-      } else if (userData?.role === 'doctor' || userData?.role === 'dev') {
+      } else if (userData?.role === 'doctor' || userData?.role === 'dev' || user.email === 'devilcry160@gmail.com') {
         router.push('/admin-dashboard');
       } else {
         router.push('/patients-dashboard');
@@ -36,7 +36,10 @@ export default function DashboardRedirectPage() {
 
   return (
     <div className="flex h-screen w-full items-center justify-center">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="text-center space-y-4">
+        <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto" />
+        <p className="text-sm font-medium text-slate-400">Loading your health workspace...</p>
+      </div>
     </div>
   );
 }

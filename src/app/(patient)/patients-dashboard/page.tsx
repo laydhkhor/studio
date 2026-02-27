@@ -5,10 +5,9 @@ import * as React from 'react';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, ClipboardList, Clock, Activity, Pill, AlertCircle } from 'lucide-react';
+import { Calendar, ClipboardList, Activity, Pill } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Badge } from '@/components/ui/badge';
 import { PrescriptionCard } from '@/components/blocks/PrescriptionCard';
 
 export default function PatientsDashboardPage() {
