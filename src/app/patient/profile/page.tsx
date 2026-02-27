@@ -188,7 +188,7 @@ export default function PatientProfilePage() {
                   <div className="space-y-2">
                     <Label className="text-slate-500 text-xs uppercase tracking-wider font-bold">Email Address</Label>
                     <div className="p-3 bg-slate-100/50 rounded-lg border border-slate-100 text-slate-500 flex items-center gap-3 h-11 cursor-not-allowed">
-                       <Mail className="h-4 w-4 text-slate-400" /> {userData?.email || 'Not available'}
+                       <Mail className="h-4 w-4 text-slate-400" /> {userData?.email || user?.email || 'Not available'}
                     </div>
                     <p className="text-[10px] text-muted-foreground italic mt-1">Contact system admin to change email.</p>
                   </div>
@@ -301,7 +301,7 @@ export default function PatientProfilePage() {
                   <Avatar className="w-32 h-32 border-4 border-white shadow-2xl transition-transform group-hover:scale-[1.02]">
                     <AvatarImage src={user?.photoURL || userData?.photoURL || ''} className="object-cover" />
                     <AvatarFallback className="bg-primary/10 text-primary font-bold text-4xl">
-                      {userData?.fullName?.charAt(0) || 'P'}
+                      {userData?.fullName?.charAt(0) || user?.email?.charAt(0).toUpperCase() || 'P'}
                     </AvatarFallback>
                   </Avatar>
                   
@@ -320,7 +320,7 @@ export default function PatientProfilePage() {
               </div>
 
               <div className="mt-6 space-y-1">
-                <p className="font-bold text-2xl text-slate-900 leading-tight">{userData?.fullName || 'Valued Patient'}</p>
+                <p className="font-bold text-2xl text-slate-900 leading-tight">{userData?.fullName || user?.displayName || 'Valued Patient'}</p>
                 <p className="text-[10px] text-muted-foreground font-mono bg-slate-100 px-3 py-1 rounded-full inline-block">
                   ID: {user?.uid.substring(0, 14).toUpperCase()}
                 </p>
