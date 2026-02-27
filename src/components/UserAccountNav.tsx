@@ -8,13 +8,15 @@ import {
   LayoutDashboard, 
   LogOut, 
   Settings,
-  ShieldCheck
+  ShieldCheck,
+  Stethoscope
 } from 'lucide-react';
 import { 
   useUser, 
   useAuth, 
   useDoc,
-  useMemoFirebase
+  useMemoFirebase,
+  useFirestore
 } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { doc } from 'firebase/firestore';
@@ -33,7 +35,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 export default function UserAccountNav() {
   const { user } = useUser();
   const auth = useAuth();
+  const db = useFirestore();
   const router = useRouter();
+
+  const userDocRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, 'users', user.uid);
+  }, [db, user]);
+
+  const { data: userData } = useDoc(userDocRef);
+  const isDoctor = userData?.role === 'doctor';
 
   const handleLogout = async () => {
     if (auth) {
@@ -51,7 +62,7 @@ export default function UserAccountNav() {
           <Avatar className="h-10 w-10">
             <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User'} />
             <AvatarFallback className="bg-primary/10 text-primary font-bold">
-              {user.displayName?.charAt(0) || user.email?.charAt(0).toUpperCase()}
+              {userData?.fullName?.charAt(0) || user.email?.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -59,26 +70,34 @@ export default function UserAccountNav() {
       <DropdownMenuContent className="w-64" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-bold leading-none">{user.displayName || 'Patient'}</p>
+            <p className="text-sm font-bold leading-none">{userData?.fullName || 'User'}</p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>
+            {isDoctor && (
+              <div className="flex items-center gap-1 mt-1">
+                <ShieldCheck className="h-3 w-3 text-primary" />
+                <span className="text-[10px] font-bold text-primary uppercase tracking-tighter">Verified Doctor</span>
+              </div>
+            )}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/dashboard" className="cursor-pointer">
+            <Link href={isDoctor ? "/admin/dashboard" : "/dashboard"} className="cursor-pointer">
               <LayoutDashboard className="mr-2 h-4 w-4" />
-              <span>Patient Dashboard</span>
+              <span>{isDoctor ? 'Clinical Dashboard' : 'Patient Dashboard'}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/complete-profile" className="cursor-pointer">
-              <UserIcon className="mr-2 h-4 w-4" />
-              <span>Medical Profile</span>
-            </Link>
-          </DropdownMenuItem>
+          {!isDoctor && (
+            <DropdownMenuItem asChild>
+              <Link href="/complete-profile" className="cursor-pointer">
+                <UserIcon className="mr-2 h-4 w-4" />
+                <span>Medical Profile</span>
+              </Link>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
