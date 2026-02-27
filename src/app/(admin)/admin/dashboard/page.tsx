@@ -5,19 +5,16 @@ import {
   Users, 
   CalendarCheck, 
   Activity, 
-  ArrowUpRight, 
   TrendingUp,
   Clock,
-  User,
-  ExternalLink,
   MessageSquare,
-  AlertCircle,
   ChevronRight,
+  ShieldCheck,
+  CalendarDays,
+  PlusCircle,
   ClipboardPlus,
   ArrowRight,
-  Stethoscope,
-  ShieldCheck,
-  CalendarDays
+  AlertCircle
 } from 'lucide-react';
 import { 
   Card, 
@@ -32,7 +29,6 @@ import { collection, query, where, orderBy, limit } from 'firebase/firestore';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
 
 export default function AdminDashboardPage() {
   const db = useFirestore();
@@ -43,7 +39,7 @@ export default function AdminDashboardPage() {
     return query(collection(db, 'notifications'), orderBy('createdAt', 'desc'), limit(8));
   }, [db]);
 
-  const { data: recentEvents, isLoading: isEventsLoading } = useCollection(eventsQuery);
+  const { data: recentEvents } = useCollection(eventsQuery);
 
   // 2. Fetch stats
   const patientsQuery = useMemoFirebase(() => {

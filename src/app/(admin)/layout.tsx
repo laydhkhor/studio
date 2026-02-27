@@ -14,7 +14,6 @@ import {
   CalendarDays,
   ClipboardPlus,
   Activity,
-  PlusCircle,
   HelpCircle
 } from 'lucide-react';
 import { Logo } from '@/components/icons';
@@ -116,8 +115,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-[#f8fafc]">
-        <Sidebar collapsible="icon" className="border-r border-slate-200 shadow-sm">
+      <div className="flex h-screen w-full bg-[#f8fafc] overflow-hidden">
+        <Sidebar collapsible="icon" className="border-r border-slate-200 shadow-sm shrink-0">
           <SidebarHeader className="h-20 flex items-center justify-center px-4 shrink-0">
             <div className="flex items-center gap-3">
               <div className="bg-slate-900 p-2 rounded-xl shadow-lg ring-1 ring-white/10 shrink-0">
@@ -130,7 +129,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="px-3">
+          <SidebarContent className="px-3 overflow-y-auto">
             <SidebarGroup>
               <SidebarGroupLabel className="px-3 mb-2 text-[10px] uppercase font-black tracking-widest text-slate-400 opacity-70">Main Console</SidebarGroupLabel>
               <SidebarGroupContent>
@@ -185,7 +184,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="p-4 bg-slate-50/50 mt-auto">
+          <SidebarFooter className="p-4 bg-slate-50/50 mt-auto shrink-0">
              <div className="flex flex-col gap-3 group-data-[collapsible=icon]:hidden">
                 <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-200/60 flex items-center gap-3">
                    <div className="relative">
@@ -212,8 +211,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarRail />
         </Sidebar>
 
-        <SidebarInset className="bg-[#f8fafc]">
-          <header className="sticky top-0 z-40 h-20 bg-white/80 backdrop-blur-xl flex items-center justify-between px-8 border-b border-slate-200/60 shrink-0">
+        <SidebarInset className="bg-[#f8fafc] flex flex-col min-w-0 h-full overflow-hidden">
+          <header className="h-20 bg-white/80 backdrop-blur-xl flex items-center justify-between px-8 border-b border-slate-200/60 shrink-0 z-40">
             <div className="flex items-center gap-6">
               <SidebarTrigger className="h-10 w-10 rounded-xl hover:bg-slate-100 text-slate-500" />
               <div className="h-6 w-px bg-slate-200 hidden md:block" />
@@ -250,8 +249,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
           </header>
           
-          <main className="flex-1 p-8 lg:p-12 max-w-[1600px] mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out">
-            {children}
+          <main className="flex-1 overflow-y-auto overflow-x-hidden relative bg-[#f8fafc]">
+            <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out">
+              {children}
+            </div>
           </main>
         </SidebarInset>
       </div>
