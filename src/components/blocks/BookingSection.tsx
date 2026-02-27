@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar as CalendarIcon, Clock, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Calendar as CalendarIcon, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import {
   Popover,
   PopoverContent,
@@ -60,73 +60,65 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
     if (!bookingData) return null;
 
     return (
-        <section className="bg-secondary/50 py-24 md:py-32 relative overflow-hidden">
-            {/* Background pattern */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-            
+        <section className="bg-secondary/30 py-24 md:py-32 relative overflow-hidden">
             <div className="container relative z-10">
                 <div className="flex flex-col items-center gap-16">
-                    <div className="max-w-3xl text-center space-y-6">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold font-ui uppercase tracking-widest">
-                           <ShieldCheck className="h-4 w-4" />
-                           Priority Booking
-                        </div>
-                        <h2 className="font-headline text-4xl md:text-5xl font-bold text-foreground">
-                           {bookingData.title}
+                    {/* Standardized Section Header */}
+                    <div className="mx-auto max-w-3xl text-center space-y-4">
+                        <span className="font-ui font-bold text-primary tracking-widest uppercase text-sm">Direct Access</span>
+                        <h2 className="font-headline text-3xl md:text-5xl font-bold text-foreground">
+                            {bookingData.title}
                         </h2>
-                        <p className="text-xl text-muted-foreground leading-relaxed">
-                           {bookingData.subtitle}
+                        <p className="text-lg text-muted-foreground leading-relaxed">
+                            {bookingData.subtitle}
                         </p>
                         
-                        <div className="mt-8 flex flex-wrap justify-center gap-8">
-                            <div className="flex items-center gap-3">
-                                <div className="bg-primary/10 p-2 rounded-full">
-                                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                                </div>
-                                <span className="font-ui font-medium text-muted-foreground">Encrypted Sessions</span>
+                        <div className="pt-8 flex flex-wrap justify-center gap-8">
+                            <div className="flex items-center gap-2">
+                                <CheckCircle2 className="h-5 w-5 text-accent" />
+                                <span className="font-ui text-sm font-medium text-muted-foreground">Secure & Encrypted</span>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <div className="bg-primary/10 p-2 rounded-full">
-                                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                                </div>
-                                <span className="font-ui font-medium text-muted-foreground">Digital Prescription</span>
+                            <div className="flex items-center gap-2">
+                                <CheckCircle2 className="h-5 w-5 text-accent" />
+                                <span className="font-ui text-sm font-medium text-muted-foreground">Digital Prescription</span>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <div className="bg-primary/10 p-2 rounded-full">
-                                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                                </div>
-                                <span className="font-ui font-medium text-muted-foreground">No Wait Times</span>
+                            <div className="flex items-center gap-2">
+                                <CheckCircle2 className="h-5 w-5 text-accent" />
+                                <span className="font-ui text-sm font-medium text-muted-foreground">No Travel Required</span>
                             </div>
                         </div>
                     </div>
 
-                    <Card className="w-full max-w-4xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border-t-4 border-t-primary rounded-2xl overflow-hidden">
-                        <CardHeader className="bg-card px-8 pt-10">
-                            <CardTitle className="font-headline text-2xl font-bold">Patient Details</CardTitle>
-                             <CardDescription className="text-base">Please provide accurate information for the clinical record.</CardDescription>
+                    <Card className="w-full max-w-4xl shadow-xl border-none rounded-2xl overflow-hidden bg-white">
+                        <CardHeader className="bg-white px-8 pt-10 text-center">
+                            <div className="mx-auto bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                                <ShieldCheck className="h-6 w-6 text-primary" />
+                            </div>
+                            <CardTitle className="font-headline text-2xl font-bold">Fill in Your Details</CardTitle>
+                             <CardDescription className="text-base">Provide accurate info for your medical record.</CardDescription>
                         </CardHeader>
-                        <CardContent className="p-8 pt-4">
-                            <form onSubmit={handleSubmit} className="space-y-8">
+                        <CardContent className="p-8 pt-6">
+                            <form onSubmit={handleSubmit} className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-3">
-                                        <Label htmlFor="name" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Full Name</Label>
-                                        <Input id="name" placeholder="Pritam Pattyanayek" className="h-12 bg-secondary/30 border-none focus-visible:ring-primary" value={name} onChange={(e) => setName(e.target.value)} required/>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="name">Full Name</Label>
+                                        <Input id="name" placeholder="Pritam Pattyanayek" className="h-12" value={name} onChange={(e) => setName(e.target.value)} required/>
                                     </div>
-                                    <div className="space-y-3">
-                                        <Label htmlFor="phone" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Phone Number</Label>
-                                        <Input id="phone" type="tel" placeholder="+91 12345 67890" className="h-12 bg-secondary/30 border-none focus-visible:ring-primary" value={phone} onChange={(e) => setPhone(e.target.value)} required/>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="phone">Phone Number</Label>
+                                        <Input id="phone" type="tel" placeholder="+91 12345 67890" className="h-12" value={phone} onChange={(e) => setPhone(e.target.value)} required/>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-3">
-                                        <Label htmlFor="dob" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Date of Birth</Label>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="dob">Date of Birth</Label>
                                         <Popover>
                                             <PopoverTrigger asChild>
                                             <Button
                                                 variant={'outline'}
                                                 className={cn(
-                                                'w-full h-12 justify-start text-left font-normal bg-secondary/30 border-none hover:bg-secondary/50',
+                                                'w-full h-12 justify-start text-left font-normal bg-card',
                                                 !dob && 'text-muted-foreground'
                                                 )}
                                             >
@@ -147,11 +139,11 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                             </PopoverContent>
                                         </Popover>
                                     </div>
-                                    <div className="space-y-3">
-                                        <Label htmlFor="reason" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Primary Concern</Label>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="reason">Consultation Reason</Label>
                                         <Select value={selectedReason} onValueChange={setSelectedReason} required>
-                                            <SelectTrigger id="reason" className="h-12 bg-secondary/30 border-none focus:ring-primary">
-                                                <SelectValue placeholder="Select symptom/reason" />
+                                            <SelectTrigger id="reason" className="h-12 bg-card">
+                                                <SelectValue placeholder="Select primary concern" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {bookingData.reasons.map((reason: string) => (
@@ -162,12 +154,12 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-dashed">
-                                    <div className="space-y-3">
-                                        <Label htmlFor="date" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Preferred Date</Label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="date">Appointment Date</Label>
                                         <Select value={selectedDate} onValueChange={setSelectedDate} required>
-                                            <SelectTrigger id="date" className="h-12 bg-card border-2 focus:ring-primary">
-                                                <SelectValue placeholder="Available Dates" />
+                                            <SelectTrigger id="date" className="h-12 bg-card">
+                                                <SelectValue placeholder="Available dates" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {bookingData.availableDates.map((date: string) => (
@@ -176,11 +168,11 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <div className="space-y-3">
-                                        <Label htmlFor="time" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Available Time Slot</Label>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="time">Time Slot</Label>
                                         <Select value={selectedTime} onValueChange={setSelectedTime} required>
-                                            <SelectTrigger id="time" className="h-12 bg-card border-2 focus:ring-primary">
-                                                <SelectValue placeholder="Choose Time" />
+                                            <SelectTrigger id="time" className="h-12 bg-card">
+                                                <SelectValue placeholder="Available slots" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {bookingData.timeSlots.map((time: string) => (
@@ -191,24 +183,20 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                     </div>
                                 </div>
 
-                                <div className="space-y-3">
-                                    <Label htmlFor="details" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Additional Medical History (Optional)</Label>
+                                <div className="space-y-2">
+                                    <Label htmlFor="details">Medical History / Notes (Optional)</Label>
                                     <Textarea
                                         id="details"
-                                        placeholder="Describe symptoms or ongoing medications..."
+                                        placeholder="Briefly describe your symptoms or current medications..."
                                         value={details}
                                         onChange={(e) => setDetails(e.target.value)}
-                                        className="min-h-[120px] bg-secondary/30 border-none focus-visible:ring-primary"
+                                        className="min-h-[100px] bg-card"
                                     />
                                 </div>
 
-                                <Button type="submit" size="lg" className="w-full h-16 text-lg font-bold font-ui rounded-xl shadow-xl shadow-primary/20 transition-all hover:scale-[1.01]" disabled={isSubmitting}>
-                                    {isSubmitting ? 'Processing Secure Booking...' : 'Confirm Video Consultation Slot'}
+                                <Button type="submit" size="lg" className="w-full h-14 text-lg font-bold font-ui rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98]" disabled={isSubmitting}>
+                                    {isSubmitting ? 'Booking Consultation...' : 'Confirm Video Appointment'}
                                 </Button>
-                                
-                                <p className="text-center text-xs text-muted-foreground font-ui">
-                                    By booking, you agree to our terms of service and medical privacy policy.
-                                </p>
                             </form>
                         </CardContent>
                     </Card>

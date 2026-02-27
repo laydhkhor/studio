@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Award, GraduationCap, Users, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, Users, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function AboutSection({ about }: { about: any }) {
   if (!about) return null;
@@ -13,12 +13,12 @@ export default function AboutSection({ about }: { about: any }) {
       <div className="container">
         {/* Section Title */}
         <div className="mx-auto max-w-3xl text-center mb-20 space-y-4">
-          <span className="font-ui font-bold text-primary tracking-widest uppercase text-sm">Our Legacy</span>
+          <span className="font-ui font-bold text-primary tracking-widest uppercase text-sm">Professional Profile</span>
           <h2 className="font-headline text-3xl md:text-5xl font-bold text-foreground">
-            About the <span className="text-primary">Doctor</span>
+            Meet Your <span className="text-primary">Physician</span>
           </h2>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            Founded on the principles of compassion and excellence, our practice is dedicated to the well-being of every patient.
+            A legacy of compassionate care and clinical excellence in Purba Medinipur.
           </p>
         </div>
 
@@ -43,27 +43,24 @@ export default function AboutSection({ about }: { about: any }) {
                     <ShieldCheck className="h-10 w-10" />
                  </div>
                  <div>
-                    <p className="font-headline font-bold text-xl leading-tight">Verified Specialist</p>
-                    <p className="text-sm font-ui opacity-90">WB Medical Council Reg.</p>
+                    <p className="font-headline font-bold text-xl leading-tight">WBMC Registered</p>
+                    <p className="text-sm font-ui opacity-90">Medical Specialist</p>
                  </div>
               </div>
-
-              {/* Decorative background element */}
-              <div className="absolute -top-10 -left-10 w-full h-full bg-primary/5 rounded-3xl -z-10 transform -rotate-3"></div>
             </div>
           </div>
 
           {/* Text Content */}
           <div className="space-y-8">
-            <div className="space-y-4">
+            <div className="space-y-6">
               <h3 className="font-headline text-3xl md:text-4xl font-bold">
-                Meet <span className="text-primary">{about.doctorName}</span>
+                <span className="text-primary">{about.doctorName}</span>
               </h3>
               <div 
                 className="text-lg text-muted-foreground leading-relaxed text-justify space-y-4" 
                 dangerouslySetInnerHTML={{ __html: about.missionStatement }} 
               />
-              <p className="text-lg text-muted-foreground leading-relaxed text-justify italic font-medium">
+              <p className="text-lg text-muted-foreground leading-relaxed text-justify italic font-medium border-l-4 border-primary pl-6">
                 "{about.bio}"
               </p>
             </div>
@@ -74,7 +71,7 @@ export default function AboutSection({ about }: { about: any }) {
                     <div className="bg-primary/10 p-2 rounded-lg">
                       <GraduationCap className="h-6 w-6 text-primary" />
                     </div>
-                    <h4 className="font-headline font-bold">Education</h4>
+                    <h4 className="font-headline font-bold">Background</h4>
                   </div>
                   <p className="text-sm text-muted-foreground font-ui pl-11">{about.education}</p>
                </div>
@@ -83,9 +80,9 @@ export default function AboutSection({ about }: { about: any }) {
                     <div className="bg-accent/10 p-2 rounded-lg">
                       <Users className="h-6 w-6 text-accent" />
                     </div>
-                    <h4 className="font-headline font-bold">Community Trust</h4>
+                    <h4 className="font-headline font-bold">Track Record</h4>
                   </div>
-                  <p className="text-sm text-muted-foreground font-ui pl-11">{about.patientsServed} Patients treated successfully in Purba Medinipur.</p>
+                  <p className="text-sm text-muted-foreground font-ui pl-11">{about.patientsServed}+ patients served across Mahishadal and Nandakumar.</p>
                </div>
             </div>
 
@@ -96,7 +93,7 @@ export default function AboutSection({ about }: { about: any }) {
                 </Link>
               </Button>
                <Button asChild variant="outline" size="lg" className="h-14 px-8 text-lg font-ui rounded-xl border-2 hover:bg-secondary/50">
-                <Link href="/contact">Schedule Consultation</Link>
+                <Link href="/contact">Contact Info</Link>
               </Button>
             </div>
           </div>

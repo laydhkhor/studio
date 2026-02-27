@@ -61,21 +61,23 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
   };
 
   return (
-    <section className="bg-secondary py-20 md:py-28">
+    <section className="bg-secondary/20 py-24 md:py-32">
       <div className="container">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="font-headline text-3xl md:text-4xl font-bold">
-            Visit Our <span className="text-primary">Clinics</span>
+        {/* Standardized Section Header */}
+        <div className="mx-auto max-w-3xl text-center mb-16 space-y-4">
+          <span className="font-ui font-bold text-primary tracking-widest uppercase text-sm">Physical Care</span>
+          <h2 className="font-headline text-3xl md:text-5xl font-bold text-foreground">
+            Our <span className="text-primary">Clinics</span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Find the nearest <span className="text-primary">clinic</span> for your consultation. Use the filters to
-            select by location or search by PIN code.
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            Conveniently located practices with modern facilities and dedicated staff.
           </p>
         </div>
-        <div className="mt-8 flex flex-col items-center justify-center gap-2 sm:flex-row">
+
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row mb-12">
             <Select value={locationFilter} onValueChange={setLocationFilter}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Filter by Location" />
+              <SelectTrigger className="w-full sm:w-[220px] bg-white">
+                <SelectValue placeholder="Location" />
               </SelectTrigger>
               <SelectContent>
                 {locations.map((location) => (
@@ -86,24 +88,25 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
               </SelectContent>
             </Select>
             <div className="relative w-full sm:w-auto">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search by PIN..."
-                className="w-full sm:w-[240px] rounded-lg pl-8"
+                placeholder="Search by PIN code..."
+                className="w-full sm:w-[240px] pl-10 bg-white"
                 value={pinSearch}
                 onChange={(e) => setPinSearch(e.target.value)}
               />
             </div>
           <Button
-            variant="outline"
+            variant="ghost"
             onClick={clearFilters}
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto text-primary hover:bg-primary/5"
           >
-            View All
+            Clear Filters
           </Button>
         </div>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 lg:max-w-5xl lg:mx-auto">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:max-w-6xl lg:mx-auto">
           {filteredClinics.length > 0 ? (
             filteredClinics.map((clinic) => {
               const fullAddress = `${clinic.address}, ${clinic.pinCode}`;
@@ -111,56 +114,50 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
                 fullAddress
               )}`;
               return (
-                <Card key={clinic.id} className="shadow-lg flex flex-col">
-                  <CardHeader>
-                    <CardTitle className="font-headline">
+                <Card key={clinic.id} className="shadow-lg border-none flex flex-col bg-white overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="h-2 bg-primary w-full"></div>
+                  <CardHeader className="p-8 pb-4">
+                    <CardTitle className="font-headline text-2xl font-bold">
                       {clinic.name}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4 flex-grow">
+                  <CardContent className="px-8 space-y-5 flex-grow">
                     <div className="flex items-start gap-4">
-                      <MapPin className="h-5 w-5 text-primary mt-1 shrink-0" />
+                      <div className="bg-primary/5 p-2 rounded-lg shrink-0">
+                        <MapPin className="h-5 w-5 text-primary" />
+                      </div>
                       <div>
-                        <p className="font-ui font-semibold">Address</p>
-                        <p className="text-muted-foreground">{fullAddress}</p>
+                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-tight">Address</p>
+                        <p className="text-foreground font-medium">{fullAddress}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <Phone className="h-5 w-5 text-primary mt-1 shrink-0" />
+                      <div className="bg-primary/5 p-2 rounded-lg shrink-0">
+                        <Phone className="h-5 w-5 text-primary" />
+                      </div>
                       <div>
-                        <p className="font-ui font-semibold">Phone</p>
-                        <p className="text-muted-foreground">
-                          {clinic.phone}
-                        </p>
+                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-tight">Contact</p>
+                        <p className="text-foreground font-medium">{clinic.phone}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <Mail className="h-5 w-5 text-primary mt-1 shrink-0" />
-                      <div>
-                        <p className="font-ui font-semibold">Email</p>
-                        <p className="text-muted-foreground">
-                          {clinic.email}
-                        </p>
+                      <div className="bg-primary/5 p-2 rounded-lg shrink-0">
+                        <Clock className="h-5 w-5 text-primary" />
                       </div>
-                    </div>
-                    <div className="flex items-start gap-4">
-                      <Clock className="h-5 w-5 text-primary mt-1 shrink-0" />
                       <div>
-                        <p className="font-ui font-semibold">Timings</p>
-                        <p className="text-muted-foreground">
-                          {clinic.timings}
-                        </p>
+                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-tight">Timings</p>
+                        <p className="text-foreground font-medium">{clinic.timings}</p>
                       </div>
                     </div>
                   </CardContent>
-                  <CardFooter>
-                    <Button asChild className="w-full font-ui">
+                  <CardFooter className="p-8 pt-0">
+                    <Button asChild className="w-full h-12 font-ui" variant="outline">
                       <a
                         href={mapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Get Directions <ExternalLink className="ml-2" />
+                        Navigate on Maps <ExternalLink className="ml-2 h-4 w-4" />
                       </a>
                     </Button>
                   </CardFooter>
@@ -168,9 +165,9 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
               );
             })
           ) : (
-            <div className="md:col-span-2 flex items-center justify-center bg-muted/50 rounded-lg p-8">
+            <div className="md:col-span-2 flex items-center justify-center bg-white border border-dashed border-muted-foreground/20 rounded-2xl p-16">
               <p className="text-muted-foreground text-center">
-                No clinics found for the selected filters.
+                No clinics match your search criteria.
               </p>
             </div>
           )}

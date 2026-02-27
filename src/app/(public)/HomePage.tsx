@@ -3,7 +3,7 @@ import HeroSection from '@/components/blocks/HeroSection';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const LoadingSkeleton = () => (
-  <div className="w-full py-20 md:py-28">
+  <div className="w-full py-24 md:py-32">
     <div className="container">
       <Skeleton className="h-48 w-full" />
     </div>
@@ -56,33 +56,33 @@ export default function HomePage({
     faq: any
 }) {
     return (
-      <>
+      <div className="flex flex-col">
         {/* 1. Hero */}
         <HeroSection 
             home={home}
             about={about}
         />
 
-        {/* 2. About Doctor / Trust Section */}
+        {/* 2. About Doctor / Trust Section - White Background */}
         <AboutSection about={about} />
 
-        {/* 3. Booking Form */}
+        {/* 3. Booking Form - Secondary Background */}
         <BookingSection bookingData={booking} />
 
-        {/* 4. Services + Pricing */}
+        {/* 4. Services + Pricing - White Background */}
         <PricingSection pricingOptions={pricing?.pricingOptions} />
 
-        {/* 5. Clinic Location & Timings */}
+        {/* 5. Clinic Location & Timings - Secondary Background */}
         <ClinicDetailsSection clinicLocations={clinic?.clinicLocations} />
 
-        {/* 6. Testimonials */}
+        {/* 6. Testimonials - White Background */}
         <TestimonialsSection testimonials={testimonials} />
 
-        {/* 7. Health Tips / Blog */}
+        {/* 7. Health Tips / Blog - White Background (consistent with testimonials for content flow) */}
         <FeaturedBlogsSection featuredBlogs={home?.featuredBlogs} />
 
-        {/* 8. FAQ */}
+        {/* 8. FAQ - White Background */}
         <FaqSection faqs={faq?.faqs} />
-      </>
+      </div>
     );
 }
