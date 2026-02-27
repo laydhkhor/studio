@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -151,7 +152,7 @@ export default function AdminLayout({
     if (!isUserLoading && !isRoleLoading) {
       if (!user) {
         router.push('/admin/auth');
-      } else if (userData?.role !== 'doctor') {
+      } else if (userData?.role !== 'doctor' && userData?.role !== 'dev') {
         router.push('/patient/dashboard');
       }
     }
@@ -179,7 +180,7 @@ export default function AdminLayout({
     );
   }
 
-  if (!user || userData?.role !== 'doctor') {
+  if (!user || (userData?.role !== 'doctor' && userData?.role !== 'dev')) {
     return null;
   }
 

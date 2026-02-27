@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -13,7 +14,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, ShieldCheck, Stethoscope, UserPlus } from 'lucide-react';
+import { Loader2, ShieldCheck, Stethoscope, UserPlus, Terminal } from 'lucide-react';
 import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase, initiateEmailSignUp, initiateEmailSignIn, setDocumentNonBlocking } from '@/firebase';
 import { collection, getDocs, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
@@ -56,9 +57,9 @@ export default function AdminAuthPage() {
     checkDoctor();
   }, [db]);
 
-  // Handle successful login/signup logic for existing doctors
+  // Handle successful login/signup logic for existing authorized users
   React.useEffect(() => {
-    if (user && userData?.role === 'doctor') {
+    if (user && (userData?.role === 'doctor' || userData?.role === 'dev')) {
       router.push('/admin/dashboard');
     }
   }, [user, userData, router]);
@@ -119,32 +120,33 @@ export default function AdminAuthPage() {
     return () => unsubscribe();
   }, [auth, db, isAdminExists, fullName, router]);
 
-  const handleClaimDoctorRole = async () => {
+  const handleClaimDevRole = async () => {
     if (!user || !db) return;
     setIsLoading(true);
-    const doctorId = user.uid;
+    const userId = user.uid;
     
     try {
-      // Grant doctor role to existing user (Developer Bypass)
-      await setDoc(doc(db, 'roles_doctor', doctorId), { active: true });
+      // 1. Create developer role marker (triggers super-admin security rules)
+      await setDoc(doc(db, 'roles_dev', userId), { active: true });
       
-      setDocumentNonBlocking(doc(db, 'users', doctorId), {
-        role: 'doctor',
+      // 2. Mark user as 'dev'
+      setDocumentNonBlocking(doc(db, 'users', userId), {
+        role: 'dev',
         updatedAt: serverTimestamp(),
       }, { merge: true });
 
-      // Create initial doctor profile if missing
-      await setDoc(doc(db, 'doctor_profile', doctorId), {
-        userId: doctorId,
-        education: 'Developer Provisioned',
-        practiceLocation: 'Dev Environment',
+      // 3. Create initial profile if missing
+      await setDoc(doc(db, 'doctor_profile', userId), {
+        userId: userId,
+        education: 'System Developer',
+        practiceLocation: 'Development Environment',
         yearsOfExperience: 10,
-        patientsServed: 100,
+        patientsServed: 999,
       }, { merge: true });
 
       toast({
-        title: "Access Granted",
-        description: "You have been promoted to Doctor status.",
+        title: "Developer Access Granted",
+        description: "You have been promoted to Dev status with global Firestore permissions.",
       });
       
       router.push('/admin/dashboard');
@@ -167,26 +169,26 @@ export default function AdminAuthPage() {
     );
   }
 
-  // If user is already logged in but is NOT a doctor, show the "Claim" button
-  if (user && userData?.role !== 'doctor') {
+  // If user is already logged in but is NOT an authorized role, show the "Claim" button
+  if (user && !['doctor', 'dev'].includes(userData?.role)) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
-        <Card className="w-full max-w-md shadow-2xl border-t-4 border-amber-500">
+        <Card className="w-full max-w-md shadow-2xl border-t-4 border-indigo-500">
           <CardHeader className="text-center">
-            <div className="mx-auto bg-amber-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
-              <UserPlus className="h-8 w-8 text-amber-600" />
+            <div className="mx-auto bg-indigo-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
+              <Terminal className="h-8 w-8 text-indigo-600" />
             </div>
             <CardTitle className="font-headline text-2xl">Developer Access</CardTitle>
             <CardDescription>
-              You are logged in as <strong>{user.email}</strong> but do not have administrative privileges.
+              You are logged in as <strong>{user.email}</strong>.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground text-center">
-              Since you are the developer, you can grant yourself the Doctor role to inspect the Admin Dashboard.
+              Grant yourself the <strong>Dev</strong> role to unlock full read/write access to all database collections and the clinical dashboard.
             </p>
-            <Button onClick={handleClaimDoctorRole} className="w-full h-12 text-lg font-bold bg-amber-600 hover:bg-amber-700" disabled={isLoading}>
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Claim Doctor Role'}
+            <Button onClick={handleClaimDevRole} className="w-full h-12 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200" disabled={isLoading}>
+              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Claim Developer Access'}
             </Button>
           </CardContent>
           <CardFooter className="flex justify-center border-t pt-4">

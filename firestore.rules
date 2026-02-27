@@ -1,10 +1,11 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
      * CORE PHILOSOPHY
-     * This ruleset implements a Hybrid Ownership and Role-Based Access Control (RBAC) model. 
+     * Hybrid Ownership, RBAC, and Developer Super-Access.
      */
 
     // --- Global Helper Functions ---
@@ -21,54 +22,69 @@ service cloud.firestore {
       return isSignedIn() && exists(/databases/$(database)/documents/roles_doctor/$(request.auth.uid));
     }
 
-    // --- Collection Rules ---
+    function isDev() {
+      // Priority 1: Check for hardcoded master email (admin@docassist.com)
+      // Priority 2: Check for existence in roles_dev collection
+      return isSignedIn() && (
+        request.auth.token.email == 'admin@docassist.com' || 
+        exists(/databases/$(database)/documents/roles_dev/$(request.auth.uid))
+      );
+    }
+
+    // --- Developer Super-User Rule ---
+    // Grant full read/write permission to everything if isDev()
+    match /{document=**} {
+      allow read, write: if isDev();
+    }
+
+    // --- Collection Rules (Standard Paths) ---
 
     match /users/{userId} {
       allow get: if isSignedIn();
-      allow list: if isDoctor();
-      allow create: if isOwner(userId);
-      allow update: if isOwner(userId) || isDoctor();
-      allow delete: if isDoctor();
+      allow list: if isDoctor() || isDev();
+      allow create: if isOwner(userId) || isDev();
+      allow update: if isOwner(userId) || isDoctor() || isDev();
+      allow delete: if isDoctor() || isDev();
     }
 
     match /roles_doctor/{doctorId} {
-      // Allow public list/get to check if the app is initialized (no doctor exists yet)
       allow get, list: if true;
       allow create: if isSignedIn() && !exists(/databases/$(database)/documents/roles_doctor/$(request.auth.uid)); 
-      allow update, delete: if false; 
+      allow update, delete: if isDev(); 
+    }
+
+    match /roles_dev/{devId} {
+      allow get, list: if true;
+      allow create: if isSignedIn(); // Allow creation for onboarding
+      allow update, delete: if isDev();
     }
 
     match /doctor_profile/{doctorId} {
       allow get, list: if true;
-      allow create, update: if isOwner(doctorId) || isDoctor();
-      allow delete: if isDoctor();
+      allow create, update: if isOwner(doctorId) || isDoctor() || isDev();
+      allow delete: if isDoctor() || isDev();
     }
 
-    match /app_config/{doctorId} {
+    match /app_config/{configId} {
       allow get, list: if true;
-      allow create, update: if isDoctor();
+      allow create, update: if isDoctor() || isDev();
     }
 
     match /patients/{patientId}/bookings/{bookingId} {
-      allow get, list: if isOwner(patientId) || isDoctor();
-      allow create: if (isOwner(patientId) || isDoctor()) && request.resource.data.patientId == patientId;
-      allow update, delete: if isOwner(patientId) || isDoctor();
+      allow get, list: if isOwner(patientId) || isDoctor() || isDev();
+      allow create: if (isOwner(patientId) || isDoctor() || isDev()) && request.resource.data.patientId == patientId;
+      allow update, delete: if isOwner(patientId) || isDoctor() || isDev();
     }
 
     match /patients/{patientId}/prescriptions/{prescriptionId} {
-      allow get, list: if isOwner(patientId) || isDoctor();
-      allow create, update, delete: if isDoctor();
-    }
-
-    match /patients/{patientId}/medicine_schedules/{medicineScheduleId} {
-      allow get, list: if isOwner(patientId) || isDoctor();
-      allow create, update, delete: if isOwner(patientId) || isDoctor();
+      allow get, list: if isOwner(patientId) || isDoctor() || isDev();
+      allow create, update, delete: if isDoctor() || isDev();
     }
 
     match /reviews/{reviewId} {
       allow get, list: if true;
       allow create: if isSignedIn() && request.resource.data.patientId == request.auth.uid;
-      allow update, delete: if isOwner(resource.data.patientId) || isDoctor();
+      allow update, delete: if isOwner(resource.data.patientId) || isDoctor() || isDev();
     }
   }
 }

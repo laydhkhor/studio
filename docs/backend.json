@@ -10,7 +10,7 @@
         "id": { "type": "string" },
         "fullName": { "type": "string" },
         "email": { "type": "string", "format": "email" },
-        "role": { "type": "string", "enum": ["patient", "doctor"] },
+        "role": { "type": "string", "enum": ["patient", "doctor", "dev"] },
         "isActive": { "type": "boolean" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
