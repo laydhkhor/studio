@@ -14,7 +14,8 @@ import {
   Loader2,
   Ban,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Plus
 } from 'lucide-react';
 import { 
   Card, 
@@ -39,6 +40,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 export default function PatientsManagementPage() {
   const db = useFirestore();

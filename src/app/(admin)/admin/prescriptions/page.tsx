@@ -39,6 +39,7 @@ import { collection, query, where, serverTimestamp, doc } from 'firebase/firesto
 import { useToast } from '@/hooks/use-toast';
 import { PrescriptionCard } from '@/components/blocks/PrescriptionCard';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface Medicine {
   name: string;

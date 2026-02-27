@@ -30,6 +30,8 @@ import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export default function AppointmentsPage() {
   const db = useFirestore();

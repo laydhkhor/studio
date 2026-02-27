@@ -11,7 +11,9 @@ import {
   User,
   ExternalLink,
   MessageSquare,
-  AlertCircle
+  AlertCircle,
+  ChevronRight,
+  ClipboardPlus
 } from 'lucide-react';
 import { 
   Card, 
