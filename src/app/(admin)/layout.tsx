@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -117,7 +118,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <SidebarProvider>
       <div className="flex h-screen w-full bg-[#f8fafc] overflow-hidden">
         <Sidebar collapsible="icon" className="border-r border-slate-200 shadow-sm shrink-0">
-          <SidebarHeader className="h-20 flex items-center justify-center px-4 shrink-0">
+          <SidebarHeader className="h-20 flex items-center justify-center px-4 group-data-[collapsible=icon]:px-0 shrink-0">
             <div className="flex items-center justify-center gap-3">
               <div className="bg-slate-900 p-2 rounded-xl shadow-lg ring-1 ring-white/10 shrink-0">
                 <Logo className="h-5 w-5 text-white" />
@@ -129,7 +130,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="px-3 overflow-y-auto">
+          <SidebarContent className="px-3 group-data-[collapsible=icon]:px-0 overflow-y-auto">
             <SidebarGroup>
               <SidebarGroupLabel className="px-3 mb-2 text-[10px] uppercase font-black tracking-widest text-slate-400 opacity-70">Main Console</SidebarGroupLabel>
               <SidebarGroupContent>
@@ -184,7 +185,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="p-4 bg-slate-50/50 mt-auto shrink-0">
+          <SidebarFooter className="p-4 group-data-[collapsible=icon]:p-0 bg-slate-50/50 mt-auto shrink-0">
              <div className="flex flex-col gap-3 group-data-[collapsible=icon]:hidden">
                 <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-200/60 flex items-center gap-3">
                    <div className="relative">
