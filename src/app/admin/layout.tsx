@@ -48,6 +48,7 @@ import {
   SidebarFooter,
   SidebarTrigger,
   SidebarInset,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { signOut } from 'firebase/auth';
@@ -71,6 +72,7 @@ function AdminSidebar() {
           </span>
         </Link>
       </SidebarHeader>
+      <SidebarSeparator />
       <SidebarContent className="px-2 pt-4">
         <SidebarMenu className="gap-1">
           {adminNavItems.map((item) => {
