@@ -61,7 +61,7 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
   };
 
   return (
-    <section className="bg-secondary/20 py-24 md:py-32">
+    <section className="bg-secondary/20 py-24 md:py-32 overflow-hidden">
       <div className="container">
         {/* Standardized Section Header */}
         <div className="mx-auto max-w-3xl text-center mb-16 space-y-4">

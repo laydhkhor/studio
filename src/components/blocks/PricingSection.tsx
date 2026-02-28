@@ -10,7 +10,7 @@ export default function PricingSection({ pricingOptions }: any) {
     return null;
   }
   return (
-    <section className="py-24 md:py-32 bg-white relative">
+    <section className="py-24 md:py-32 bg-white relative overflow-hidden">
       <div className="container">
         <div className="mx-auto max-w-3xl text-center space-y-4 mb-20">
           <span className="font-ui font-bold text-primary tracking-widest uppercase text-sm">Services</span>

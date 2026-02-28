@@ -44,7 +44,7 @@ export default function PublicHeader({ navLinks }: any) {
         isScrolled ? 'shadow-md py-1' : 'py-2'
       )}
     >
-      <div className="container px-4 md:px-8 flex h-14 md:h-16 items-center justify-between">
+      <div className="container px-4 md:px-8 flex h-14 md:h-16 items-center justify-between max-w-full">
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Logo className="h-6 w-6 text-primary" />
           <span className="font-headline text-lg md:text-xl font-bold text-primary">

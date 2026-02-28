@@ -49,14 +49,15 @@
   html {
     scroll-behavior: smooth;
     height: -webkit-fill-available;
+    overflow-x: clip; /* Prevent horizontal scroll while keeping sticky working */
   }
 
   body {
     @apply bg-background text-foreground font-body antialiased;
-    max-width: 100vw;
-    overflow-x: hidden;
-    position: relative;
     width: 100%;
+    max-width: 100%;
+    overflow-x: clip; /* Crucial for mobile overflow without breaking sticky */
+    position: relative;
     min-height: 100vh;
     min-height: -webkit-fill-available;
   }

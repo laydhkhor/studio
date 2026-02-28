@@ -45,7 +45,7 @@ export default function RootLayout({
     )}>
       <body className={cn('min-h-screen bg-background font-body antialiased selection:bg-primary/10')}>
         <FirebaseClientProvider>
-          <div className="relative flex min-h-screen flex-col">
+          <div className="relative flex min-h-screen flex-col w-full overflow-x-clip">
             {children}
           </div>
         </FirebaseClientProvider>

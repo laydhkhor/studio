@@ -7,7 +7,7 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
   return (
     <section className="relative bg-white overflow-hidden border-b w-full">
       {/* Subtle Background Pattern */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0">
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0 overflow-hidden">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -18,7 +18,7 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
         </svg>
       </div>
 
-      <div className="container z-10 relative py-12 md:py-16 lg:py-24 max-w-full">
+      <div className="container z-10 relative py-12 md:py-16 lg:py-24">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left Column - Content */}
           <div className="text-center lg:text-left space-y-8 max-w-2xl mx-auto lg:mx-0">
@@ -119,8 +119,8 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
                     </div>
                 </div>
 
-                {/* Status Indicator - Tucked in safely */}
-                <div className="absolute -top-4 right-4 md:-right-4 z-20 bg-white border border-slate-100 text-accent px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl font-bold shadow-2xl text-[9px] md:text-[10px] font-ui uppercase tracking-widest flex items-center gap-2">
+                {/* Status Indicator - Fixed for Mobile Containment */}
+                <div className="absolute -top-4 right-2 md:-right-4 z-20 bg-white border border-slate-100 text-accent px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl font-bold shadow-2xl text-[9px] md:text-[10px] font-ui uppercase tracking-widest flex items-center gap-2">
                    <span className="relative flex h-2 w-2">
                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                      <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
