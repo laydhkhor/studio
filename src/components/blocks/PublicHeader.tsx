@@ -38,12 +38,12 @@ export default function PublicHeader({ navLinks }: any) {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300 font-ui bg-card',
-        isScrolled && 'shadow-lg border-b'
+        'sticky top-0 z-50 w-full transition-all duration-300 font-ui',
+        isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm border-b' : 'bg-white'
       )}
     >
-      <div className="container relative flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
+      <div className="container px-4 md:px-8 relative flex h-16 items-center justify-between">
+        <Link href="/" className="flex items-center gap-2 shrink-0">
           <Logo className="h-6 w-6 text-primary" />
           <span className="font-headline text-xl font-bold text-primary">
             DocAssist
@@ -69,7 +69,7 @@ export default function PublicHeader({ navLinks }: any) {
             })}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           {/* Auth State Desktop */}
           <div className="hidden md:flex items-center gap-2">
             {isUserLoading ? (
@@ -94,17 +94,18 @@ export default function PublicHeader({ navLinks }: any) {
           </div>
 
           {/* Mobile Menu */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
+            {!isUserLoading && user && <UserAccountNav />}
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
+                <Button variant="ghost" size="icon" className="rounded-full h-10 w-10 hover:bg-primary/10 hover:text-primary transition-colors">
                   <Menu className="h-6 w-6" />
                   <span className="sr-only">Open menu</span>
                 </Button>
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="w-full max-w-sm flex flex-col p-0"
+                className="w-full max-w-sm flex flex-col p-0 border-l-0"
               >
                 <SheetHeader className="p-6 pb-4 border-b">
                   <SheetTitle asChild>
@@ -119,8 +120,8 @@ export default function PublicHeader({ navLinks }: any) {
                     </Link>
                   </SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-1 flex-col justify-between">
-                  <nav className="mt-8 flex flex-col gap-4 px-6">
+                <div className="flex flex-1 flex-col justify-between overflow-y-auto">
+                  <nav className="mt-8 flex flex-col gap-2 px-4">
                     {navLinks.map((link: any) => {
                       const isActive = pathname === link.href;
                       return (
@@ -128,8 +129,10 @@ export default function PublicHeader({ navLinks }: any) {
                           <Link
                             href={link.href}
                             className={cn(
-                              "text-lg transition-colors hover:text-primary",
-                              isActive ? "text-primary font-bold" : "text-foreground"
+                              "flex items-center px-4 py-3 rounded-xl text-lg font-medium transition-all",
+                              isActive 
+                                ? "bg-primary/10 text-primary font-bold" 
+                                : "text-slate-600 hover:bg-slate-50 hover:text-primary"
                             )}
                           >
                             {link.label}
@@ -138,30 +141,33 @@ export default function PublicHeader({ navLinks }: any) {
                       );
                     })}
                   </nav>
-                  <div className="space-y-3 border-t p-6 bg-slate-50">
+                  <div className="mt-auto p-6 bg-slate-50 border-t">
                      {user ? (
-                        <div className="flex flex-col gap-3">
-                           <div className="flex items-center gap-3 mb-2">
+                        <div className="flex flex-col gap-4">
+                           <div className="flex items-center gap-3 p-3 bg-white rounded-2xl shadow-sm">
                               <UserAccountNav />
-                              <span className="font-bold text-sm truncate">{user.email}</span>
+                              <div className="flex flex-col overflow-hidden">
+                                <span className="font-bold text-sm text-slate-900 truncate">Account Active</span>
+                                <span className="text-xs text-slate-500 truncate">{user.email}</span>
+                              </div>
                            </div>
                            <SheetClose asChild>
-                              <Button asChild className="w-full" size="lg">
+                              <Button asChild className="w-full h-12 font-bold shadow-lg shadow-primary/20" size="lg">
                                 <Link href="/login?redirect=/booking">Book New Appointment</Link>
                               </Button>
                            </SheetClose>
                         </div>
                      ) : (
-                        <>
+                        <div className="grid grid-cols-2 gap-3">
                           <SheetClose asChild>
-                            <Button asChild variant="outline" className="w-full bg-white transition-all" size="lg">
+                            <Button asChild variant="outline" className="w-full h-12 font-bold bg-white" size="lg">
                               <Link href="/login">Login</Link>
                             </Button>
                           </SheetClose>
                           <SheetClose asChild>
                             <Button
                               asChild
-                              className="w-full transition-all"
+                              className="w-full h-12 font-bold shadow-lg shadow-primary/20"
                               size="lg"
                             >
                               <Link href="/login?redirect=/booking">
@@ -169,7 +175,7 @@ export default function PublicHeader({ navLinks }: any) {
                               </Link>
                             </Button>
                           </SheetClose>
-                        </>
+                        </div>
                      )}
                   </div>
                 </div>
