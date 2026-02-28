@@ -43,9 +43,11 @@ export default function RootLayout({
       openSans.variable,
       poppins.variable
     )}>
-      <body className={cn('min-h-screen max-w-full overflow-x-hidden bg-background font-body antialiased')}>
+      <body className={cn('min-h-screen bg-background font-body antialiased selection:bg-primary/10')}>
         <FirebaseClientProvider>
-          {children}
+          <div className="relative flex min-h-screen flex-col overflow-x-hidden">
+            {children}
+          </div>
         </FirebaseClientProvider>
         <Toaster />
       </body>

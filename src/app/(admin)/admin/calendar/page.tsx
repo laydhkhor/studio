@@ -6,7 +6,6 @@ import {
   ChevronRight, 
   Plus, 
   Trash2, 
-  Clock, 
   Loader2,
   CheckCircle2,
   AlertCircle,
@@ -178,13 +177,13 @@ export default function CalendarManagementPage() {
   };
 
   return (
-    <div className="space-y-8 h-full flex flex-col">
+    <div className="space-y-8 min-h-screen">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-headline text-3xl font-black text-slate-900 tracking-tight">Clinical Scheduler</h1>
           <p className="text-slate-500 font-medium text-sm">Define availability windows and manage daily diagnostic slots.</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
            <Button 
             variant={isRangeMode ? "default" : "outline"} 
             className="rounded-xl h-11 px-6 font-bold shadow-sm"
@@ -199,7 +198,7 @@ export default function CalendarManagementPage() {
            </Button>
            <div className="flex items-center gap-2 bg-white p-1 rounded-2xl border shadow-sm">
               <Button variant="ghost" size="icon" onClick={prevMonth} className="h-10 w-10 rounded-xl hover:bg-slate-50"><ChevronLeft className="h-5 w-5" /></Button>
-              <div className="px-4 py-2 min-w-[160px] text-center">
+              <div className="px-4 py-2 min-w-[140px] text-center">
                  <span className="font-headline font-black text-sm uppercase tracking-widest">{format(currentMonth, 'MMMM yyyy')}</span>
               </div>
               <Button variant="ghost" size="icon" onClick={nextMonth} className="h-10 w-10 rounded-xl hover:bg-slate-50"><ChevronRight className="h-5 w-5" /></Button>
@@ -207,10 +206,10 @@ export default function CalendarManagementPage() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-12 gap-8 flex-1 overflow-hidden">
+      <div className="grid lg:grid-cols-12 gap-8">
         {/* Main Interactive Grid */}
-        <div className="lg:col-span-8 h-full">
-           <Card className="border-none shadow-2xl shadow-slate-200/50 bg-white rounded-[2.5rem] overflow-hidden h-full flex flex-col">
+        <div className="lg:col-span-8">
+           <Card className="border-none shadow-2xl shadow-slate-200/50 bg-white rounded-[2.5rem] overflow-hidden">
               <div className="grid grid-cols-7 border-b border-slate-100 bg-slate-50/50">
                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
                    <div key={day} className="py-4 text-center">
@@ -218,7 +217,7 @@ export default function CalendarManagementPage() {
                    </div>
                  ))}
               </div>
-              <div className="flex-1 grid grid-cols-7 auto-rows-fr overflow-y-auto">
+              <div className="grid grid-cols-7">
                  {calendarDays.map((day, idx) => {
                     const daySchedule = allSchedules?.find(s => s.id === format(day, 'yyyy-MM-dd'));
                     const hasSlots = daySchedule && daySchedule.slots?.length > 0;
@@ -268,7 +267,7 @@ export default function CalendarManagementPage() {
         </div>
 
         {/* Action Sidebar */}
-        <div className="lg:col-span-4 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
+        <div className="lg:col-span-4 space-y-6">
            <Card className="border-none shadow-xl bg-white rounded-[2rem] overflow-hidden">
               <CardHeader className="bg-slate-900 text-white p-8">
                  <div className="flex items-center justify-between mb-2">
@@ -284,7 +283,6 @@ export default function CalendarManagementPage() {
                  </CardDescription>
               </CardHeader>
               <CardContent className="p-8 space-y-8">
-                 {/* Generator Tool */}
                  <div className="space-y-4 p-6 bg-slate-50 rounded-2xl border border-slate-100">
                     <div className="flex items-center gap-2 mb-2">
                        <Wand2 className="h-4 w-4 text-primary" />
@@ -310,7 +308,6 @@ export default function CalendarManagementPage() {
                     </Button>
                  </div>
 
-                 {/* Slot List (Only show in single select mode) */}
                  {!isRangeMode && (
                    <div className="space-y-4">
                       <div className="flex items-center justify-between">

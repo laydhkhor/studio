@@ -115,7 +115,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full bg-[#f8fafc] overflow-hidden">
+      <div className="flex min-h-screen w-full bg-[#f8fafc]">
         <Sidebar collapsible="icon" className="border-r border-slate-200 shadow-sm shrink-0">
           <SidebarHeader className="h-20 flex items-center justify-center group-data-[collapsible=icon]:px-0 shrink-0">
             <div className="flex items-center justify-center gap-3 px-4 group-data-[collapsible=icon]:px-0">
@@ -129,7 +129,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="px-3 group-data-[collapsible=icon]:px-0 overflow-y-auto overflow-x-hidden">
+          <SidebarContent className="px-3 group-data-[collapsible=icon]:px-0">
             <SidebarGroup>
               <SidebarGroupLabel className="px-3 mb-2 text-[10px] uppercase font-black tracking-widest text-slate-400 opacity-70 group-data-[collapsible=icon]:hidden">Main Console</SidebarGroupLabel>
               <SidebarGroupContent>
@@ -188,7 +188,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="p-4 group-data-[collapsible=icon]:p-2 bg-slate-50/50 mt-auto shrink-0 overflow-hidden">
+          <SidebarFooter className="p-4 group-data-[collapsible=icon]:p-2 bg-slate-50/50 mt-auto shrink-0">
              <div className="flex flex-col gap-3 group-data-[collapsible=icon]:items-center">
                 <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-200/60 flex items-center gap-3 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:justify-center">
                    <div className="relative shrink-0">
@@ -215,8 +215,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarRail />
         </Sidebar>
 
-        <SidebarInset className="bg-[#f8fafc] flex flex-col min-w-0 h-full overflow-hidden">
-          <header className="h-20 bg-white/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-8 border-b border-slate-200/60 shrink-0 z-40">
+        <SidebarInset className="bg-[#f8fafc] flex flex-col min-w-0 flex-1">
+          <header className="h-20 bg-white/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-8 border-b border-slate-200/60 shrink-0 z-40 sticky top-0">
             <div className="flex items-center gap-2 md:gap-6">
               <SidebarTrigger className="h-10 w-10 rounded-xl hover:bg-slate-100 text-slate-500" />
               <div className="h-6 w-px bg-slate-200 hidden md:block" />
@@ -253,7 +253,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
           </header>
           
-          <main className="flex-1 overflow-y-auto overflow-x-hidden relative bg-[#f8fafc]">
+          <main className="flex-1 relative bg-[#f8fafc]">
             <div className="p-4 md:p-8 lg:p-12 max-w-[1600px] mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out">
               {children}
             </div>

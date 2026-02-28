@@ -4,23 +4,13 @@ import * as React from 'react';
 import { 
   CalendarDays, 
   Search, 
-  Filter, 
-  Video, 
-  History, 
   Clock,
-  ExternalLink,
-  ChevronRight,
-  MoreVertical,
-  CheckCircle2,
-  Loader2,
-  Calendar
+  Video, 
+  Loader2
 } from 'lucide-react';
 import { 
   Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle,
-  CardDescription
+  CardContent
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -120,7 +110,7 @@ export default function AppointmentsPage() {
   );
 
   return (
-    <div className="space-y-8 h-full flex flex-col">
+    <div className="space-y-8 min-h-screen">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-headline text-3xl font-bold">Clinical Sessions</h1>
@@ -139,7 +129,7 @@ export default function AppointmentsPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="upcoming" className="w-full flex-1 flex flex-col">
+      <Tabs defaultValue="upcoming" className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-[400px] h-12 bg-white border p-1 rounded-2xl">
           <TabsTrigger value="upcoming" className="rounded-xl font-bold text-xs uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">
             Upcoming ({upcoming.length})
@@ -149,7 +139,7 @@ export default function AppointmentsPage() {
           </TabsTrigger>
         </TabsList>
         
-        <div className="mt-8 flex-1 overflow-y-auto">
+        <div className="mt-8">
           {isLoading ? (
             <div className="py-32 text-center">
                <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto mb-4" />

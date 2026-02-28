@@ -5,14 +5,9 @@ import {
   ClipboardPlus, 
   Plus, 
   Trash2, 
-  Download, 
   Eye, 
-  Stethoscope, 
-  Pill, 
-  User,
   CheckCircle2,
   Loader2,
-  FileText,
   AlertCircle
 } from 'lucide-react';
 import { 
@@ -20,8 +15,7 @@ import {
   CardContent, 
   CardHeader, 
   CardTitle, 
-  CardDescription,
-  CardFooter
+  CardDescription
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -95,7 +89,6 @@ export default function PrescriptionBuilderPage() {
     );
 
     const prescriptionId = `RX-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
-    // Save to top-level prescriptions collection
     const prescriptionsRef = collection(db, 'prescriptions');
 
     addDocumentNonBlocking(prescriptionsRef, {
@@ -110,7 +103,6 @@ export default function PrescriptionBuilderPage() {
 
     toast({ title: 'Prescription Issued', description: `Digital RX ${prescriptionId} sent to patient hub.` });
     
-    // Reset Form
     setTimeout(() => {
       setPatientId('');
       setGeneralRemarks('');
@@ -129,13 +121,13 @@ export default function PrescriptionBuilderPage() {
   };
 
   return (
-    <div className="space-y-8 h-full flex flex-col">
+    <div className="space-y-8 min-h-screen">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-headline text-3xl font-bold">Prescription Builder</h1>
           <p className="text-muted-foreground font-ui text-sm">Create high-fidelity digital prescriptions for patients.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
            <Button 
             variant="outline" 
             className="h-11 rounded-xl font-bold"
@@ -157,8 +149,8 @@ export default function PrescriptionBuilderPage() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-12 gap-8 items-start flex-1 overflow-hidden">
-        <div className={cn("space-y-8 transition-all duration-500 overflow-y-auto h-full pr-2 custom-scrollbar", isPreviewMode ? "lg:col-span-5" : "lg:col-span-12")}>
+      <div className="grid lg:grid-cols-12 gap-8 items-start">
+        <div className={cn("space-y-8 transition-all duration-500", isPreviewMode ? "lg:col-span-5" : "lg:col-span-12")}>
           <Card className="border-none shadow-sm bg-white overflow-hidden">
             <CardHeader className="bg-slate-50/50 border-b border-slate-100">
               <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-400">1. Patient Identification</CardTitle>
@@ -274,20 +266,20 @@ export default function PrescriptionBuilderPage() {
         </div>
 
         {/* Live Preview Panel */}
-        <div className={cn("lg:sticky lg:top-0 h-full overflow-y-auto transition-all duration-500", isPreviewMode ? "lg:col-span-7" : "hidden")}>
-           <div className="space-y-4 pr-2">
+        {isPreviewMode && (
+          <div className="lg:sticky lg:top-4 space-y-4 lg:col-span-7">
               <div className="flex items-center gap-3 bg-primary/5 p-4 rounded-2xl border border-primary/10">
                  <AlertCircle className="h-5 w-5 text-primary" />
                  <p className="text-xs font-bold text-primary uppercase tracking-widest leading-none mt-0.5">Clinical Preview Mode</p>
               </div>
-              <div className="bg-white p-2 rounded-[2rem] shadow-2xl border border-slate-100 scale-90 origin-top">
+              <div className="bg-white p-2 rounded-[2rem] shadow-2xl border border-slate-100 origin-top">
                  <PrescriptionCard prescription={mockPrescriptionForPreview} />
               </div>
               <p className="text-[10px] text-muted-foreground text-center italic px-10 leading-relaxed pb-8">
                 "Preview matches the final PDF layout the patient will receive. Check all medicine names and dosages carefully before finalizing."
               </p>
-           </div>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
