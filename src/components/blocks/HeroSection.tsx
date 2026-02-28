@@ -5,7 +5,7 @@ import { ArrowRight, Award, Users, Stethoscope, ShieldCheck, CheckCircle2 } from
 
 export default function HeroSection({ home, about }: { home: any, about: any }) {
   return (
-    <section className="relative bg-white overflow-hidden border-b">
+    <section className="relative bg-white overflow-hidden border-b w-full">
       {/* Subtle Background Pattern */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -18,21 +18,21 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
         </svg>
       </div>
 
-      <div className="container z-10 relative py-16 lg:py-24">
+      <div className="container z-10 relative py-12 md:py-16 lg:py-24 max-w-full overflow-hidden">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left Column - Content */}
-          <div className="text-center lg:text-left space-y-8 max-w-2xl mx-auto lg:mx-0">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold font-ui uppercase tracking-widest border border-primary/20">
+          <div className="text-center lg:text-left space-y-8 max-w-2xl mx-auto lg:mx-0 overflow-hidden">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold font-ui uppercase tracking-widest border border-primary/20">
                <ShieldCheck className="h-3.5 w-3.5" />
                Registered Medical Practitioner
             </div>
             
-            <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.15] text-slate-900">
+            <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.15] text-slate-900">
               Trusted <span className="text-primary">Medical Care</span> <br className="hidden md:block" />
               for Your Family's Health
             </h1>
             
-            <p className="text-lg md:text-xl text-slate-600 leading-relaxed font-body">
+            <p className="text-base md:text-lg lg:text-xl text-slate-600 leading-relaxed font-body">
               Experience the highest standard of healthcare with <span className="font-semibold text-primary">Dr. Pritam Pattyanayek</span>. Providing compassionate, evidence-based medical consultations in Mahishadal and Nandakumar.
             </p>
             
@@ -52,28 +52,28 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
               </Button>
             </div>
 
-            <div className="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-4 pt-4 border-t border-slate-100">
-              <div className="flex items-center gap-2 text-sm text-slate-500 font-ui">
-                <CheckCircle2 className="h-4 w-4 text-accent" />
+            <div className="flex flex-wrap justify-center lg:justify-start gap-x-6 md:gap-x-8 gap-y-4 pt-4 border-t border-slate-100">
+              <div className="flex items-center gap-2 text-xs md:text-sm text-slate-500 font-ui">
+                <CheckCircle2 className="h-4 w-4 text-accent shrink-0" />
                 <span>Video & Chat Support</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-slate-500 font-ui">
-                <CheckCircle2 className="h-4 w-4 text-accent" />
+              <div className="flex items-center gap-2 text-xs md:text-sm text-slate-500 font-ui">
+                <CheckCircle2 className="h-4 w-4 text-accent shrink-0" />
                 <span>Digital Prescriptions</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-slate-500 font-ui">
-                <CheckCircle2 className="h-4 w-4 text-accent" />
+              <div className="flex items-center gap-2 text-xs md:text-sm text-slate-500 font-ui">
+                <CheckCircle2 className="h-4 w-4 text-accent shrink-0" />
                 <span>15+ Years Excellence</span>
               </div>
             </div>
           </div>
 
           {/* Right Column - Professional Image Block */}
-          <div className="relative flex justify-center">
+          <div className="relative flex justify-center w-full max-w-full overflow-visible py-8">
             <div className="relative w-full max-w-[500px]">
                 {/* Main Image Container */}
-                <div className="relative z-10 p-2 bg-white rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] border border-slate-100">
-                    <div className="overflow-hidden rounded-2xl bg-slate-50">
+                <div className="relative z-10 p-2 bg-white rounded-2xl md:rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] border border-slate-100 overflow-hidden">
+                    <div className="overflow-hidden rounded-xl md:rounded-2xl bg-slate-50">
                       <Image
                         src={home.heroImage}
                         alt="Dr. Pritam Pattyanayek"
@@ -120,7 +120,7 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
                 </div>
 
                 {/* Status Indicator */}
-                <div className="absolute -top-4 -right-4 z-20 bg-white border border-slate-100 text-accent px-4 py-2 rounded-2xl font-bold shadow-2xl text-[10px] font-ui uppercase tracking-widest flex items-center gap-2.5">
+                <div className="absolute -top-4 -right-2 md:-right-4 z-20 bg-white border border-slate-100 text-accent px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl font-bold shadow-2xl text-[9px] md:text-[10px] font-ui uppercase tracking-widest flex items-center gap-2">
                    <span className="relative flex h-2 w-2">
                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                      <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>

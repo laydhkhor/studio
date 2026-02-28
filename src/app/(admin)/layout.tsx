@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -118,8 +117,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <SidebarProvider>
       <div className="flex h-screen w-full bg-[#f8fafc] overflow-hidden">
         <Sidebar collapsible="icon" className="border-r border-slate-200 shadow-sm shrink-0">
-          <SidebarHeader className="h-20 flex items-center justify-center px-4 group-data-[collapsible=icon]:px-0 shrink-0">
-            <div className="flex items-center justify-center gap-3">
+          <SidebarHeader className="h-20 flex items-center justify-center group-data-[collapsible=icon]:px-0 shrink-0">
+            <div className="flex items-center justify-center gap-3 px-4 group-data-[collapsible=icon]:px-0">
               <div className="bg-slate-900 p-2 rounded-xl shadow-lg ring-1 ring-white/10 shrink-0">
                 <Logo className="h-5 w-5 text-white" />
               </div>
@@ -130,9 +129,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="px-3 group-data-[collapsible=icon]:px-0 overflow-y-auto">
+          <SidebarContent className="px-3 group-data-[collapsible=icon]:px-0 overflow-y-auto overflow-x-hidden">
             <SidebarGroup>
-              <SidebarGroupLabel className="px-3 mb-2 text-[10px] uppercase font-black tracking-widest text-slate-400 opacity-70">Main Console</SidebarGroupLabel>
+              <SidebarGroupLabel className="px-3 mb-2 text-[10px] uppercase font-black tracking-widest text-slate-400 opacity-70 group-data-[collapsible=icon]:hidden">Main Console</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu className="gap-1">
                   {ADMIN_NAV_ITEMS.map((item) => (
@@ -145,12 +144,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                           "h-11 px-3 rounded-xl transition-all duration-200",
                           pathname === item.href 
                             ? "bg-primary text-white shadow-md shadow-primary/20 hover:bg-primary/90" 
-                            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+                          "group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
                         )}
                       >
                         <Link href={item.href}>
                           <item.icon className={cn("size-4", pathname === item.href ? "text-white" : "text-slate-400")} />
-                          <span className="font-bold text-sm">{item.label}</span>
+                          <span className="font-bold text-sm group-data-[collapsible=icon]:hidden">{item.label}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -162,7 +162,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <SidebarSeparator className="my-4 opacity-50" />
 
             <SidebarGroup>
-              <SidebarGroupLabel className="px-3 mb-2 text-[10px] uppercase font-black tracking-widest text-slate-400 opacity-70">Management</SidebarGroupLabel>
+              <SidebarGroupLabel className="px-3 mb-2 text-[10px] uppercase font-black tracking-widest text-slate-400 opacity-70 group-data-[collapsible=icon]:hidden">Management</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu className="gap-1">
                   {SECONDARY_NAV.map((item) => (
@@ -171,11 +171,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         asChild 
                         isActive={pathname === item.href}
                         tooltip={item.label}
-                        className="h-10 px-3 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                        className={cn(
+                          "h-10 px-3 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors",
+                          "group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+                        )}
                       >
                         <Link href={item.href}>
                           <item.icon className="size-4 opacity-60" />
-                          <span className="font-bold text-sm">{item.label}</span>
+                          <span className="font-bold text-sm group-data-[collapsible=icon]:hidden">{item.label}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -185,27 +188,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="p-4 group-data-[collapsible=icon]:p-0 bg-slate-50/50 mt-auto shrink-0">
-             <div className="flex flex-col gap-3 group-data-[collapsible=icon]:hidden">
-                <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-200/60 flex items-center gap-3">
-                   <div className="relative">
+          <SidebarFooter className="p-4 group-data-[collapsible=icon]:p-2 bg-slate-50/50 mt-auto shrink-0 overflow-hidden">
+             <div className="flex flex-col gap-3 group-data-[collapsible=icon]:items-center">
+                <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-200/60 flex items-center gap-3 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:justify-center">
+                   <div className="relative shrink-0">
                       <div className="bg-emerald-50 p-2 rounded-xl border border-emerald-100/50">
                         <Activity className="h-4 w-4 text-emerald-600" />
                       </div>
                       <span className="absolute -top-1 -right-1 h-2 w-2 bg-emerald-500 rounded-full border-2 border-white animate-pulse" />
                    </div>
-                   <div className="overflow-hidden">
+                   <div className="overflow-hidden group-data-[collapsible=icon]:hidden">
                       <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Verified Practitioner</p>
                       <p className="text-xs font-black text-slate-800 truncate">Dr. P. Pattyanayek</p>
                    </div>
                 </div>
                 <Button 
                   variant="ghost" 
-                  className="w-full justify-start h-11 gap-3 rounded-xl text-slate-500 hover:text-destructive hover:bg-destructive/5 transition-all group"
+                  className="w-full justify-start h-11 gap-3 rounded-xl text-slate-500 hover:text-destructive hover:bg-destructive/5 transition-all group group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
                   onClick={handleLogout}
                 >
                   <LogOut className="h-4 w-4 opacity-60 group-hover:opacity-100" />
-                  <span className="font-bold text-sm text-slate-600 group-hover:text-destructive">Sign Out</span>
+                  <span className="font-bold text-sm text-slate-600 group-hover:text-destructive group-data-[collapsible=icon]:hidden">Sign Out</span>
                 </Button>
              </div>
           </SidebarFooter>
@@ -213,11 +216,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </Sidebar>
 
         <SidebarInset className="bg-[#f8fafc] flex flex-col min-w-0 h-full overflow-hidden">
-          <header className="h-20 bg-white/80 backdrop-blur-xl flex items-center justify-between px-8 border-b border-slate-200/60 shrink-0 z-40">
-            <div className="flex items-center gap-6">
+          <header className="h-20 bg-white/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-8 border-b border-slate-200/60 shrink-0 z-40">
+            <div className="flex items-center gap-2 md:gap-6">
               <SidebarTrigger className="h-10 w-10 rounded-xl hover:bg-slate-100 text-slate-500" />
               <div className="h-6 w-px bg-slate-200 hidden md:block" />
-              <Breadcrumb className="hidden md:block">
+              <Breadcrumb className="hidden lg:block">
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbLink href="/admin/dashboard" className="text-[10px] uppercase font-black text-slate-400 tracking-[0.1em] hover:text-primary transition-colors">Clinical OS</BreadcrumbLink>
@@ -230,22 +233,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </Breadcrumb>
             </div>
 
-            <div className="flex-1 max-w-xl px-12 hidden lg:block">
+            <div className="flex-1 max-w-xl px-4 md:px-12 hidden md:block">
                <div className="relative group">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 group-focus-within:text-primary transition-all duration-300" />
                   <Input 
-                    placeholder="Search clinical records, patient UIDs or prescriptions..." 
+                    placeholder="Search clinical records..." 
                     className="pl-11 h-12 bg-slate-50 border-none rounded-2xl focus-visible:ring-2 focus-visible:ring-primary/10 focus-visible:bg-white transition-all text-sm font-medium"
                   />
                </div>
             </div>
 
-            <div className="flex items-center gap-4">
-               <Button variant="ghost" size="icon" className="rounded-2xl h-11 w-11 relative bg-slate-50 text-slate-400 hover:text-primary hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-100 transition-all">
+            <div className="flex items-center gap-2 md:gap-4">
+               <Button variant="ghost" size="icon" className="rounded-2xl h-10 w-10 md:h-11 md:w-11 relative bg-slate-50 text-slate-400 hover:text-primary hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-100 transition-all">
                   <Bell className="h-5 w-5" />
-                  <span className="absolute top-3 right-3 h-2 w-2 bg-rose-500 border-2 border-white rounded-full" />
+                  <span className="absolute top-2 right-2 md:top-3 md:right-3 h-2 w-2 bg-rose-500 border-2 border-white rounded-full" />
                </Button>
-               <div className="h-8 w-px bg-slate-200 mx-1" />
+               <div className="h-8 w-px bg-slate-200 mx-1 hidden sm:block" />
                <UserAccountNav />
             </div>
           </header>

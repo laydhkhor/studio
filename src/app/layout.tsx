@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import { Montserrat, Open_Sans, Poppins } from 'next/font/google';
 import { cn } from '@/lib/utils';
@@ -44,7 +43,7 @@ export default function RootLayout({
       openSans.variable,
       poppins.variable
     )}>
-      <body className={cn('min-h-screen bg-background font-body antialiased')}>
+      <body className={cn('min-h-screen max-w-full overflow-x-hidden bg-background font-body antialiased')}>
         <FirebaseClientProvider>
           {children}
         </FirebaseClientProvider>

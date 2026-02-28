@@ -88,8 +88,6 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
       
       setIsProcessing(true);
 
-      // Simulation of Razorpay Payment Flow
-      // In production, this would call your backend to create an order
       const options = {
         key: 'rzp_test_dummy',
         amount: 40000, // INR 400.00
@@ -119,7 +117,6 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
           const rzp = new window.Razorpay(options);
           rzp.open();
         } else {
-          // Fallback if Razorpay script didn't load (prototyping fallback)
           finalizeBooking(slot.time, 'MOCK_PAY_SUCCESS');
         }
       } catch (e) {
@@ -132,12 +129,10 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
       if (!db || !user || !currentSchedule || selectedSlotIndex === null) return;
 
       const bookingId = `BK-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
-      // Generate a mock meeting link
       const meetingLink = `https://meet.google.com/doc-${Math.random().toString(36).substring(2, 5)}-${Math.random().toString(36).substring(2, 5)}`;
       const appointmentDateTime = `${selectedDate}T${slotTime}:00`;
 
       try {
-        // A. Update the Doctor's Schedule (Lock the slot)
         const scheduleRef = doc(db, 'doctor_schedules', selectedDate);
         const updatedSlots = [...currentSchedule.slots];
         updatedSlots[selectedSlotIndex] = {
@@ -147,7 +142,6 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
         };
         await updateDoc(scheduleRef, { slots: updatedSlots });
 
-        // B. Create the Appointment Record (Flat collection)
         const appointmentRef = doc(db, 'appointments', bookingId);
         await setDoc(appointmentRef, {
           id: bookingId,
@@ -163,7 +157,6 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
           updatedAt: serverTimestamp()
         });
 
-        // C. Create a Notification
         const notificationsRef = collection(db, 'notifications');
         await addDoc(notificationsRef, {
           userId: user.uid,
@@ -195,12 +188,12 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
     if (!bookingData) return null;
 
     return (
-        <section className="bg-transparent py-10" id="booking">
+        <section className="bg-transparent py-10 w-full overflow-hidden" id="booking">
             <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-            <div className="container">
-                <div className="grid lg:grid-cols-12 gap-0 border-none rounded-[3rem] overflow-hidden shadow-2xl bg-white">
+            <div className="container px-4 sm:px-6 lg:px-8">
+                <div className="grid lg:grid-cols-12 gap-0 border-none rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl bg-white w-full">
                     {/* Left: Benefits & Information */}
-                    <div className="lg:col-span-4 bg-slate-900 p-8 md:p-12 text-white flex flex-col justify-between relative overflow-hidden">
+                    <div className="lg:col-span-4 bg-slate-900 p-6 md:p-12 text-white flex flex-col justify-between relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32" />
                         
                         <div className="relative z-10 space-y-8">
@@ -208,7 +201,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                 <div className="bg-primary/20 w-fit p-3 rounded-2xl mb-4">
                                   <Stethoscope className="h-8 w-8 text-primary" />
                                 </div>
-                                <h3 className="text-3xl font-headline font-bold">Video Clinic</h3>
+                                <h3 className="text-2xl md:text-3xl font-headline font-bold">Video Clinic</h3>
                                 <p className="text-slate-400 text-sm">Evidence-based diagnosis from your home.</p>
                             </div>
                             
@@ -219,7 +212,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                   { icon: ShieldCheck, t: 'Verified Digital RX', s: 'Immediate dashboard delivery' }
                                 ].map((item, i) => (
                                   <div key={i} className="flex gap-4 items-start group">
-                                      <div className="bg-white/5 p-2.5 rounded-xl group-hover:bg-primary/20 transition-colors">
+                                      <div className="bg-white/5 p-2.5 rounded-xl group-hover:bg-primary/20 transition-colors shrink-0">
                                         <item.icon className="h-5 w-5 text-primary" />
                                       </div>
                                       <div>
@@ -231,26 +224,26 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                             </div>
                         </div>
 
-                        <div className="relative z-10 mt-12 bg-white/5 p-6 rounded-2xl border border-white/10">
+                        <div className="relative z-10 mt-8 md:mt-12 bg-white/5 p-4 md:p-6 rounded-2xl border border-white/10">
                             <div className="flex items-center gap-3 mb-2">
                               <AlertCircle className="h-4 w-4 text-primary" />
                               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Patient Protocol</p>
                             </div>
                             <p className="text-[11px] text-slate-400 leading-relaxed italic">
-                                "Please join the session 5 minutes early with a stable connection and any recent test reports ready for review."
+                                "Please join the session 5 minutes early with a stable connection."
                             </p>
                         </div>
                     </div>
 
                     {/* Right: Interaction Area */}
-                    <div className="lg:col-span-8 p-8 md:p-12 space-y-12">
+                    <div className="lg:col-span-8 p-6 md:p-12 space-y-8 md:space-y-12 overflow-hidden">
                         {/* 1. Date Selection */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
                               <Label className="text-xs font-black uppercase tracking-widest text-slate-400">1. Select Consultation Date</Label>
                               {isLoadingSchedules && <Loader2 className="h-4 w-4 animate-spin text-primary" />}
                             </div>
-                            <div className="flex flex-wrap gap-3">
+                            <div className="flex flex-wrap gap-2 md:gap-3">
                                 {availableDates.length > 0 ? availableDates.map((schedule) => (
                                     <button
                                         key={schedule.id}
@@ -259,31 +252,30 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                           setSelectedSlotIndex(null);
                                         }}
                                         className={cn(
-                                            "px-6 py-4 rounded-2xl border-2 transition-all font-bold text-sm flex flex-col items-center min-w-[110px] group",
+                                            "px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl border-2 transition-all font-bold text-sm flex flex-col items-center min-w-[90px] md:min-w-[110px] group",
                                             selectedDate === schedule.date 
-                                                ? "border-primary bg-primary text-white shadow-xl scale-105" 
-                                                : "border-slate-50 bg-slate-50 text-slate-600 hover:border-primary/20 hover:bg-white hover:shadow-md"
+                                                ? "border-primary bg-primary text-white shadow-xl" 
+                                                : "border-slate-50 bg-slate-50 text-slate-600 hover:border-primary/20 hover:bg-white"
                                         )}
                                     >
                                         <span className={cn(
-                                          "text-[10px] uppercase font-black tracking-tighter mb-1",
+                                          "text-[9px] md:text-[10px] uppercase font-black tracking-tighter mb-1",
                                           selectedDate === schedule.date ? "text-white/70" : "text-slate-400"
                                         )}>
                                           {format(parse(schedule.date, 'yyyy-MM-dd', new Date()), 'EEE')}
                                         </span>
-                                        <span className="text-lg">{format(parse(schedule.date, 'yyyy-MM-dd', new Date()), 'dd')}</span>
+                                        <span className="text-base md:text-lg">{format(parse(schedule.date, 'yyyy-MM-dd', new Date()), 'dd')}</span>
                                         <span className={cn(
-                                          "text-[10px] font-bold uppercase",
+                                          "text-[9px] md:text-[10px] font-bold uppercase",
                                           selectedDate === schedule.date ? "text-white/80" : "text-primary"
                                         )}>
                                           {format(parse(schedule.date, 'yyyy-MM-dd', new Date()), 'MMM')}
                                         </span>
                                     </button>
                                 )) : !isLoadingSchedules && (
-                                  <div className="py-12 border-2 border-dashed border-slate-100 rounded-[2rem] w-full text-center bg-slate-50/50">
-                                    <CalendarIcon className="h-10 w-10 text-slate-200 mx-auto mb-4" />
-                                    <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">No Clinical Slots Found</p>
-                                    <p className="text-xs text-slate-300 mt-1">Check back later or contact the clinic directly.</p>
+                                  <div className="py-8 md:py-12 border-2 border-dashed border-slate-100 rounded-2xl w-full text-center bg-slate-50/50 px-4">
+                                    <CalendarIcon className="h-8 w-8 text-slate-200 mx-auto mb-4" />
+                                    <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">No Clinical Slots Found</p>
                                   </div>
                                 )}
                             </div>
@@ -292,15 +284,15 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                         {/* 2. Slot Selection */}
                         {selectedDate && (
                             <div className="space-y-6 animate-in fade-in slide-in-from-top-2 duration-500">
-                                <Label className="text-xs font-black uppercase tracking-widest text-slate-400">2. Choose Your 10-Min Window</Label>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                                <Label className="text-xs font-black uppercase tracking-widest text-slate-400">2. Choose Your Window</Label>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
                                     {currentSchedule?.slots?.map((slot: any, index: number) => (
                                         <button
                                             key={index}
                                             disabled={slot.isBooked}
                                             onClick={() => setSelectedSlotIndex(index)}
                                             className={cn(
-                                                "p-4 rounded-xl border-2 font-mono text-sm transition-all relative overflow-hidden h-14 flex items-center justify-center",
+                                                "p-3 md:p-4 rounded-lg md:rounded-xl border-2 font-mono text-xs md:text-sm transition-all relative overflow-hidden h-12 md:h-14 flex items-center justify-center",
                                                 slot.isBooked 
                                                     ? "bg-slate-50 text-slate-300 border-slate-100 cursor-not-allowed" 
                                                     : selectedSlotIndex === index 
@@ -311,7 +303,7 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                             {slot.time}
                                             {slot.isBooked && (
                                               <div className="absolute inset-0 bg-slate-100/40 flex items-center justify-center">
-                                                <span className="text-[8px] uppercase font-black -rotate-12 bg-white px-1.5 py-0.5 rounded shadow-sm text-slate-400">Reserved</span>
+                                                <span className="text-[7px] md:text-[8px] uppercase font-black -rotate-12 bg-white px-1 py-0.5 rounded shadow-sm text-slate-400">Reserved</span>
                                               </div>
                                             )}
                                         </button>
@@ -321,18 +313,18 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                         )}
 
                         {/* 3. Confirmation & Checkout */}
-                        <div className="pt-8 border-t border-slate-100">
-                            <div className="flex flex-col sm:flex-row items-center gap-8">
+                        <div className="pt-6 md:pt-8 border-t border-slate-100">
+                            <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8">
                               <Button 
                                   onClick={handleBookingInitiation}
                                   size="lg" 
                                   disabled={!selectedDate || selectedSlotIndex === null || isProcessing}
-                                  className="w-full sm:flex-1 h-16 rounded-2xl text-lg font-black shadow-2xl shadow-primary/20 group relative overflow-hidden"
+                                  className="w-full sm:flex-1 h-14 md:h-16 rounded-xl md:rounded-2xl text-base md:text-lg font-black shadow-2xl shadow-primary/20 group relative overflow-hidden"
                               >
                                   {isProcessing ? (
                                     <div className="flex items-center gap-3">
                                       <Loader2 className="h-5 w-5 animate-spin" />
-                                      <span>Contacting Secure Gateway...</span>
+                                      <span className="text-sm">Contacting Gateway...</span>
                                     </div>
                                   ) : (
                                     <div className="flex items-center gap-3">
@@ -341,12 +333,12 @@ export default function BookingSection({ bookingData }: { bookingData: any }) {
                                     </div>
                                   )}
                               </Button>
-                              <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-1.5">
-                                  <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                              <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-1">
+                                  <div className="flex items-center gap-2 text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest">
                                       <ShieldCheck className="h-4 w-4 text-emerald-500" /> Razorpay Verified 
                                   </div>
-                                  <p className="text-[10px] font-bold text-slate-300 max-w-[180px] uppercase leading-tight">
-                                    Instant Confirmation • Digital RX Included
+                                  <p className="text-[9px] md:text-[10px] font-bold text-slate-300 max-w-[180px] uppercase leading-tight">
+                                    Instant Confirmation
                                   </p>
                               </div>
                             </div>
