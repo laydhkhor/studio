@@ -64,7 +64,7 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
     <section className="bg-secondary/20 py-24 md:py-32 overflow-hidden">
       <div className="container">
         {/* Standardized Section Header */}
-        <div className="mx-auto max-w-3xl text-center mb-16 space-y-4">
+        <div className="mx-auto max-w-3xl text-center mb-16 space-y-4 px-4">
           <span className="font-ui font-bold text-primary tracking-widest uppercase text-sm">Physical Care</span>
           <h2 className="font-headline text-3xl md:text-5xl font-bold text-foreground">
             Our <span className="text-primary">Clinics</span>
@@ -74,7 +74,7 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
           </p>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row mb-12">
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row mb-12 px-4">
             <Select value={locationFilter} onValueChange={setLocationFilter}>
               <SelectTrigger className="w-full sm:w-[220px] bg-white">
                 <SelectValue placeholder="Location" />
@@ -100,13 +100,13 @@ export default function ClinicDetailsSection({ clinicLocations }: any) {
           <Button
             variant="ghost"
             onClick={clearFilters}
-            className="w-full sm:w-auto transition-all"
+            className="w-full sm:w-auto transition-all border border-slate-200 bg-white/50"
           >
             Clear Filters
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:max-w-6xl lg:mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:max-w-6xl lg:mx-auto px-4">
           {filteredClinics.length > 0 ? (
             filteredClinics.map((clinic) => {
               const fullAddress = `${clinic.address}, ${clinic.pinCode}`;
