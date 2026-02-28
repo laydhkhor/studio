@@ -51,7 +51,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased text-justify;
+    @apply bg-background text-foreground font-body antialiased;
     width: 100%;
     max-width: 100vw;
     overflow-x: clip; 
@@ -60,7 +60,7 @@
     hyphens: auto;
   }
 
-  p {
+  p, li {
     @apply text-justify;
   }
 }

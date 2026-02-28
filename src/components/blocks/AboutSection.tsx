@@ -53,12 +53,12 @@ export default function AboutSection({ about }: { about: any }) {
           {/* Text Content */}
           <div className="space-y-10">
             <div className="space-y-6">
-              <h3 className="font-headline text-3xl md:text-4xl font-bold">
+              <h3 className="font-headline text-3xl md:text-4xl font-bold text-left">
                 <span className="text-primary">{about.doctorName}</span>
               </h3>
               
               <div className="space-y-4">
-                <p className="text-lg font-bold text-slate-800">Key Highlights:</p>
+                <p className="text-lg font-bold text-slate-800 text-left">Key Highlights:</p>
                 <ul className="space-y-3">
                   {about.highlights?.map((highlight: string, i: number) => (
                     <li key={i} className="flex items-start gap-3">
@@ -71,7 +71,7 @@ export default function AboutSection({ about }: { about: any }) {
             </div>
             
             <div className="space-y-6">
-               <p className="text-lg font-bold text-slate-800">Clinical Expertise:</p>
+               <p className="text-lg font-bold text-slate-800 text-left">Clinical Expertise:</p>
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {about.services?.slice(0, 4).map((service: any, i: number) => (
                     <div key={i} className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3 group hover:bg-white hover:shadow-md transition-all">
