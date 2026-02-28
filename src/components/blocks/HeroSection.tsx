@@ -69,7 +69,7 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
           </div>
 
           {/* Right Column - Professional Image Block */}
-          <div className="relative flex justify-center w-full max-w-full overflow-visible py-8">
+          <div className="relative flex justify-center w-full max-w-full overflow-hidden py-8">
             <div className="relative w-full max-w-[500px]">
                 {/* Main Image Container */}
                 <div className="relative z-10 p-2 bg-white rounded-2xl md:rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] border border-slate-100 overflow-hidden">
@@ -120,7 +120,7 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
                 </div>
 
                 {/* Status Indicator */}
-                <div className="absolute -top-4 -right-2 md:-right-4 z-20 bg-white border border-slate-100 text-accent px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl font-bold shadow-2xl text-[9px] md:text-[10px] font-ui uppercase tracking-widest flex items-center gap-2">
+                <div className="absolute -top-4 right-2 md:-right-4 z-20 bg-white border border-slate-100 text-accent px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl font-bold shadow-2xl text-[9px] md:text-[10px] font-ui uppercase tracking-widest flex items-center gap-2">
                    <span className="relative flex h-2 w-2">
                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                      <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
