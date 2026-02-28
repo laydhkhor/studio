@@ -1,8 +1,8 @@
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './src/sanity/schema'
-import {apiVersion, dataset, projectId} from './src/sanity/client'
+import {schemaTypes} from './schema'
+import {apiVersion, dataset, projectId} from './client'
 import {presentationTool} from 'sanity/presentation'
 
 export default defineConfig({
