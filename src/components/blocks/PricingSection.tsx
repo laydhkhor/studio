@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,8 +36,10 @@ export default function PricingSection({ pricingOptions }: any) {
             <Card
               key={index}
               className={cn(
-                "group flex flex-col shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-none hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] transition-all duration-500 rounded-3xl overflow-hidden relative",
-                option.tag === 'Most Popular' ? 'ring-2 ring-primary scale-[1.02] z-10' : 'bg-slate-50/50'
+                "group flex flex-col shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] transition-all duration-500 rounded-3xl overflow-hidden relative",
+                option.tag === 'Most Popular' 
+                  ? 'ring-2 ring-primary scale-[1.02] z-10 border-none' 
+                  : 'bg-slate-50/50 border border-slate-200'
               )}
             >
               {option.tag === 'Most Popular' && (
