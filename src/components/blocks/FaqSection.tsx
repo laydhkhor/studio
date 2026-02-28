@@ -24,7 +24,7 @@ export default function FaqSection({ faqs }: any) {
         </div>
 
         <div className="mt-12 max-w-3xl mx-auto bg-secondary/5 p-6 md:p-10 rounded-3xl">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
             {faqs.map((faq: any, index: number) => (
               <AccordionItem key={index} value={`item-${index}`} className="border-b-secondary/20 last:border-0">
                 <AccordionTrigger className="font-ui font-semibold text-lg text-left hover:no-underline hover:text-primary py-6">
