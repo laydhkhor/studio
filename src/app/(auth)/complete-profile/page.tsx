@@ -132,7 +132,7 @@ export default function CompleteProfilePage() {
                   selected={date}
                   onSelect={setDate}
                   initialFocus
-                  captionLayout="dropdown-buttons"
+                  captionLayout="dropdown"
                   fromYear={1920}
                   toYear={new Date().getFullYear()}
                 />
