@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -22,7 +23,7 @@ export default function AboutSection({ about }: { about: any }) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Image Container */}
           <div className="relative flex justify-center lg:justify-start lg:sticky lg:top-32">
             <div className="relative w-full max-w-[320px] sm:max-w-[450px]">

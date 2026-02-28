@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { Award, GraduationCap, Users, CheckCircle2, Activity, HeartPulse, Stethoscope, ClipboardCheck } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -18,7 +19,7 @@ export default async function AboutPage() {
     <div className="py-20 md:py-32 overflow-hidden">
       <div className="container">
         {/* Header Section */}
-        <header className="text-center mb-20 px-4">
+        <header className="text-center mb-20">
           <span className="font-ui font-bold text-primary tracking-widest uppercase text-sm">Medical Profile</span>
           <h1 className="font-headline text-4xl md:text-6xl font-bold mt-4">About <span className="text-primary">{data?.doctorName}</span></h1>
           <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -27,7 +28,7 @@ export default async function AboutPage() {
         </header>
 
         {/* Doctor Identity Block */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start mb-32 px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start mb-32">
           <div className="lg:col-span-5 flex justify-center">
             <div className="relative w-full max-w-[320px] sm:max-w-[500px]">
               <Image
@@ -92,7 +93,7 @@ export default async function AboutPage() {
         </div>
 
         {/* Services Section */}
-        <section className="bg-slate-900 text-white rounded-[2rem] md:rounded-[3rem] p-8 md:p-20 overflow-hidden relative mx-4">
+        <section className="bg-slate-900 text-white rounded-[2rem] md:rounded-[3rem] p-8 md:p-20 overflow-hidden relative">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
           <div className="relative z-10">
             <div className="max-w-3xl mb-16">
