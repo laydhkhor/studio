@@ -32,7 +32,7 @@ export default function HeroSection({ home, about }: { home: any, about: any }) 
               for Your Family's Health
             </h1>
             
-            <p className="text-base md:text-lg lg:text-xl text-slate-600 leading-relaxed font-body">
+            <p className="text-base md:text-lg lg:text-xl text-slate-600 leading-relaxed font-body text-justify">
               Experience the highest standard of healthcare with <span className="font-semibold text-primary">Dr. Pritam Pattyanayek</span>. Providing compassionate, evidence-based medical consultations in Mahishadal and Nandakumar.
             </p>
             

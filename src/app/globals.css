@@ -51,12 +51,17 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground font-body antialiased text-justify;
     width: 100%;
     max-width: 100vw;
-    overflow-x: clip; /* Best practice for sticky compatibility + overflow protection */
+    overflow-x: clip; 
     position: relative;
     min-height: 100vh;
+    hyphens: auto;
+  }
+
+  p {
+    @apply text-justify;
   }
 }
 

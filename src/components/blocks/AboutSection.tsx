@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -18,7 +17,7 @@ export default function AboutSection({ about }: { about: any }) {
           <h2 className="font-headline text-3xl md:text-5xl font-bold text-slate-900">
             Meet Your <span className="text-primary">Physician</span>
           </h2>
-          <p className="text-lg text-muted-foreground leading-relaxed">
+          <p className="text-lg text-muted-foreground leading-relaxed text-justify">
             A legacy of compassionate care and clinical excellence in Purba Medinipur.
           </p>
         </div>
@@ -33,7 +32,7 @@ export default function AboutSection({ about }: { about: any }) {
                   alt={about.doctorName}
                   width={450}
                   height={450}
-                  className="w-full h-auto rounded-3xl object-cover aspect-square shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border-4 border-white mx-auto"
+                  className="w-full h-auto rounded-3xl object-cover aspect-square shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] border-4 border-white mx-auto"
                   data-ai-hint={about.imageHint}
                 />
               </div>
@@ -64,7 +63,7 @@ export default function AboutSection({ about }: { about: any }) {
                   {about.highlights?.map((highlight: string, i: number) => (
                     <li key={i} className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-1" />
-                      <span className="text-muted-foreground leading-relaxed">{highlight}</span>
+                      <span className="text-muted-foreground leading-relaxed text-justify">{highlight}</span>
                     </li>
                   ))}
                 </ul>

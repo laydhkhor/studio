@@ -1,4 +1,3 @@
-
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
@@ -78,7 +77,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   />
               </div>}
               
-              <div className="prose lg:prose-xl mx-auto text-slate-700">
+              <div className="prose lg:prose-xl mx-auto text-slate-700 text-justify">
                   {post.body.map((block: any) => {
                     const text = block.children.map((span: any) => span.text).join('');
                     
@@ -94,13 +93,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                         return (
                             <div key={block._key} className="flex gap-3 mb-3 ml-2">
                                 <div className="h-2 w-2 rounded-full bg-primary mt-2.5 shrink-0" />
-                                <p className="text-lg leading-relaxed">{text}</p>
+                                <p className="text-lg leading-relaxed text-justify">{text}</p>
                             </div>
                         );
                     }
                     
                     return (
-                        <p key={block._key} className="text-lg leading-relaxed mb-6 font-ui">
+                        <p key={block._key} className="text-lg leading-relaxed mb-6 font-ui text-justify">
                             {text}
                         </p>
                     );
