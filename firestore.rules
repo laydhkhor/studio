@@ -2,7 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // DEV MODE: Allow all read/write access for rapid prototyping
-    // FORCE SYNC: 2024-07-26_v3
+    // FORCE SYNC: 2024-07-26_v4
     match /{document=**} {
       allow read, write: if true;
     }

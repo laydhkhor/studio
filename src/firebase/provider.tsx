@@ -45,6 +45,9 @@ export interface UserHookResult {
 
 export const FirebaseContext = createContext<FirebaseContextState | undefined>(undefined);
 
+/**
+ * The core Firebase Provider that maintains the Auth state and service instances.
+ */
 export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
   children,
   firebaseApp,
@@ -96,6 +99,9 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
   );
 };
 
+/**
+ * Hook to access all Firebase services and the current user state.
+ */
 export const useFirebase = (): FirebaseServicesAndUser => {
   const context = useContext(FirebaseContext);
   if (context === undefined) {
@@ -118,6 +124,9 @@ export const useAuth = (): Auth => useFirebase().auth;
 export const useFirestore = (): Firestore => useFirebase().firestore;
 export const useFirebaseApp = (): FirebaseApp => useFirebase().firebaseApp;
 
+/**
+ * Utility hook to memoize Firestore references or queries.
+ */
 export function useMemoFirebase<T>(factory: () => T, deps: DependencyList): T {
   const memoized = useMemo(factory, deps);
   if (typeof memoized === 'object' && memoized !== null) {
