@@ -111,7 +111,7 @@ export default function TestimonialsSection({ testimonials }: any) {
       <div className="container">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-headline text-3xl md:text-4xl font-bold">
-            Words from Our Patients
+            Words from Our <span className="text-primary">Patients</span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             See what people are saying about their experience with DocAssist.
