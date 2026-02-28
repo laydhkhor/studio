@@ -48,17 +48,15 @@
 
   html {
     scroll-behavior: smooth;
-    height: -webkit-fill-available;
   }
 
   body {
     @apply bg-background text-foreground font-body antialiased;
     width: 100%;
-    max-width: 100%;
-    overflow-x: clip; /* Prevent horizontal scroll while keeping sticky working on iOS */
+    max-width: 100vw;
+    overflow-x: clip; /* Best practice for sticky compatibility + overflow protection */
     position: relative;
     min-height: 100vh;
-    min-height: -webkit-fill-available;
   }
 }
 
