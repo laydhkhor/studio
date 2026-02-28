@@ -23,7 +23,7 @@ export default function PricingSection({ pricingOptions }: any) {
             Professional medical care delivered through your preferred medium. 
           </p>
            <div className="pt-4">
-            <Button asChild variant="ghost" className="font-ui transition-all">
+            <Button asChild variant="ghost" className="font-ui transition-all border border-slate-200 bg-white/50">
               <Link href="/pricing" className="flex items-center">
                 Compare Plan Features <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
