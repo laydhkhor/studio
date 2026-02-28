@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -10,10 +9,10 @@ export default function AboutSection({ about }: { about: any }) {
   if (!about) return null;
 
   return (
-    <section className="py-24 md:py-32 bg-white">
+    <section className="py-24 md:py-32 bg-white overflow-hidden">
       <div className="container">
         {/* Section Title */}
-        <div className="mx-auto max-w-3xl text-center mb-20 space-y-4">
+        <div className="mx-auto max-w-3xl text-center mb-20 space-y-4 px-4">
           <span className="font-ui font-bold text-primary tracking-widest uppercase text-sm">Professional Profile</span>
           <h2 className="font-headline text-3xl md:text-5xl font-bold text-slate-900">
             Meet Your <span className="text-primary">Physician</span>
@@ -23,17 +22,17 @@ export default function AboutSection({ about }: { about: any }) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start px-4">
           {/* Image Container */}
           <div className="relative flex justify-center lg:justify-start lg:sticky lg:top-32">
-            <div className="relative">
+            <div className="relative w-full max-w-[320px] sm:max-w-[450px]">
               <div className="relative z-10">
                 <Image
                   src={about.image}
                   alt={about.doctorName}
                   width={450}
                   height={450}
-                  className="rounded-3xl object-cover aspect-square shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border-4 border-white"
+                  className="w-full h-auto rounded-3xl object-cover aspect-square shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border-4 border-white mx-auto"
                   data-ai-hint={about.imageHint}
                 />
               </div>

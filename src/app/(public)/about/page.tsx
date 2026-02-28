@@ -1,4 +1,3 @@
-
 import Image from 'next/image';
 import { Award, GraduationCap, Users, CheckCircle2, Activity, HeartPulse, Stethoscope, ClipboardCheck } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -16,37 +15,37 @@ export default async function AboutPage() {
   const data = aboutData;
 
   return (
-    <div className="py-20 md:py-32">
+    <div className="py-20 md:py-32 overflow-hidden">
       <div className="container">
         {/* Header Section */}
-        <header className="text-center mb-20">
+        <header className="text-center mb-20 px-4">
           <span className="font-ui font-bold text-primary tracking-widest uppercase text-sm">Medical Profile</span>
           <h1 className="font-headline text-4xl md:text-6xl font-bold mt-4">About <span className="text-primary">{data?.doctorName}</span></h1>
-          <p className="mt-6 text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Dedicated to providing evidence-based healthcare with a focus on <span className="text-primary font-semibold">patient wellness</span> and long-term health management.
           </p>
         </header>
 
         {/* Doctor Identity Block */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start mb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start mb-32 px-4">
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative">
+            <div className="relative w-full max-w-[320px] sm:max-w-[500px]">
               <Image
                 src={data.image}
                 alt={data.doctorName || 'Doctor'}
                 width={500}
                 height={500}
-                className="rounded-3xl object-cover aspect-square shadow-2xl border-8 border-white"
+                className="w-full h-auto rounded-3xl object-cover aspect-square shadow-2xl border-4 sm:border-8 border-white mx-auto"
                 data-ai-hint={data.imageHint}
                 priority
               />
-              <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl flex items-center gap-4">
-                 <div className="bg-primary/10 p-3 rounded-xl text-primary">
-                    <Award className="h-8 w-8" />
+              <div className="absolute -bottom-4 left-4 sm:-bottom-6 sm:-left-6 bg-white p-4 sm:p-6 rounded-2xl shadow-xl flex items-center gap-3 sm:gap-4 border border-slate-100">
+                 <div className="bg-primary/10 p-2 sm:p-3 rounded-xl text-primary">
+                    <Award className="h-6 w-6 sm:h-8 sm:w-8" />
                  </div>
                  <div>
-                    <p className="font-headline font-bold text-2xl leading-tight">{data.experience}</p>
-                    <p className="text-xs font-ui uppercase tracking-wider text-muted-foreground">Expertise</p>
+                    <p className="font-headline font-bold text-xl sm:text-2xl leading-tight">{data.experience}</p>
+                    <p className="text-[10px] sm:text-xs font-ui uppercase tracking-wider text-muted-foreground">Expertise</p>
                  </div>
               </div>
             </div>
@@ -93,7 +92,7 @@ export default async function AboutPage() {
         </div>
 
         {/* Services Section */}
-        <section className="bg-slate-900 text-white rounded-[3rem] p-12 md:p-20 overflow-hidden relative">
+        <section className="bg-slate-900 text-white rounded-[2rem] md:rounded-[3rem] p-8 md:p-20 overflow-hidden relative mx-4">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
           <div className="relative z-10">
             <div className="max-w-3xl mb-16">
